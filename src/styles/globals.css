@@ -1,0 +1,115 @@
+body {
+	@apply text-gray-800 dark:bg-dark dark:text-white;
+}
+
+.-icon {
+	fill: currentColor;
+	height: 21px;
+	width: 21px;
+}
+
+.-button {
+	@apply px-5 py-4 flex flex-row items-center justify-center rounded-xl font-bold transition-colors;
+	touch-action: manipulation;
+}
+.-button:disabled {
+	opacity: 0.5;
+	pointer-events: none;
+}
+.-button.-primary {
+	@apply bg-primary text-white;
+}
+.-button.-secondary {
+	@apply text-gray-500 hover:text-primary;
+}
+.-button.-dark {
+	@apply bg-gray-800 text-white;
+}
+.-button.-round {
+	border-radius: 50%;
+}
+.-button.-sm {
+	@apply px-4 py-2;
+}
+
+.-card {
+	@apply bg-white block rounded-3xl dark:bg-dark;
+}
+.-card.--shadow {
+	@apply relative;
+}
+.-card.--shadow::before {
+	@apply absolute rounded-3xl;
+	content: '';
+	z-index: -1;
+	background: #e3e6ec;
+	filter: blur(86.985px);
+	top: 22px;
+	left: 18px;
+	right: 18px;
+	bottom: -40px;
+}
+.dark .-card.--shadow::before {
+	background: black;
+}
+
+.ReactModal__Content {
+	@apply mx-auto my-10 px-7 py-3 rounded-3xl border-0 bg-white dark:bg-dark !important;
+	max-width: 650px;
+}
+.ReactModal__Overlay {
+	@apply z-20;
+	background-color: rgba(27, 29, 33, 0.5) !important;
+}
+
+.-table {
+	@apply w-full rounded-3xl;
+}
+.-table td,
+.-table th {
+	@apply p-4;
+}
+.-table-responsive {
+	overflow-x: auto;
+}
+
+.-hstack {
+	@apply flex rounded-xl;
+	border: 1px solid rgba(127, 127, 127, 0.5);
+}
+.-hstack > div {
+	@apply flex-1;
+}
+.-hstack > div:not(:first-of-type) {
+	border-left: 1px solid rgba(127, 127, 127, 0.5);
+}
+
+.-sidebar-wrapper-mobile {
+	@apply absolute bg-white z-10;
+	transition: transform 0.25s ease;
+	transform: translateX(-100%);
+}
+.-sidebar-wrapper-mobile.--open {
+	transform: translateX(0);
+}
+
+.heading-sizes h1 {
+	@apply text-4xl my-4 font-bold;
+}
+
+.heading-sizes h2 {
+	@apply text-2xl my-4 font-bold;
+}
+
+.heading-sizes ul {
+	@apply my-4 ml-5;
+	list-style: circle;
+}
+
+.heading-sizes p {
+	@apply my-4;
+}
+
+.heading-sizes a {
+	@apply underline text-primary;
+}

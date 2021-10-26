@@ -1,0 +1,48 @@
+{
+	"name": "c9-mitp-frontend",
+	"version": "0.1.0",
+	"private": true,
+	"scripts": {
+		"dev": "next dev",
+		"build": "next build",
+		"start": "next start",
+		"prettier": "prettier --write 'src/**/*.{js,json,jsx,ts,tsx}' *.js package.json"
+	},
+	"prettier": {
+		"singleQuote": true,
+		"semi": false,
+		"trailingComma": "none",
+		"useTabs": true,
+		"arrowParens": "avoid"
+	},
+	"dependencies": {
+		"apexcharts": "^3.29.0",
+		"axios": "^0.21.4",
+		"clsx": "^1.1.1",
+		"cuid": "^2.1.8",
+		"dayjs": "^1.10.6",
+		"jwt-decode": "^3.1.2",
+		"mobx": "^6.3.3",
+		"mobx-react-lite": "^3.2.1",
+		"next": "^11.1.2",
+		"next-plugin-preact": "^3.0.6",
+		"next-themes": "^0.0.15",
+		"preact": "^10.5.14",
+		"preact-render-to-string": "^5.1.19",
+		"react": "npm:@preact/compat",
+		"react-apexcharts": "^1.3.9",
+		"react-dom": "npm:@preact/compat",
+		"react-modal": "^3.14.3",
+		"react-query": "^3.21.1",
+		"react-ssr-prepass": "npm:preact-ssr-prepass"
+	},
+	"devDependencies": {
+		"@types/react": "17.0.19",
+		"@types/react-modal": "^3.12.1",
+		"autoprefixer": "^10.3.3",
+		"postcss": "^8.3.6",
+		"prettier": "^2.3.2",
+		"tailwindcss": "^2.2.8",
+		"typescript": "4.4.2"
+	}
+}
