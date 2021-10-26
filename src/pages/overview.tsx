@@ -10,6 +10,8 @@ import { wrapDashboardLayout } from '../components/unique/DashboardLayout'
 import { useNextAppElement } from '../state/useNextAppElement'
 import { userState } from '../state/user'
 import { selectedPotState, useSelectedPot } from '../state/useSelectedPot'
+import { formatDateRange } from '../utils/formatDateRange'
+import { formatDuration } from '../utils/formatDuration'
 
 export default wrapDashboardLayout(function RealIndexPage() {
 	const router = useRouter()
@@ -22,7 +24,11 @@ export default wrapDashboardLayout(function RealIndexPage() {
 
 	const month = dayjs().startOf('month')
 	const currWeek = dayjs().diff(month, 'week') + 1
-	const endOfWeek = dayjs.duration(dayjs().endOf('week').diff()).humanize(true)
+	const timeUntilWeekEnd = formatDuration(
+		Math.floor(dayjs().endOf('week').diff() / 1000)
+	)
+	const weekStartDay = dayjs().startOf('week')
+	const weekEndDay = dayjs().endOf('week')
 
 	const appElement = useNextAppElement()
 	const [viewingLogsOfUserId, setViewingLogsOfUserId] = useState(
@@ -55,9 +61,11 @@ export default wrapDashboardLayout(function RealIndexPage() {
 			</div>
 
 			<div className="bg-primary rounded-3xl p-16 text-white">
-				<div className="text-4xl font-bold">Ends {endOfWeek}</div>
+				<div className="text-4xl font-bold">
+					Check ins due in {timeUntilWeekEnd}
+				</div>
 				<div className="my-5">
-					{month.format('MMMM')}, Week {currWeek} of 4
+					{formatDateRange(weekStartDay, weekEndDay)}, Week {currWeek} of 4
 				</div>
 				<CheckInButton
 					potId={selectedPotState.moneyPotId}

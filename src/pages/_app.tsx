@@ -9,9 +9,12 @@ import { queryClient } from '../state/queryClient'
 
 import dayjsDuration from 'dayjs/plugin/duration'
 import dayjsRelativeTime from 'dayjs/plugin/relativeTime'
+import dayjsAdvancedFormat from 'dayjs/plugin/advancedFormat'
 import dayjs from 'dayjs'
 dayjs.extend(dayjsDuration)
 dayjs.extend(dayjsRelativeTime)
+dayjs.extend(dayjsAdvancedFormat)
+dayjs.Ls.en.weekStart = 1
 
 function MyApp({ Component, pageProps }: AppProps) {
 	useEffect(() => {

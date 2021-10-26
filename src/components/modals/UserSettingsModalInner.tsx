@@ -1,3 +1,4 @@
+import { runInAction } from 'mobx'
 import { observer } from 'mobx-react-lite'
 import { useState } from 'react'
 import { useMutation } from 'react-query'
@@ -76,6 +77,7 @@ export function UserSettingsModalInner({ closeModal }: ModalProps) {
 			<PotLink />
 			<PotSettings />
 			<PotAdminSettings />
+			<UserLogout />
 		</>
 	)
 }
@@ -242,6 +244,30 @@ const PotAdminSettings = observer(function PotAdminSettings() {
 					Save
 				</button>
 			</form>
+		</>
+	)
+})
+
+const UserLogout = observer(function UserLogout() {
+	return (
+		<>
+			<div className="text-xl font-poppins flex items-center mt-6 mb-2">
+				Logout from MITP
+			</div>
+
+			<button
+				className="-button -primary -sm mt-4"
+				onClick={() => {
+					runInAction(() => {
+						userState.tokens.accessToken = ''
+						userState.tokens.refreshToken = ''
+					})
+					userState.save()
+					window.location.assign('/')
+				}}
+			>
+				Logout
+			</button>
 		</>
 	)
 })

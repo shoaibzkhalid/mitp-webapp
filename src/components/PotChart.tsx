@@ -1,4 +1,5 @@
 import { observer } from 'mobx-react-lite'
+import { useMemo } from 'react'
 import ReactApexChart from 'react-apexcharts'
 import { useSelectedPot } from '../state/useSelectedPot'
 
@@ -11,85 +12,87 @@ export default observer(function PotChart() {
 
 	if (!pot.data) return null
 
-	const options = {
-		labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-		colors: [purple, blue],
-		chart: {
-			height: '100%',
-			type: 'bar',
-			toolbar: {
-				show: false
-			}
-		},
-		grid: {
-			borderColor: borderColor,
-			strokeDashArray: 0,
-			xaxis: {
-				lines: {
+	const options = useMemo(() => {
+		return {
+			labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+			colors: [purple, blue],
+			chart: {
+				height: '100%',
+				type: 'bar',
+				toolbar: {
 					show: false
+				}
+			},
+			grid: {
+				borderColor: borderColor,
+				strokeDashArray: 0,
+				xaxis: {
+					lines: {
+						show: false
+					}
+				},
+				yaxis: {
+					lines: {
+						show: false
+					}
+				},
+				padding: {
+					top: 0,
+					left: 10,
+					right: 0,
+					bottom: 0
+				}
+			},
+			states: {
+				hover: {
+					filter: {
+						type: 'darken',
+						value: 0.9
+					}
+				}
+			},
+			dataLabels: {
+				enabled: false
+			},
+			plotOptions: {
+				bar: {
+					columnWidth: '60%'
+				}
+			},
+			legend: {
+				show: false
+			},
+			tooltip: {
+				x: {
+					show: false
+				},
+				shared: true,
+				intersect: false
+			},
+			xaxis: {
+				axisBorder: {
+					show: false
+				},
+				axisTicks: {
+					show: false
+				},
+				tooltip: {
+					enabled: false
 				}
 			},
 			yaxis: {
-				lines: {
+				axisBorder: {
+					color: borderColor
+				},
+				axisTicks: {
 					show: false
+				},
+				tooltip: {
+					enabled: false
 				}
-			},
-			padding: {
-				top: 0,
-				left: 10,
-				right: 0,
-				bottom: 0
-			}
-		},
-		states: {
-			hover: {
-				filter: {
-					type: 'darken',
-					value: 0.9
-				}
-			}
-		},
-		dataLabels: {
-			enabled: false
-		},
-		plotOptions: {
-			bar: {
-				columnWidth: '60%'
-			}
-		},
-		legend: {
-			show: false
-		},
-		tooltip: {
-			x: {
-				show: false
-			},
-			shared: true,
-			intersect: false
-		},
-		xaxis: {
-			axisBorder: {
-				show: false
-			},
-			axisTicks: {
-				show: false
-			},
-			tooltip: {
-				enabled: false
-			}
-		},
-		yaxis: {
-			axisBorder: {
-				color: borderColor
-			},
-			axisTicks: {
-				show: false
-			},
-			tooltip: {
-				enabled: false
 			}
 		}
-	}
+	}, [])
 
 	return (
 		<ReactApexChart

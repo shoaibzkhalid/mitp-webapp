@@ -22,7 +22,7 @@ const DashboardLayout = observer(function DashboardLayout(props: {
 	useEffect(() => {
 		const pr = when(() => userState.loaded)
 		pr.then(() => {
-			// if (!userState.user) router.push('/paypal/login-initiate')
+			if (!userState.user) router.push('/paypal/login-initiate')
 		})
 		return () => pr.cancel()
 	}, [])
@@ -36,7 +36,7 @@ const DashboardLayout = observer(function DashboardLayout(props: {
 				<title>Dashboard - Camelot</title>
 			</Head>
 
-			{userState.user ? (
+			{!userState.user ? (
 				<SpinnerBig />
 			) : (
 				<div className="flex flex-row">
