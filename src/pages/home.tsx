@@ -15,19 +15,19 @@ export default wrapDashboardLayout(function OverviewPage() {
 	const router = useRouter()
 	const { isLoading, data } = useSelectedPot()
 
-	if (!isLoading && data === null) {
-		router.push('/pot/new')
-	}
+	// if (!isLoading && data === null) {
+	// 	router.push('/pot/new')
+	// }
 
-	if (!data) {
-		return <SpinnerBig />
-	}
+	// if (!data) {
+	// 	return <SpinnerBig />
+	// }
 
-	const checkinCountUser = useMemo(
-		() =>
-			data.users.find(u => u.id === userState.user?.id)?.checkinsThisWeek || 0,
-		[data]
-	)
+	// const checkinCountUser = useMemo(
+	// 	() =>
+	// 		data.users.find(u => u.id === userState.user?.id)?.checkinsThisWeek || 0,
+	// 	[data]
+	// )
 
 	return (
 		<>
@@ -37,17 +37,17 @@ export default wrapDashboardLayout(function OverviewPage() {
 
 			<div className="py-12 pb-10 font-poppins">
 				<div className="text-2xl mb-3">The Group Pot Of</div>
-				<div className="text-5xl font-semibold">{data.pot.title}</div>
+				{/* <div className="text-5xl font-semibold">{data.pot.title}</div> */}
 			</div>
 
 			<div className="p-10 pb-20 flex flex-col items-center">
 				<div className="text-center text-xl text-gray-600">
-					{checkinCountUser} / {data.pot.checkinCount} check-ins this week
+					{/* {checkinCountUser} / {data.pot.checkinCount} check-ins this week */}
 				</div>
-				<CheckInButton
+				{/* <CheckInButton
 					potId={selectedPotState.moneyPotId}
 					disabled={checkinCountUser >= data.pot.checkinCount}
-				></CheckInButton>
+				></CheckInButton> */}
 			</div>
 
 			<div className="-card --shadow p-8">
@@ -56,7 +56,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 				<div className="md:grid grid-cols-3">
 					<div>
 						<div className="text-7xl font-bold text-center my-6">
-							${data.metrics.currentValue}
+							{/* ${data.metrics.currentValue} */}
 						</div>
 						<div className="flex items-center my-6 text-primary">
 							<Link href="/overview">Group Check Ins</Link>
@@ -75,7 +75,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 					<div className="p-6">
 						<div>Check Ins</div>
 						<div className="text-3xl font-bold">
-							{data.metrics.checkinsCount}
+							{/* {data.metrics.checkinsCount} */}
 						</div>
 					</div>
 					<div className="p-6">
@@ -84,7 +84,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 					</div>
 					<div className="p-6">
 						<div>Pay Ins</div>
-						<div className="text-3xl font-bold">{data.metrics.payinsCount}</div>
+						{/* <div className="text-3xl font-bold">{data.metrics.payinsCount}</div> */}
 					</div>
 				</div>
 			</div>
