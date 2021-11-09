@@ -7,8 +7,8 @@ import { useContext, useEffect } from 'react'
 import {
 	SidebarContext,
 	SidebarContextProvider
-} from '../../state/sidebarContext'
-import { useMediaQuery } from '../../state/useMediaQuery'
+} from '../../state/contexts/sidebarContext'
+import { useMediaQuery } from '../../state/react/useMediaQuery'
 import { userState } from '../../state/user'
 import { SpinnerBig } from '../SpinnerBig'
 import { Sidebar } from './Sidebar'
@@ -18,17 +18,16 @@ const DashboardLayout = observer(function DashboardLayout(props: {
 }) {
 	const router = useRouter()
 	const Component = props.contents
-
 	useEffect(() => {
 		const pr = when(() => userState.loaded)
 		pr.then(() => {
-			if (!userState.user) router.push('/paypal/login-initiate')
+			if (!userState.user) router.push('/pot/new')
 		})
 		return () => pr.cancel()
 	}, [])
 
-	const isMobile = useMediaQuery('(max-width: 1100px)')
-	const [sidebarState, setSidebarState] = useContext(SidebarContext)
+	const isMobile = useMediaQuery('(max-width: 1024px)')
+	const [sidebarState] = useContext(SidebarContext)
 
 	return (
 		<>
@@ -39,11 +38,11 @@ const DashboardLayout = observer(function DashboardLayout(props: {
 			{!userState.user ? (
 				<SpinnerBig />
 			) : (
-				<div className="flex flex-row">
+				<div className="flex flex-row h-screen">
 					{isMobile ? (
 						<div
 							className={clsx(
-								'w-full max-w-xs p-6 -sidebar-wrapper-mobile',
+								'w-full max-w-xs -sidebar-wrapper-mobile',
 								sidebarState.isOpen && '--open'
 							)}
 						>
@@ -54,27 +53,10 @@ const DashboardLayout = observer(function DashboardLayout(props: {
 							<Sidebar isMobile={isMobile}></Sidebar>
 						</div>
 					)}
-
-					<div className="w-full flex flex-col items-center">
-						{isMobile && (
-							<div
-								className="w-full border-b border-gray-200"
-								style={{ maxWidth: '1100px' }}
-							>
-								<button
-									onClick={() =>
-										setSidebarState({
-											isOpen: true
-										})
-									}
-								>
-									(open menu, icon pending)
-								</button>
-							</div>
-						)}
-						<div className="w-full px-6" style={{ maxWidth: '1100px' }}>
-							<Component></Component>
-						</div>
+					<div
+						className="flex-grow"
+					>
+						<Component />
 					</div>
 				</div>
 			)}

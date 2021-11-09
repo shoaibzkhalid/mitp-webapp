@@ -7,7 +7,7 @@ import { Api } from '../../api'
 import { Input } from '../../components/Input'
 import { SpinnerBig } from '../../components/SpinnerBig'
 import { userState } from '../../state/user'
-import { selectedPotState } from '../../state/useSelectedPot'
+import { selectedPotState } from '../../state/react/useSelectedPot'
 
 function createPotNewState() {
 	return observable({
@@ -15,7 +15,9 @@ function createPotNewState() {
 		title: '',
 		description: '',
 		checkinCount: 1,
-		minAmount: 10
+		minAmount: 0,
+		userEmail: '',
+		userFirstName: ''
 	})
 }
 type PotNewState = ReturnType<typeof createPotNewState>
@@ -28,15 +30,41 @@ export default observer(function PotNew() {
 
 	if (!userState.loaded) return <SpinnerBig />
 
-	const createPotMutation = useMutation('create-pot', Api.userPots.create, {
-		onSuccess(d) {
-			runInAction(() => {
-				selectedPotState.moneyPotId = d.id
-			})
+	const steps = useMemo(() => {
+		return userState.user
+			? [StepRequirements, StepTribute, StepSchedule]
+			: [StepRequirements]
+	}, [])
 
-			router.push('/home')
+	const createPotMutation = useMutation(
+		'create-pot',
+		async (state: PotNewState) => {
+			if (!userState.user) {
+				const newUserTokens = await Api.public.createUser({
+					email: state.userEmail || null,
+					firstName: state.userFirstName,
+					lastName: ''
+				})
+
+				runInAction(() => {
+					userState.tokens = newUserTokens
+				})
+
+				await userState.load()
+			}
+
+			return Api.userPots.create(state)
+		},
+		{
+			onSuccess(d) {
+				runInAction(() => {
+					selectedPotState.moneyPotId = d.id
+				})
+
+				router.push('/home')
+			}
 		}
-	})
+	)
 
 	const nextStep = () => {
 		if (state.step < steps.length - 1) {
@@ -45,12 +73,7 @@ export default observer(function PotNew() {
 			})
 		}
 
-		createPotMutation.mutate({
-			title: state.title,
-			description: state.description,
-			checkinCount: state.checkinCount,
-			minAmount: state.minAmount
-		})
+		createPotMutation.mutate(state)
 	}
 
 	const StepComponent = steps[state.step]
@@ -95,7 +118,7 @@ const StepRequirements = observer((props: StepProps) => {
 
 			<div className={stepTitleClassName}>Set check in requirements</div>
 
-			<label className="block mt-7" htmlFor="checkInsPerWeek">
+			{/* <label className="block mt-7" htmlFor="checkInsPerWeek">
 				Check ins per week
 			</label>
 			<select
@@ -117,7 +140,7 @@ const StepRequirements = observer((props: StepProps) => {
 						</option>
 					)
 				})}
-			</select>
+			</select> */}
 
 			<Input
 				label="What do they have to do?"
@@ -144,8 +167,13 @@ const StepTribute = observer((props: StepProps) => {
 
 			<div className={stepTitleClassName}>Set the missed week tribute</div>
 
-			<label className="block mt-7" htmlFor="selectInput">
-				Members pay this when they skip weekly check-in
+			<div className="italic text-center py-4 opacity-75">
+				Can be changed anytime, and does not become active until members ready
+				up.
+			</div>
+
+			<label className="block mt-8" htmlFor="selectInput">
+				Members pay at least this when they skip weekly check-in
 			</label>
 			<select
 				id="selectInput"
@@ -156,11 +184,10 @@ const StepTribute = observer((props: StepProps) => {
 					})
 				}
 			>
-				{[5, 10, 15, 20, 30, 40, 50].map(v => {
+				{[0, 5, 10, 15, 20, 30, 40, 50].map(v => {
 					return (
 						<option value={'' + v} selected={props.state.minAmount === v + 1}>
-							{v === 5 && 'Default: '}
-							{v}$
+							{v === 0 ? 'No contribution' : `${v}$`}
 						</option>
 					)
 				})}
@@ -198,4 +225,39 @@ const StepSchedule = observer((props: StepProps) => {
 	)
 })
 
-const steps = [StepRequirements, StepTribute, StepSchedule]
+const StepUserInfo = observer(function StepUserInfo(props: StepProps) {
+	return (
+		<>
+			<div className="flex justify-center">
+				<img src="/img/Gift_optimized.gif" style={{ height: '300px' }} />
+			</div>
+
+			<div className={stepTitleClassName}>Account information</div>
+
+			<Input
+				label="Email"
+				type="email"
+				value={props.state.userEmail}
+				className="mt-7"
+				setValue={(v: string) =>
+					runInAction(() => {
+						props.state.userEmail = v
+						props.state.userFirstName = v.split('@')[0]
+					})
+				}
+			></Input>
+
+			{/* <Input
+				label="First name"
+				type="text"
+				value={props.state.userFirstName}
+				className="mt-7"
+				setValue={v =>
+					runInAction(() => {
+						props.state.userFirstName = v
+					})
+				}
+			></Input> */}
+		</>
+	)
+})

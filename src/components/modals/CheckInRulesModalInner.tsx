@@ -1,4 +1,4 @@
-import { useSelectedPot } from '../../state/useSelectedPot'
+import { useSelectedPot } from '../../state/react/useSelectedPot'
 import { ModalProps } from './types'
 
 export function CheckInRulesModalInner({ closeModal }: ModalProps) {

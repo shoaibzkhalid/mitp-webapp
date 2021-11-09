@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite'
 import { useMemo } from 'react'
 import ReactApexChart from 'react-apexcharts'
-import { useSelectedPot } from '../state/useSelectedPot'
+import { useSelectedPot } from '../../state/react/useSelectedPot'
 
 const blue = '#A0D7E7'
 const purple = '#6C5DD3'

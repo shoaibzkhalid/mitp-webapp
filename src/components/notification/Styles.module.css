@@ -1,0 +1,36 @@
+.visible {
+	animation: movein 0.5s ease forwards, moveout 0.5s 3s ease forwards;
+}
+
+.notification {
+	width: 500px;
+	height: 50px;
+	background: #70c48f;
+	color: white;
+	border-radius: 3px;
+	font-size: 18px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: fixed;
+	top: 40px;
+	right: -500px;
+}
+
+@keyframes movein {
+	from {
+		right: -500px;
+	}
+	to {
+		right: 10px;
+	}
+}
+
+@keyframes moveout {
+	from {
+		right: 10px;
+	}
+	to {
+		right: -500px;
+	}
+}

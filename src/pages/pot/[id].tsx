@@ -5,7 +5,7 @@ import { useQuery } from 'react-query'
 import { Api } from '../../api'
 import { SpinnerBig } from '../../components/SpinnerBig'
 import { userState } from '../../state/user'
-import { selectedPotState } from '../../state/useSelectedPot'
+import { selectedPotState } from '../../state/react/useSelectedPot'
 
 export default observer(function PotById() {
 	const router = useRouter()
@@ -46,7 +46,7 @@ export default observer(function PotById() {
 						potId: v.pot.id
 					})
 				)
-				router.push('/paypal/login-initiate')
+				router.push('/paypal/skip')
 			}
 		}
 	)

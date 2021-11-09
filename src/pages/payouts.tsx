@@ -7,7 +7,7 @@ import { Spinner } from '../components/Spinner'
 import { Square } from '../components/Square'
 import { wrapDashboardLayout } from '../components/unique/DashboardLayout'
 import { userState } from '../state/user'
-import { useSelectedPot } from '../state/useSelectedPot'
+import { useSelectedPot } from '../state/react/useSelectedPot'
 
 export default wrapDashboardLayout(function PayoutsPage() {
 	const router = useRouter()

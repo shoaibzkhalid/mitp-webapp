@@ -1,5 +1,5 @@
 import { userState } from '../../state/user'
-import { useSelectedPot } from '../../state/useSelectedPot'
+import { useSelectedPot } from '../../state/react/useSelectedPot'
 import { ModalProps } from './types'
 
 export function PayInRulesModalInner({ closeModal }: ModalProps) {

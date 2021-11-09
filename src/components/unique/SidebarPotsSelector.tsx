@@ -4,7 +4,10 @@ import { useRouter } from 'next/router'
 import { useQuery } from 'react-query'
 import { Api } from '../../api'
 import { userState } from '../../state/user'
-import { selectedPotState, useSelectedPot } from '../../state/useSelectedPot'
+import {
+	selectedPotState,
+	useSelectedPot
+} from '../../state/react/useSelectedPot'
 
 export const SidebarPotsSelector = observer(function SidebarPotsSelector() {
 	const { isLoading: potsLoading, data: pots } = useQuery(
@@ -24,7 +27,7 @@ export const SidebarPotsSelector = observer(function SidebarPotsSelector() {
 
 	return (
 		<select
-			className="px-5 py-4 w-full shadow-md rounded-md text-gray-700"
+			className="px-5 py-4 w-full shadow-md rounded-md text-gray-500 outline-none bg-gray-100 dark:bg-dark"
 			onChange={e =>
 				runInAction(() => {
 					const v = e.target.value

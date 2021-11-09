@@ -8,14 +8,21 @@ import { PayInRulesModalInner } from '../modals/PayInRulesModalInner'
 import { PayoutScheduleModalInner } from '../modals/PayoutScheduleModalInner'
 import { UserSettingsModalInner } from '../modals/UserSettingsModalInner'
 import { SidebarPotsSelector } from './SidebarPotsSelector'
-import { useNextAppElement } from '../../state/useNextAppElement'
-import { SidebarContext } from '../../state/sidebarContext'
-import { useSelectedPot } from '../../state/useSelectedPot'
+import { useNextAppElement } from '../../state/react/useNextAppElement'
+import { SidebarContext } from '../../state/contexts/sidebarContext'
+import Switch from '../switch'
+import ProfileMenu from '../profileMenu'
+import { useMediaQuery } from '../../state/react/useMediaQuery'
+import { useSelectedPot } from '../../state/react/useSelectedPot'
+import { toggleSideBar } from '../../utils/common'
+import { observer } from 'mobx-react-lite'
+import { themeState } from '../../state/react/useTheme'
 
 interface SidebarProps {
 	isMobile: boolean
 }
-export function Sidebar(props: SidebarProps) {
+
+export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 	const { asPath } = useRouter()
 	const activeLink = useMemo(
 		() =>
@@ -30,127 +37,168 @@ export function Sidebar(props: SidebarProps) {
 	const appElement = useNextAppElement()
 	const [sidebarState, setSidebarState] = useContext(SidebarContext)
 	const pot = useSelectedPot()
+	const isMobile = useMediaQuery('(max-width: 1024px)')
+
+	const handleClickToggleSideBar = () => {
+		setSidebarState({ isOpen: false })
+		toggleSideBar(false)
+	}
 
 	return (
-		<div style={{ height: '100vh' }} className="overflow-y-auto w-full">
-			<div className="flex items-center justify-center p-8">
-				{props.isMobile && (
-					<button
-						className="mr-auto"
-						onClick={() =>
-							setSidebarState({
-								isOpen: false
-							})
-						}
-					>
-						x
-					</button>
-				)}
-				<svg
-					width="131"
-					height="37"
-					viewBox="0 0 131 37"
-					fill="none"
-					xmlns="http://www.w3.org/2000/svg"
-				>
-					<path
-						d="M39.85 0.899999V36H31.3V14.95L23.45 36H16.55L8.65 14.9V36H0.1V0.899999H10.2L20.05 25.2L29.8 0.899999H39.85ZM54.5484 0.899999V36H45.9984V0.899999H54.5484ZM85.9945 0.899999V7.75H76.6945V36H68.1445V7.75H58.8445V0.899999H85.9945ZM117.036 12.2C117.036 14.2333 116.569 16.1 115.636 17.8C114.702 19.4667 113.269 20.8167 111.336 21.85C109.402 22.8833 107.002 23.4 104.136 23.4H98.8355V36H90.2855V0.899999H104.136C106.936 0.899999 109.302 1.38333 111.236 2.35C113.169 3.31666 114.619 4.65 115.586 6.35C116.552 8.05 117.036 10 117.036 12.2ZM103.486 16.6C105.119 16.6 106.336 16.2167 107.136 15.45C107.936 14.6833 108.336 13.6 108.336 12.2C108.336 10.8 107.936 9.71667 107.136 8.95C106.336 8.18333 105.119 7.8 103.486 7.8H98.8355V16.6H103.486Z"
-						fill="currentColor"
-					/>
-					<path
-						d="M125.487 36.4C123.987 36.4 122.753 35.9667 121.787 35.1C120.853 34.2 120.387 33.1 120.387 31.8C120.387 30.4667 120.853 29.35 121.787 28.45C122.753 27.55 123.987 27.1 125.487 27.1C126.953 27.1 128.153 27.55 129.087 28.45C130.053 29.35 130.537 30.4667 130.537 31.8C130.537 33.1 130.053 34.2 129.087 35.1C128.153 35.9667 126.953 36.4 125.487 36.4Z"
-						fill="#6C5DD3"
-					/>
-				</svg>
-			</div>
-
-			<SidebarPotsSelector></SidebarPotsSelector>
-
-			<div className="text-gray-500 text-sm px-5 my-4 mt-6">
-				Your Group &mdash; {pot.data?.users.length} member
-				{pot.data?.users.length !== 1 && 's'}
-			</div>
-
-			{links.map(link => (
-				<div key={link[0]}>
-					{link[4] ? (
-						<>
-							<button
-								className={clsx(
-									`px-5 py-4 flex w-full flex-row items-center rounded-xl text-sm font-bold transition-colors`,
-									activeLink === link
-										? `bg-primary text-white`
-										: 'text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-white'
-								)}
-								onClick={() => setOpenButtonModal(link[0])}
-							>
-								{link[3]}
-								<div className="ml-4">{link[2]}</div>
-							</button>
-							<ReactModal
-								isOpen={openButtonModal === link[0]}
-								onRequestClose={() => setOpenButtonModal(null)}
-								appElement={appElement}
-							>
-								{(() => {
-									// Workaround for making Fast Refresh work
-									const Comp = link[4]
-									return (
-										<Comp closeModal={() => setOpenButtonModal(null)}></Comp>
-									)
-								})()}
-							</ReactModal>
-						</>
-					) : (
-						<Link href={link[0]}>
-							<a
-								className={clsx(
-									`px-5 py-4 flex flex-row items-center rounded-xl text-sm font-bold transition-colors`,
-									activeLink === link
-										? `bg-primary text-white`
-										: 'text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-white'
-								)}
-							>
-								{link[3]}
-								<div className="ml-4">{link[2]}</div>
-							</a>
-
-							{}
-						</Link>
+		<div
+			style={{ padding: '140px 0 72px 0' }}
+			className="w-56 h-screen fixed top-0 left-0 border-r border-gray-200 bg-white dark:bg-gray-900 md:w-80"
+		>
+			<div style={{ height: 140 }} className="absolute top-0 left-0 right-0">
+				<div className="relative flex flex-col items-center justify-center px-8 py-6 border-b border-gray-200 md:border-0 md:py-12">
+					{props.isMobile && (
+						<button
+							className="absolute mr-auto left-4"
+							onClick={() => handleClickToggleSideBar()}
+						>
+							<svg className="w-6 h-6 fill-current">
+								<use xlinkHref="/img/sprite.svg#icon-close"></use>
+							</svg>
+						</button>
 					)}
+					{!isMobile ? (
+						<svg
+							width="131"
+							height="37"
+							viewBox="0 0 131 37"
+							fill="none"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<path
+								d="M39.85 0.899999V36H31.3V14.95L23.45 36H16.55L8.65 14.9V36H0.1V0.899999H10.2L20.05 25.2L29.8 0.899999H39.85ZM54.5484 0.899999V36H45.9984V0.899999H54.5484ZM85.9945 0.899999V7.75H76.6945V36H68.1445V7.75H58.8445V0.899999H85.9945ZM117.036 12.2C117.036 14.2333 116.569 16.1 115.636 17.8C114.702 19.4667 113.269 20.8167 111.336 21.85C109.402 22.8833 107.002 23.4 104.136 23.4H98.8355V36H90.2855V0.899999H104.136C106.936 0.899999 109.302 1.38333 111.236 2.35C113.169 3.31666 114.619 4.65 115.586 6.35C116.552 8.05 117.036 10 117.036 12.2ZM103.486 16.6C105.119 16.6 106.336 16.2167 107.136 15.45C107.936 14.6833 108.336 13.6 108.336 12.2C108.336 10.8 107.936 9.71667 107.136 8.95C106.336 8.18333 105.119 7.8 103.486 7.8H98.8355V16.6H103.486Z"
+								fill={'currentColor'}
+							/>
+							<path
+								d="M125.487 36.4C123.987 36.4 122.753 35.9667 121.787 35.1C120.853 34.2 120.387 33.1 120.387 31.8C120.387 30.4667 120.853 29.35 121.787 28.45C122.753 27.55 123.987 27.1 125.487 27.1C126.953 27.1 128.153 27.55 129.087 28.45C130.053 29.35 130.537 30.4667 130.537 31.8C130.537 33.1 130.053 34.2 129.087 35.1C128.153 35.9667 126.953 36.4 125.487 36.4Z"
+								fill="#6C5DD3"
+							/>
+						</svg>
+					) : (
+						<svg
+							width="80"
+							height="24"
+							viewBox="0 0 80 23"
+							fill="none"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<path
+								d="M24.71 0.939999V22H19.58V9.37L14.87 22H10.73L5.99 9.34V22H0.86V0.939999H6.92L12.83 15.52L18.68 0.939999H24.71ZM33.5291 0.939999V22H28.3991V0.939999H33.5291ZM52.3967 0.939999V5.05H46.8167V22H41.6867V5.05H36.1067V0.939999H52.3967ZM71.0213 7.72C71.0213 8.94 70.7413 10.06 70.1813 11.08C69.6213 12.08 68.7613 12.89 67.6013 13.51C66.4413 14.13 65.0013 14.44 63.2813 14.44H60.1013V22H54.9713V0.939999H63.2813C64.9613 0.939999 66.3813 1.23 67.5413 1.81C68.7013 2.39 69.5713 3.19 70.1513 4.21C70.7313 5.23 71.0213 6.4 71.0213 7.72ZM62.8913 10.36C63.8713 10.36 64.6013 10.13 65.0813 9.67C65.5613 9.21 65.8013 8.56 65.8013 7.72C65.8013 6.88 65.5613 6.23 65.0813 5.77C64.6013 5.31 63.8713 5.08 62.8913 5.08H60.1013V10.36H62.8913Z"
+								fill={'currentColor'}
+							/>
+							<path
+								d="M76.092 22.24C75.192 22.24 74.452 21.98 73.872 21.46C73.312 20.92 73.032 20.26 73.032 19.48C73.032 18.68 73.312 18.01 73.872 17.47C74.452 16.93 75.192 16.66 76.092 16.66C76.972 16.66 77.692 16.93 78.252 17.47C78.832 18.01 79.122 18.68 79.122 19.48C79.122 20.26 78.832 20.92 78.252 21.46C77.692 21.98 76.972 22.24 76.092 22.24Z"
+								fill="#6C5DD3"
+							/>
+						</svg>
+					)}
+
+					<p className="mt-2 text-gray-500 text-sm md:text-base">
+						closed beta v1.0.1
+					</p>
 				</div>
-			))}
-
-			<div className="border-t border-gray-300 dark:border-gray-700 mx-5 mt-7 mb-10"></div>
-
-			<div className="text-gray-500  text-sm px-5 mb-4">Insights</div>
-
-			{insightButtons.map(button => (
-				<div key={button[0]}>
-					<button
-						className={`px-5 py-4 flex flex-row items-center rounded-xl text-sm font-bold transition-colors text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-white`}
-						onClick={() => setOpenButtonModal(button)}
-					>
-						{button[1]}
-						<div className="ml-4">{button[0]}</div>
-					</button>
-
-					<ReactModal
-						isOpen={openButtonModal === button}
-						onRequestClose={() => setOpenButtonModal(null)}
-						appElement={appElement}
-					>
-						{(() => {
-							// Workaround for making Fast Refresh work
-							const Comp = button[2]
-							return <Comp closeModal={() => setOpenButtonModal(null)}></Comp>
-						})()}
-					</ReactModal>
+			</div>
+			<div className="overflow-y-auto w-full h-full px-5 pb-5 border-b border-gray-200 -sidebar-main md:px-6">
+				<div className="py-4">
+					<SidebarPotsSelector />
 				</div>
-			))}
+
+				{links.map(link => (
+					<div key={link[0]}>
+						{link[4] ? (
+							<>
+								<button
+									className={clsx(
+										`px-5 py-4 flex w-full flex-row items-center rounded-xl text-sm font-bold transition-colors`,
+										activeLink === link
+											? `bg-primary text-white`
+											: 'text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-white'
+									)}
+									onClick={() => setOpenButtonModal(link[0])}
+								>
+									{link[3]}
+									<div className="ml-4">{link[2]}</div>
+								</button>
+								<ReactModal
+									isOpen={openButtonModal === link[0]}
+									onRequestClose={() => setOpenButtonModal(null)}
+									appElement={appElement}
+								>
+									{(() => {
+										// Workaround for making Fast Refresh work
+										const Comp = link[4]
+										return (
+											<Comp closeModal={() => setOpenButtonModal(null)}></Comp>
+										)
+									})()}
+								</ReactModal>
+							</>
+						) : (
+							<Link href={link[0]}>
+								<a
+									className={clsx(
+										`px-5 py-4 flex flex-row items-center rounded-xl text-sm font-bold transition-colors`,
+										activeLink === link
+											? `bg-primary text-white`
+											: 'text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-white'
+									)}
+								>
+									{link[3]}
+									<div className="ml-4">{link[2]}</div>
+								</a>
+
+								{}
+							</Link>
+						)}
+					</div>
+				))}
+
+				<div className="border-t border-gray-300 dark:border-gray-700 mx-5 mt-7 mb-10"></div>
+
+				<div className="text-gray-500 text-sm px-5 mb-4">Rules</div>
+
+				{insightButtons.map(button => (
+					<div key={button[0]}>
+						<button
+							className={`px-5 py-4 flex flex-row items-center rounded-xl text-sm font-bold transition-colors text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-white`}
+							onClick={() => setOpenButtonModal(button)}
+						>
+							{button[1]}
+							<div className="ml-4">{button[0]}</div>
+						</button>
+
+						<ReactModal
+							isOpen={openButtonModal === button}
+							onRequestClose={() => setOpenButtonModal(null)}
+							appElement={appElement}
+						>
+							{(() => {
+								// Workaround for making Fast Refresh work
+								const Comp = button[2]
+								return <Comp closeModal={() => setOpenButtonModal(null)}></Comp>
+							})()}
+						</ReactModal>
+					</div>
+				))}
+				<div className="mt-auto">
+					<div className="border-t border-gray-300 dark:border-gray-700 mx-5 mt-7 mb-10">
+						<ProfileMenu />
+					</div>
+				</div>
+			</div>
+
+			
+
+			<div className="flex justify-center items-center py-8">
+				<Switch />
+			</div>
 		</div>
 	)
-}
+})
 
 const links: any[][] = [
 	[
@@ -172,7 +220,7 @@ const links: any[][] = [
 	[
 		'/payouts',
 		[],
-		'Payouts',
+		'Your Payouts',
 		<svg className="-icon">
 			<use xlinkHref="/img/sprite.svg#icon-wallet"></use>
 		</svg>
@@ -180,13 +228,22 @@ const links: any[][] = [
 	[
 		'/settings',
 		[],
-		'Settings',
+		'Group Details',
 		<svg className="-icon">
 			<use xlinkHref="/img/sprite.svg#icon-settings"></use>
 		</svg>,
 		UserSettingsModalInner
+	],
+	[
+		'https://forms.gle/RZak8BEdDUkG67xJA ',
+		[],
+		'Send Feedback to Developers',
+		<svg className="-icon">
+			<use xlinkHref="/img/sprite.svg#icon-document"></use>
+		</svg>
 	]
 ]
+
 const insightButtons: any[][] = [
 	[
 		'Check in Rules',

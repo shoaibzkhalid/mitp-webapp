@@ -1,0 +1,110 @@
+.switch {
+	display: inline-block;
+	position: relative;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	cursor: pointer;
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+	font-size: 0;
+	-webkit-transition: opacity 0.25s;
+	-o-transition: opacity 0.25s;
+	transition: opacity 0.25s;
+}
+
+.switch__input {
+	position: absolute;
+	top: 0;
+	left: 0;
+	opacity: 0;
+}
+
+.switch__in {
+	display: inline-block;
+}
+
+.switch__box {
+	position: relative;
+	display: block;
+	width: 64px;
+	height: 24px;
+	background: rgba(228, 228, 228, 0.5);
+	border-radius: 16px;
+	-webkit-transition: all 0.25s;
+	-o-transition: all 0.25s;
+	transition: all 0.25s;
+}
+
+.switch__box:before {
+	content: '';
+	position: absolute;
+	top: 50%;
+	left: 2px;
+	-webkit-transform: translateY(-50%);
+	-ms-transform: translateY(-50%);
+	transform: translateY(-50%);
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	border: 4px solid #ffffff;
+	-webkit-box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.16);
+	box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.16);
+	background: #3f8cff;
+	-webkit-transition: all 0.25s;
+	-o-transition: all 0.25s;
+	transition: all 0.25s;
+}
+
+.switch__icon {
+	position: absolute;
+	top: 50%;
+	left: 0;
+	-webkit-transform: translateY(-50%);
+	-ms-transform: translateY(-50%);
+	transform: translateY(-50%);
+	font-size: 0;
+}
+
+.switch__icon .icon {
+	font-size: 24px;
+	fill: #3f8cff;
+}
+
+.switch__icon .icon_moon {
+	display: none;
+	width: 1.3rem;
+	height: 1.3rem;
+}
+
+.switch__icon .icon_sun {
+	width: 1.3rem;
+	height: 1.3rem;
+}
+
+.switch__in {
+	padding-left: 56px;
+}
+
+.dark_switch__box {
+	background: #000000;
+}
+
+.dark_switch__box:before {
+	width: 4px;
+	height: 16px;
+	border-width: 2px;
+	border-radius: 2px;
+	-webkit-transform: translate(48px, -50%);
+	-ms-transform: translate(48px, -50%);
+	transform: translate(48px, -50%);
+	border-color: #3f8cff;
+}
+
+.dark_switch__in .icon_moon {
+	display: inline-block;
+}
+
+.dark_switch__in .icon_sun {
+	display: none;
+}

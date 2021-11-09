@@ -17,5 +17,19 @@ export default {
 					isJoined: boolean
 				}
 		)
+	},
+
+	async createUser(user: {
+		firstName: string
+		lastName: string
+		email: string | null
+	}) {
+		return r.post('user', user).then(
+			d =>
+				d.data.data.tokens as {
+					accessToken: string
+					refreshToken: string
+				}
+		)
 	}
 }

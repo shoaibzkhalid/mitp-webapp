@@ -6,7 +6,7 @@ import { Api } from '../../api'
 import { AppEnv } from '../../env'
 import { queryClient } from '../../state/queryClient'
 import { userState } from '../../state/user'
-import { useSelectedPot } from '../../state/useSelectedPot'
+import { useSelectedPot } from '../../state/react/useSelectedPot'
 import { Input } from '../Input'
 import { SelectInput } from '../SelectInput'
 import { ModalProps } from './types'
@@ -139,14 +139,14 @@ const PotSettings = observer(function PotSettings() {
 					<SelectInput
 						label="Contribution amount"
 						disabled={false}
-						options={[5, 10, 15, 20, 30, 40, 50]
+						options={[0, 5, 10, 15, 20, 30, 40, 50]
 							.filter(
 								v =>
 									v >= parseInt(selectedPot.data!.pot.minAmount) ||
 									v === parseInt(pl.amount)
 							)
 							.map(i => ({
-								label: i + '$',
+								label: i === 0 ? 'No contribution' : i + '$',
 								value: i + ''
 							}))}
 						value={pl.amount}
@@ -228,8 +228,8 @@ const PotAdminSettings = observer(function PotAdminSettings() {
 					<SelectInput
 						label="Min contribution amount"
 						disabled={false}
-						options={[5, 10, 15, 20, 30, 40, 50].map(i => ({
-							label: i + '$',
+						options={[0, 5, 10, 15, 20, 30, 40, 50].map(i => ({
+							label: i === 0 ? 'No minimum value' : i + '$',
 							value: i + ''
 						}))}
 						value={pot.minAmount}

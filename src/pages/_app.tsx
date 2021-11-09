@@ -6,6 +6,7 @@ import { userState } from '../state/user'
 import { runInAction } from 'mobx'
 import { QueryClientProvider } from 'react-query'
 import { queryClient } from '../state/queryClient'
+import { MatomoTracking } from '../components/MatomoTracking'
 
 import dayjsDuration from 'dayjs/plugin/duration'
 import dayjsRelativeTime from 'dayjs/plugin/relativeTime'
@@ -35,12 +36,9 @@ function MyApp({ Component, pageProps }: AppProps) {
 		}
 	}, [])
 
-	useEffect(() => {
-		// document.getElementsByTagName('html')[0].classList.add('dark')
-	}, [])
-
 	return (
 		<QueryClientProvider client={queryClient}>
+			<MatomoTracking />
 			<div>
 				<Component {...pageProps} />
 			</div>

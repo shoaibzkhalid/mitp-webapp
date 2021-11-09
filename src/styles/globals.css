@@ -1,5 +1,5 @@
 body {
-	@apply text-gray-800 dark:bg-dark dark:text-white;
+	@apply text-gray-800 font-poppins dark:bg-gray-900 dark:text-white;
 }
 
 .-icon {
@@ -80,9 +80,9 @@ body {
 .-hstack > div {
 	@apply flex-1;
 }
-.-hstack > div:not(:first-of-type) {
+/* .-hstack > div:not(:first-of-type) {
 	border-left: 1px solid rgba(127, 127, 127, 0.5);
-}
+} */
 
 .-sidebar-wrapper-mobile {
 	@apply absolute bg-white z-10;
@@ -112,4 +112,17 @@ body {
 
 .heading-sizes a {
 	@apply underline text-primary;
+}
+
+.-sidebar-main::-webkit-scrollbar {
+	display: none;
+}
+
+.-sidebar-main {
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+}
+
+.no-scroll {
+	overflow: hidden;
 }
