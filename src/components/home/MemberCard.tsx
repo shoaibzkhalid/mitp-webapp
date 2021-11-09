@@ -14,7 +14,7 @@ export default function MemberCard(props: MemberCardProps) {
 	const { users } = props
 	return (
 		<>
-			<button className="p-4 w-full bg-gray-100 dark:bg-gray-900">
+			<button className="p-4 w-full rounded-2xl bg-gray-100 dark:bg-gray-900">
 				Review Rules & Ready Up
 			</button>
 			{users?.map(user => {
