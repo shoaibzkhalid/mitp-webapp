@@ -47,7 +47,7 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 	return (
 		<div
 			style={{ padding: '140px 0 72px 0' }}
-			className="w-56 h-screen fixed top-0 left-0 border-r border-gray-200 bg-white dark:bg-gray-900 md:w-80"
+			className="w-56 h-screen fixed top-0 left-0 border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 md:w-80"
 		>
 			<div style={{ height: 140 }} className="absolute top-0 left-0 right-0">
 				<div className="relative flex flex-col items-center justify-center px-8 py-6 border-b border-gray-200 md:border-0 md:py-12">
@@ -102,7 +102,7 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 					</p>
 				</div>
 			</div>
-			<div className="overflow-y-auto w-full h-full px-5 pb-5 border-b border-gray-200 -sidebar-main md:px-6">
+			<div className="overflow-y-auto w-full h-full px-5 pb-5 border-b border-gray-200 dark:border-gray-700 -sidebar-main md:px-6">
 				<div className="py-4">
 					<SidebarPotsSelector />
 				</div>
