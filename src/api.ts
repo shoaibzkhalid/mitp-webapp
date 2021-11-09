@@ -28,7 +28,7 @@ export const Api = {
 	async logsCreate(moneyPotId: string, file: File) {
 		const fd = new FormData()
 		fd.append('picture', file)
-		return r.post(`money-pot/${moneyPotId}/log`, fd, await getApiReqOptions())
+		return r.post(`money-pot/${moneyPotId}/log`, fd, await getApiReqOptions()).catch(error => console.log(error.response))
 	},
 
 	async logsList(moneyPotId: string, userId: string) {

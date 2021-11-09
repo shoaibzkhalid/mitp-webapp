@@ -1,3 +1,5 @@
 export interface ModalProps {
-	closeModal: () => void
+	closeModal: () => void,
+	potId: string,
+	openSuccessModal: () => void
 }
