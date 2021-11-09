@@ -14,8 +14,7 @@ export const ProfileMenu = observer(function ProfileMenu() {
 		<div
 			className={clsx(
 				classes.sidebar__profile,
-				theme === 'dark' ? classes.profile_dark : '',
-				'dark:bg-dark dark: rounded-xl'
+				theme === 'dark' ? classes.profile_dark : ''
 			)}
 		>
 			<div

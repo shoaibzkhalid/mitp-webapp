@@ -11,11 +11,11 @@ interface MemberCardProps {
 }
 
 export default function MemberCard(props: MemberCardProps) {
-	const { users } =  props
+	const { users } = props
 	return (
 		<>
 			<button className="p-4 w-full bg-gray-100 dark:bg-gray-900">
-				Review Rules & Redy Up
+				Review Rules & Ready Up
 			</button>
 			{users?.map(user => {
 				return (
