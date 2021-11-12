@@ -110,7 +110,6 @@ export default wrapDashboardLayout(function OverviewPage() {
 				<title>Home - Camelot</title>
 			</Head>
 			<div style={{ maxWidth: '1400px', margin: '0 auto' }}>
-				
 				<div className="w-full flex flex-col flex-col-reverse xl:flex-row">
 					<div className="px-10 pt-4 pb-1 xl:w-8/12 xl:px-12 md:px-8 md:pt-12">
 						<div className="text-3xl font-medium">The Group Pot Of</div>
@@ -151,7 +150,9 @@ export default wrapDashboardLayout(function OverviewPage() {
 							</div>
 							<CheckInButton
 								disabled={checkinCountUser >= data.pot.checkinCount}
-								setPhotoModalIsOpen={setPhotoModalIsOpen}
+								setPhotoModalIsOpen={(isOpen: boolean) =>
+									setPhotoModalIsOpen(isOpen)
+								}
 							></CheckInButton>
 							<ReactModal
 								isOpen={photoModalIsOpen}
@@ -164,18 +165,13 @@ export default wrapDashboardLayout(function OverviewPage() {
 									}
 								}}
 							>
-								{(() => {
-									const Comp = CheckInPhotoModalInner
-									return (
-										<Comp
-											closeModal={() => setPhotoModalIsOpen(false)}
-											potId={selectedPotState.moneyPotId}
-											openSuccessModal={() => {
-												setSucessModalIsOpen(true)
-											}}
-										></Comp>
-									)
-								})()}
+								<CheckInPhotoModalInner
+									closeModal={() => setPhotoModalIsOpen(false)}
+									potId={selectedPotState.moneyPotId}
+									openSuccessModal={() => {
+										setSucessModalIsOpen(true)
+									}}
+								></CheckInPhotoModalInner>
 							</ReactModal>
 							<ReactModal
 								isOpen={sucessModalIsOpen}
@@ -184,21 +180,16 @@ export default wrapDashboardLayout(function OverviewPage() {
 								style={{
 									content: {
 										height: '70%',
-										top: '10%',
+										top: '10%'
 									}
 								}}
 							>
-								{(() => {
-									const Comp = CheckInSuccessModalInner
-									return (
-										<Comp
-											closeModal={() => setSucessModalIsOpen(false)}
-											openSuccessModal={() => {
-												setSucessModalIsOpen(false)
-											}}
-										></Comp>
-									)
-								})()}
+								<CheckInSuccessModalInner
+									closeModal={() => setSucessModalIsOpen(false)}
+									openSuccessModal={() => {
+										setSucessModalIsOpen(false)
+									}}
+								></CheckInSuccessModalInner>
 							</ReactModal>
 						</div>
 
