@@ -94,7 +94,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 							{data.pot.title}
 						</div>
 					</div>
-					<div className="pl-8 pr-4 py-7 border-b border-gray-200 md:py-1 md:px-3 xl:px-12 xl:pt-12 xl:w-4/12 xl:border-l xl:border-b-0">
+					<div className="pl-8 pr-4 py-7 border-b border-gray-200 dark:border-gray-700 md:py-1 md:px-3 xl:px-12 xl:pt-12 xl:w-4/12 xl:border-l xl:border-b-0">
 						<div className="font-poppins flex justify-between items-center xl:justify-center lg:justify-end">
 							<button
 								className="block lg:hidden"
@@ -287,7 +287,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 						</div>
 					</div>
 
-					<div className="px-10 pb-4 flex flex-col w-full border-l border-gray-200 xl:w-4/12 xl:flex-col xl:px-12 md:px-8 md:flex-row">
+					<div className="px-10 pb-4 flex flex-col w-full border-l border-gray-200 dark:border-gray-700 xl:w-4/12 xl:flex-col xl:px-12 md:px-8 md:flex-row">
 						<div className="w-full p-0 xl:w-full xl:p-0 md:w-6/12 md:pr-3">
 							<div className="-card --shadow px-8 py-5 mt-24 md:px-10">
 								<MemberChart checkinUserChartValue={checkinUserChartValue} />
