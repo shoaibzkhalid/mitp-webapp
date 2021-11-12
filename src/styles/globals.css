@@ -19,6 +19,9 @@ body {
 .-button.-primary {
 	@apply bg-primary text-white;
 }
+.-button.-shark {
+	@apply bg-shark text-white px-7 py-3;
+}
 .-button.-secondary {
 	@apply text-gray-500 hover:text-primary;
 }

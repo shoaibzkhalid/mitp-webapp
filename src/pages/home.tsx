@@ -18,6 +18,10 @@ import { SidebarContext } from '../state/contexts/sidebarContext'
 import { formatTodayDate } from '../utils/formatTodayDate'
 import { toggleSideBar } from '../utils/common'
 import { copyToClipboard } from '../state/utils/copyToClipboard'
+import ReactModal from 'react-modal'
+import { useNextAppElement } from '../state/react/useNextAppElement'
+import { CheckInPhotoModalInner } from './../components/modals/CheckInPhotoModalInner'
+import { CheckInSuccessModalInner } from '../components/modals/CheckInSuccessModalInner'
 
 const PotChart = dynamic(() => import('../components/home/PotChart'), {
 	ssr: false
@@ -34,10 +38,15 @@ const MemberChart = dynamic(() => import('../components/home/MemberChart'), {
 
 export default wrapDashboardLayout(function OverviewPage() {
 	const [notificationMessage, setNotificationMessage] = useState<string>('')
-	const [checkinUserChartValue, setCheckinUserChartValue] = useState<number[]>([0, 0, 0])
+	const [checkinUserChartValue, setCheckinUserChartValue] = useState<number[]>([
+		0, 0, 0
+	])
 	const router = useRouter()
 	const { isLoading, data } = useSelectedPot()
 	const pot = useSelectedPot()
+	const [photoModalIsOpen, setPhotoModalIsOpen] = useState(false)
+	const [sucessModalIsOpen, setSucessModalIsOpen] = useState(false)
+	const appElement = useNextAppElement()
 
 	if (!isLoading && data === null) {
 		router.push('/pot/new')
@@ -49,10 +58,24 @@ export default wrapDashboardLayout(function OverviewPage() {
 
 	useEffect(() => {
 		const users = data.users.length
-		const completedUsers= data.users.filter(u => u.checkinsThisWeek === data.metrics.checkinsCount && u.checkinsThisWeek !== 0).length
-		const payinUsers = data.users.filter(u => u.checkinsThisWeek < data.metrics.checkinsCount && u.checkinsThisWeek !== 0).length
-		const unCompletedUsers = data.users.filter(u => u.checkinsThisWeek === 0).length
-		setCheckinUserChartValue([completedUsers/users*100, payinUsers/users*100, unCompletedUsers/users*100])
+		const completedUsers = data.users.filter(
+			u =>
+				u.checkinsThisWeek === data.metrics.checkinsCount &&
+				u.checkinsThisWeek !== 0
+		).length
+		const payinUsers = data.users.filter(
+			u =>
+				u.checkinsThisWeek < data.metrics.checkinsCount &&
+				u.checkinsThisWeek !== 0
+		).length
+		const unCompletedUsers = data.users.filter(
+			u => u.checkinsThisWeek === 0
+		).length
+		setCheckinUserChartValue([
+			(completedUsers / users) * 100,
+			(payinUsers / users) * 100,
+			(unCompletedUsers / users) * 100
+		])
 	}, [data, setCheckinUserChartValue])
 
 	const checkinCountUser = useMemo(
@@ -127,9 +150,56 @@ export default wrapDashboardLayout(function OverviewPage() {
 								{checkinCountUser} / {data.pot.checkinCount} check-ins this week
 							</div>
 							<CheckInButton
-								potId={selectedPotState.moneyPotId}
 								disabled={checkinCountUser >= data.pot.checkinCount}
+								setPhotoModalIsOpen={setPhotoModalIsOpen}
 							></CheckInButton>
+							<ReactModal
+								isOpen={photoModalIsOpen}
+								onRequestClose={() => setPhotoModalIsOpen(false)}
+								appElement={appElement}
+								style={{
+									content: {
+										height: '50%',
+										top: '20%'
+									}
+								}}
+							>
+								{(() => {
+									const Comp = CheckInPhotoModalInner
+									return (
+										<Comp
+											closeModal={() => setPhotoModalIsOpen(false)}
+											potId={selectedPotState.moneyPotId}
+											openSuccessModal={() => {
+												setSucessModalIsOpen(true)
+											}}
+										></Comp>
+									)
+								})()}
+							</ReactModal>
+							<ReactModal
+								isOpen={sucessModalIsOpen}
+								onRequestClose={() => setSucessModalIsOpen(false)}
+								appElement={appElement}
+								style={{
+									content: {
+										height: '70%',
+										top: '10%',
+									}
+								}}
+							>
+								{(() => {
+									const Comp = CheckInSuccessModalInner
+									return (
+										<Comp
+											closeModal={() => setSucessModalIsOpen(false)}
+											openSuccessModal={() => {
+												setSucessModalIsOpen(false)
+											}}
+										></Comp>
+									)
+								})()}
+							</ReactModal>
 						</div>
 
 						<div className="-card --shadow px-8 pb-8 pt-5">
@@ -332,10 +402,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 						</div>
 						<div className="w-full p-0 xl:w-full xl:p-0 md:w-6/12 md:pl-3">
 							<div className="-card --shadow px-8 py-5 mt-5 md:px-10">
-								{pot.data?.users && (
-									<MemberCard users={pot.data?.users}/>
-								)}
-								
+								{pot.data?.users && <MemberCard users={pot.data?.users} />}
 							</div>
 						</div>
 					</div>
