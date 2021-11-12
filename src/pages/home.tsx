@@ -87,6 +87,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 				<title>Home - Camelot</title>
 			</Head>
 			<div style={{ maxWidth: '1400px', margin: '0 auto' }}>
+				
 				<div className="w-full flex flex-col flex-col-reverse xl:flex-row">
 					<div className="px-10 pt-4 pb-1 xl:w-8/12 xl:px-12 md:px-8 md:pt-12">
 						<div className="text-3xl font-medium">The Group Pot Of</div>
@@ -119,7 +120,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 					</div>
 				</div>
 
-				<div className="w-full flex flex-col overflow-hidden xl:flex-row">
+				<div className="w-full flex flex-col xl:flex-row">
 					<div className="px-10 xl:w-8/12 xl:px-12 md:px-8">
 						<div className="pb-24 pt-24 flex flex-col items-center md:px-10">
 							<div className="text-center text-xl text-gray-600">
