@@ -52,6 +52,7 @@ export default wrapDashboardLayout(function RealIndexPage() {
 							closeModal={() => setViewingLogsOfUserId(null)}
 							userId={viewingLogsOfUserId}
 							potId={data.pot.id}
+							openSuccessModal={()=>console.log()}
 						></UserViewLogsModalInner>
 					)}
 				</ReactModal>
@@ -69,7 +70,7 @@ export default wrapDashboardLayout(function RealIndexPage() {
 						{formatDateRange(weekStartDay, weekEndDay)}, Week {currWeek} of 4
 					</div>
 					<CheckInButton
-						potId={selectedPotState.moneyPotId}
+						// potId={selectedPotState.moneyPotId}
 						className="-button -dark w-full max-w-xs"
 					></CheckInButton>
 				</div>

@@ -1,7 +1,7 @@
 interface CheckInButtonProps {
 	disabled?: boolean
 	className?: any
-	setPhotoModalIsOpen: any
+	setPhotoModalIsOpen?: any
 }
 
 export function CheckInButton(props: CheckInButtonProps) {
