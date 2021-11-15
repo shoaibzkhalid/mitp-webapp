@@ -12,6 +12,8 @@ import { userState } from '../state/user'
 import { selectedPotState, useSelectedPot } from '../state/react/useSelectedPot'
 import { formatDateRange } from '../utils/formatDateRange'
 import { formatDuration } from '../utils/formatDuration'
+import { CheckInPhotoModalInner } from '../components/modals/CheckInPhotoModalInner'
+import { CheckInSuccessModalInner } from '../components/modals/CheckInSuccessModalInner'
 
 export default wrapDashboardLayout(function RealIndexPage() {
 	const router = useRouter()
@@ -34,6 +36,8 @@ export default wrapDashboardLayout(function RealIndexPage() {
 	const [viewingLogsOfUserId, setViewingLogsOfUserId] = useState(
 		null as string | null
 	)
+	const [photoModalIsOpen, setPhotoModalIsOpen] = useState(false)
+	const [sucessModalIsOpen, setSucessModalIsOpen] = useState(false)
 
 	return (
 		<>
@@ -41,7 +45,7 @@ export default wrapDashboardLayout(function RealIndexPage() {
 				<title>Overview - Camelot</title>
 			</Head>
 
-			<div style={{ maxWidth: '1400px', margin: '0 auto' }}>
+			<div className="px-10 xl:px-12 md:px-8" style={{ maxWidth: '1400px', margin: '0 auto' }}>
 				<ReactModal
 					isOpen={viewingLogsOfUserId !== null}
 					onRequestClose={() => setViewingLogsOfUserId(null)}
@@ -52,7 +56,7 @@ export default wrapDashboardLayout(function RealIndexPage() {
 							closeModal={() => setViewingLogsOfUserId(null)}
 							userId={viewingLogsOfUserId}
 							potId={data.pot.id}
-							openSuccessModal={()=>console.log()}
+							openSuccessModal={() => console.log()}
 						></UserViewLogsModalInner>
 					)}
 				</ReactModal>
@@ -70,9 +74,48 @@ export default wrapDashboardLayout(function RealIndexPage() {
 						{formatDateRange(weekStartDay, weekEndDay)}, Week {currWeek} of 4
 					</div>
 					<CheckInButton
-						// potId={selectedPotState.moneyPotId}
 						className="-button -dark w-full max-w-xs"
+						setPhotoModalIsOpen={(isOpen: boolean) =>
+							setPhotoModalIsOpen(isOpen)
+						}
 					></CheckInButton>
+					<ReactModal
+						isOpen={photoModalIsOpen}
+						onRequestClose={() => setPhotoModalIsOpen(false)}
+						appElement={appElement}
+						style={{
+							content: {
+								height: '50%',
+								top: '20%'
+							}
+						}}
+					>
+						<CheckInPhotoModalInner
+							closeModal={() => setPhotoModalIsOpen(false)}
+							potId={selectedPotState.moneyPotId}
+							openSuccessModal={() => {
+								setSucessModalIsOpen(true)
+							}}
+						></CheckInPhotoModalInner>
+					</ReactModal>
+					<ReactModal
+						isOpen={sucessModalIsOpen}
+						onRequestClose={() => setSucessModalIsOpen(false)}
+						appElement={appElement}
+						style={{
+							content: {
+								height: '70%',
+								top: '10%'
+							}
+						}}
+					>
+						<CheckInSuccessModalInner
+							closeModal={() => setSucessModalIsOpen(false)}
+							openSuccessModal={() => {
+								setSucessModalIsOpen(false)
+							}}
+						></CheckInSuccessModalInner>
+					</ReactModal>
 				</div>
 
 				<div className="-card --shadow mt-6 p-4">

@@ -1,7 +1,7 @@
 interface CheckInButtonProps {
 	disabled?: boolean
 	className?: any
-	setPhotoModalIsOpen?: any
+	setPhotoModalIsOpen?:  (isOpen:boolean) => void
 }
 
 export function CheckInButton(props: CheckInButtonProps) {
@@ -16,7 +16,7 @@ export function CheckInButton(props: CheckInButtonProps) {
 						'linear-gradient(166.98deg, #8679E2 -3.04%, #6C5DD3 90.61%)'
 				}}
 				onClick={() => {
-					props.setPhotoModalIsOpen(true)
+					props?.setPhotoModalIsOpen && props?.setPhotoModalIsOpen(true)
 				}}
 			>
 				<img className="mr-3" src="./img/camera.png"></img>

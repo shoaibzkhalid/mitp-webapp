@@ -28,7 +28,7 @@ export default wrapDashboardLayout(function PayoutsPage() {
 				<title>Payouts - Camelot</title>
 			</Head>
 
-			<div style={{ maxWidth: '1400px', margin: '0 auto' }}>
+			<div className="px-10 xl:px-12 md:px-8" style={{ maxWidth: '1400px', margin: '0 auto' }}>
 				<div className="py-12 font-poppins">
 					<div className="text-2xl mb-3">Hi {userState.user!.firstName},</div>
 					<div className="text-5xl font-semibold">Payouts 💰</div>
