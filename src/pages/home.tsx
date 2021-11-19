@@ -20,6 +20,7 @@ import { useNextAppElement } from '../state/react/useNextAppElement'
 import { CheckInPhotoModalInner } from './../components/modals/CheckInPhotoModalInner'
 import { CheckInSuccessModalInner } from '../components/modals/CheckInSuccessModalInner'
 import { Intro } from '../components/Intro'
+import { Header } from '../components/unique/Header'
 
 const PotChart = dynamic(() => import('../components/home/PotChart'), {
 	ssr: false
@@ -152,7 +153,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 				enabled={userState.loaded && pot.data}
 				steps={getIntroSteps}
 			/>
-			<div style={{ maxWidth: '1400px', margin: '0 auto' }}>
+			<div style={{ maxWidth: '1400px', margin: '0 auto' }}>				
 				<div className="w-full flex flex-col flex-col-reverse xl:flex-row">
 					<div
 						id="walkthrough_potname"
@@ -163,17 +164,12 @@ export default wrapDashboardLayout(function OverviewPage() {
 							{data.pot.title}
 						</div>
 						<div className="text-gray-400 text-xl">{`Group Admin:  ${userState.user?.firstName}`}</div>
-					</div>
+					</div>										
+					
 					<div className="pl-8 pr-4 py-7 border-b border-gray-200 dark:border-gray-700 md:py-1 md:px-3 xl:px-12 xl:pt-12 xl:w-4/12 xl:border-b-0">
 						<div className="font-poppins flex justify-between items-center xl:justify-center lg:justify-end">
-							<button
-								className="block lg:hidden"
-								onClick={() => handleClickToggleSideBar()}
-							>
-								<div className="w-8 mx-auto border-2 border-gray-900 rounded-2xl dark:border-white"></div>
-								<div className="w-8 mt-3 mx-auto border-2 border-gray-900 rounded-2xl dark:border-white"></div>
-							</button>
-							<div className="text-center text-lg">
+						<Header />
+							<div className="text-center text-lg">							
 								<div className="text-gray-500 text-base hidden md:block">
 									{pot.data?.users.length} member
 									{pot.data?.users.length !== 1 && 's'}
