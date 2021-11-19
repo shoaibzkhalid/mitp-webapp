@@ -146,6 +146,7 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 											? `bg-primary text-white`
 											: 'text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-white'
 									)}
+									target={link[5] ? '_blank' : '_self'}
 								>
 									{link[3]}
 									<div className="ml-4">{link[2]}</div>
@@ -191,8 +192,6 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 				</div>
 			</div>
 
-			
-
 			<div className="flex justify-center items-center py-8">
 				<Switch />
 			</div>
@@ -235,12 +234,14 @@ const links: any[][] = [
 		UserSettingsModalInner
 	],
 	[
-		'https://forms.gle/RZak8BEdDUkG67xJA ',
+		'https://forms.gle/riuAuH1cr6YC5j567',
 		[],
 		'Send Feedback to Developers',
 		<svg className="-icon">
 			<use xlinkHref="/img/sprite.svg#icon-document"></use>
-		</svg>
+		</svg>,
+		'',
+		'blank'
 	]
 ]
 

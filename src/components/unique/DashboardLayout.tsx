@@ -21,7 +21,7 @@ const DashboardLayout = observer(function DashboardLayout(props: {
 	useEffect(() => {
 		const pr = when(() => userState.loaded)
 		pr.then(() => {
-			if (!userState.user) router.push('/pot/new')
+			if (!userState.user) router.push('/create')
 		})
 		return () => pr.cancel()
 	}, [])

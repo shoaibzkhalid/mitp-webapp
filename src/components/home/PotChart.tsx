@@ -14,7 +14,7 @@ export default observer(function PotChart() {
 
 	const options = useMemo(() => {
 		return {
-			labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+			labels: ['Week 1', 'Week 2', 'Week 3', 'This Week'],
 			colors: [purple, blue],
 			chart: {
 				height: '100%',
@@ -66,6 +66,11 @@ export default observer(function PotChart() {
 				x: {
 					show: false
 				},
+				y: {
+					formatter: function (value: number) {
+						return 'N/A' //arr defined as a global variable
+					}
+				},
 				shared: true,
 				intersect: false
 			},
@@ -95,19 +100,22 @@ export default observer(function PotChart() {
 	}, [])
 
 	return (
-		<ReactApexChart
-			options={options as any}
-			type="bar"
-			series={[
-				{
-					name: 'Check ins',
-					data: [60, 25, 44, 37]
-				},
-				{
-					name: 'Pay ins',
-					data: [40, 16, 38, 30]
-				}
-			]}
-		/>
+		<div className="text-center">
+			<ReactApexChart
+				options={options as any}
+				type="bar"
+				series={[
+					{
+						name: 'Check ins',
+						data: [30, 25, 44, 37]
+					},
+					{
+						name: 'Pay ins',
+						data: [10, 16, 38, 30]
+					}
+				]}
+			/>
+			<p>Group Activity last 30 days</p>
+		</div>
 	)
 })

@@ -12,16 +12,14 @@ import dynamic from 'next/dynamic'
 import { AppEnv } from '../env'
 import Notification from '../components/notification'
 import dayjs from 'dayjs'
-import MemberCard from '../components/home/MemberCard'
-import { useMediaQuery } from '../state/react/useMediaQuery'
 import { SidebarContext } from '../state/contexts/sidebarContext'
-import { formatTodayDate } from '../utils/formatTodayDate'
-import { toggleSideBar } from '../utils/common'
+import { toggleSideBar, getCheckInProgress } from '../utils/common'
 import { copyToClipboard } from '../state/utils/copyToClipboard'
 import ReactModal from 'react-modal'
 import { useNextAppElement } from '../state/react/useNextAppElement'
 import { CheckInPhotoModalInner } from './../components/modals/CheckInPhotoModalInner'
 import { CheckInSuccessModalInner } from '../components/modals/CheckInSuccessModalInner'
+import { Intro } from '../components/Intro'
 
 const PotChart = dynamic(() => import('../components/home/PotChart'), {
 	ssr: false
@@ -32,24 +30,23 @@ const CheckinUpdateChart = dynamic(
 	{ ssr: false }
 )
 
-const MemberChart = dynamic(() => import('../components/home/MemberChart'), {
-	ssr: false
-})
-
 export default wrapDashboardLayout(function OverviewPage() {
 	const [notificationMessage, setNotificationMessage] = useState<string>('')
+
 	const [checkinUserChartValue, setCheckinUserChartValue] = useState<number[]>([
 		0, 0, 0
 	])
+
 	const router = useRouter()
 	const { isLoading, data } = useSelectedPot()
 	const pot = useSelectedPot()
 	const [photoModalIsOpen, setPhotoModalIsOpen] = useState(false)
 	const [sucessModalIsOpen, setSucessModalIsOpen] = useState(false)
+
 	const appElement = useNextAppElement()
 
 	if (!isLoading && data === null) {
-		router.push('/pot/new')
+		router.push('/create')
 	}
 
 	if (!data) {
@@ -104,20 +101,70 @@ export default wrapDashboardLayout(function OverviewPage() {
 		setSidebarState({ isOpen: !sidebarState.isOpen })
 	}
 
+	function getIntroSteps() {
+		// One user === the pot was created. More users === the user joined a pot
+		if (pot.data!.users.length === 1)
+			return [
+				{
+					element: document.getElementById('walkthrough_potname'),
+					title: 'Welcome to your new group!',
+					intro:
+						'This is the activity of your group your members do to complete their check ins with the rest of the group. You can change your group activity or add details to it like time, location, or specific requirements (IE; Types of Exercises Allowed) later.'
+				},
+				{
+					element: document.getElementById('walkthrough_checkins'),
+					intro: `Users must tap the “check in” button on mobile or desktop and upload photo proof they’ve completed the group activity successfully before the week is over.`
+				},
+				{
+					element: document.getElementById('walkthrough_pot'),
+					title: 'This is your group’s pot.',
+					intro: `Members of your group who fail their check-in before the week is up pay in to the pot. Note: You set the minimum pay-in for your group, and can always set the value to zero, so group members are able to set their own.`
+				},
+				{
+					intro: `We recommend you take a minute to finish setup, but you can also invite friends or explore. This is your group, and you’re at the helm. Tap "tutorial" at anytime if you want to see this walkthrough again.`
+				}
+			]
+		else
+			return [
+				{
+					element: document.getElementById('walkthrough_checkins'),
+					title: 'Welcome to the group!',
+					intro:
+						'Users must tap the “check in” button on mobile or desktop and upload photo proof they’ve completed the group activity successfully before the week is over. The group activity can be seen at the top of the homepage.'
+				},
+				{
+					element: document.getElementById('walkthrough_pot'),
+					intro: `This is your group’s pot. Members of your group who fail their check-in before the week is up pay in to the pot. You get paid at the end of the month based on how big the pot is.`
+				},
+				{
+					intro: `Review & agree to this groups rules when you're ready to join it. Tap "tutorial" at anytime if you want to see this walkthrough again.`
+				}
+			]
+	}
+
 	return (
 		<>
 			<Head>
-				<title>Home - Camelot</title>
+				<title>{`Home - ${data?.pot.title}`}</title>
 			</Head>
+			<Intro
+				label="homepage"
+				enabled={userState.loaded && pot.data}
+				steps={getIntroSteps}
+			/>
 			<div style={{ maxWidth: '1400px', margin: '0 auto' }}>
 				<div className="w-full flex flex-col flex-col-reverse xl:flex-row">
-					<div className="px-10 pt-4 pb-1 xl:w-8/12 xl:px-12 md:px-8 md:pt-12">
+					<div
+						id="walkthrough_potname"
+						className="px-10 pt-4 pb-1 xl:w-8/12 xl:px-12 md:px-8 md:pt-12"
+					>
 						<div className="text-3xl font-medium">The Group Pot Of</div>
 						<div className="text-6xl font-semibold" style={{ lineHeight: 1.5 }}>
 							{data.pot.title}
 						</div>
+						<div className="text-gray-400 text-xl">{`Group Admin:  ${userState.user?.firstName}`}</div>
 					</div>
-					<div className="pl-8 pr-4 py-7 border-b border-gray-200 dark:border-gray-700 md:py-1 md:px-3 xl:px-12 xl:pt-12 xl:w-4/12 xl:border-l xl:border-b-0">
+					<div className="pl-8 pr-4 py-7 border-b border-gray-200 dark:border-gray-700 md:py-1 md:px-3 xl:px-12 xl:pt-12 xl:w-4/12 xl:border-b-0">
 						<div className="font-poppins flex justify-between items-center xl:justify-center lg:justify-end">
 							<button
 								className="block lg:hidden"
@@ -132,7 +179,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 									{pot.data?.users.length !== 1 && 's'}
 								</div>
 								<div
-									className="cursor-pointer text-sm py-3 px-6 rounded-2xl bg-gray-900 text-white md:mt-2 md:text-base md:text-blue-600 md:p-0 md:bg-white dark:bg-gray-900"
+									className="cursor-pointer text-sm py-3 px-6 rounded-2xl bg-gray-900 text-white md:mt-2 md:text-lg md:text-blue-600 md:p-0 md:bg-white dark:bg-gray-900"
 									onClick={() => copyInviteLink()}
 								>
 									&mdash; copy invite url &mdash;
@@ -143,10 +190,13 @@ export default wrapDashboardLayout(function OverviewPage() {
 				</div>
 
 				<div className="w-full flex flex-col xl:flex-row">
-					<div className="px-10 xl:w-8/12 xl:px-12 md:px-8">
+					<div className="px-10 w-full xl:px-12 md:px-8">
 						<div className="pb-24 pt-24 flex flex-col items-center md:px-10">
-							<div className="text-center text-xl text-gray-600">
-								{checkinCountUser} / {data.pot.checkinCount} check-ins this week
+							<div
+								id="walkthrough_checkins"
+								className="text-center text-xl text-gray-600"
+							>
+								{checkinCountUser}/{data.pot.checkinCount} check ins this week
 							</div>
 							<CheckInButton
 								disabled={checkinCountUser >= data.pot.checkinCount}
@@ -154,6 +204,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 									setPhotoModalIsOpen(isOpen)
 								}
 							></CheckInButton>
+							<div className="mt-3 text-gray-400 text-sm">{`Take photo proof of ${data.pot.title}, ${data.pot.description}.`}</div>
 							<ReactModal
 								isOpen={photoModalIsOpen}
 								onRequestClose={() => setPhotoModalIsOpen(false)}
@@ -193,9 +244,11 @@ export default wrapDashboardLayout(function OverviewPage() {
 							</ReactModal>
 						</div>
 
-						<div className="-card --shadow px-8 pb-8 pt-5">
+						<div id="walkthrough_pot" className="-card --shadow px-8 pb-8 pt-5">
 							<div className="flex items-center text-xl font-bold justify-between">
-								<div className="hidden md:block">Group Pot</div>
+								<div className="hidden md:block">{`Group pot of ${dayjs().format(
+									'MMMM'
+								)}`}</div>
 								<select
 									className="px-5 py-4 w-full rounded-2xl text-base text-gray-500 outline-none border-gray-200 dark:bg-gray-900 dark:border-gray-900 md:w-44"
 									style={{ borderWidth: '1px' }}
@@ -207,7 +260,8 @@ export default wrapDashboardLayout(function OverviewPage() {
 							<div className="md:grid grid-cols-3">
 								<div>
 									<div className="flex text-5xl font-bold text-center my-6 md:text-7xl">
-										<div>${data.metrics.currentValue}</div>
+										<div className="">${data.metrics.currentValue}</div>
+
 										<div className="flex ml-3 mt-3 items-center text-primary text-sm md:hidden">
 											<div className="h-10 pr-3">
 												<CheckinUpdateChart />
@@ -226,6 +280,22 @@ export default wrapDashboardLayout(function OverviewPage() {
 												</div>
 												<span className="text-green-600">6%</span>
 											</div>
+										</div>
+									</div>
+									<div>
+										<div className="font-bold text-xs">
+											You get paid for being part of this group.
+										</div>
+										<div className="text-xs">
+											<p className="mt-0">
+												When a member fails to complete their weekly check in by
+												Sunday at midnight, they pay in to the group pot
+											</p>
+											<p className="mt-4">
+												This is paid to you at the end of the month. You get
+												paid for improving yourself as long as you’re part of
+												this group!
+											</p>
 										</div>
 									</div>
 									<div className="flex items-center my-6 text-primary text-sm">
@@ -276,7 +346,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 									<div className="text-3xl font-bold mt-3">
 										{data.metrics.checkinsCount !== 0
 											? data.metrics.checkinsCount
-											: '--.--'}
+											: '3'}
 									</div>
 									<div
 										className="relative bg-gray-200 mt-3"
@@ -284,7 +354,9 @@ export default wrapDashboardLayout(function OverviewPage() {
 									>
 										<div
 											className="absolute top-0 left-0 bottom-0 bg-purple-500"
-											style={{ width: '55%' }}
+											style={{
+												width: getCheckInProgress(3, 'checkin')
+											}}
 										></div>
 									</div>
 								</div>
@@ -299,14 +371,20 @@ export default wrapDashboardLayout(function OverviewPage() {
 										</div>
 										<span>Weekly 🔥</span>
 									</div>
-									<div className="text-3xl font-bold mt-3">{'--.--'}</div>
+									<div className="text-3xl font-bold mt-3">
+										{data.metrics.checkinsCount !== 0
+											? data.metrics.currentValue
+											: '10'}
+									</div>
 									<div
 										className="relative bg-gray-200 mt-3"
 										style={{ borderRadius: '1px', height: '2px' }}
 									>
 										<div
 											className="absolute top-0 left-0 bottom-0 bg-pink-400"
-											style={{ width: '55%' }}
+											style={{
+												width: getCheckInProgress(10, 'streak')
+											}}
 										></div>
 									</div>
 								</div>
@@ -324,7 +402,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 									<div className="text-3xl font-bold mt-3">
 										{data.metrics.payinsCount !== 0
 											? data.metrics.payinsCount
-											: '--.--'}
+											: '50'}
 									</div>
 									<div
 										className="relative bg-gray-200 mt-3"
@@ -332,7 +410,9 @@ export default wrapDashboardLayout(function OverviewPage() {
 									>
 										<div
 											className="absolute top-0 left-0 bottom-0 bg-blue-500"
-											style={{ width: '55%' }}
+											style={{
+												width: getCheckInProgress(50, 'payin')
+											}}
 										></div>
 									</div>
 								</div>
@@ -346,55 +426,6 @@ export default wrapDashboardLayout(function OverviewPage() {
 								<span className="font-bold">{`${createdDuration.days()} days`}</span>
 							</p>
 							<p className="mt-4">{`They have logged ${data.pot.checkinCount} check-ins`}</p>
-						</div>
-					</div>
-
-					<div className="px-10 pb-4 flex flex-col w-full border-l border-gray-200 dark:border-gray-700 xl:w-4/12 xl:flex-col xl:px-12 md:px-8 md:flex-row">
-						<div className="w-full p-0 xl:w-full xl:p-0 md:w-6/12 md:pr-3">
-							<div className="-card --shadow px-8 py-5 mt-24 md:px-10">
-								<MemberChart checkinUserChartValue={checkinUserChartValue} />
-								<div className="text-center mt-6">
-									<div className="mb-3 text-gray-500">Today is </div>
-									<div className="text-lg font-bold mb-8">
-										{formatTodayDate()}
-									</div>
-									<div className="text-xs text-gray-500">
-										Those who have not checked in by <br />
-										the end of the week pay in to the port
-									</div>
-								</div>
-								<div className="flex mt-12 justify-around">
-									<div className="flex items-center">
-										<div
-											className="bg-purple-600 rounded-lg mr-2 text-xs"
-											style={{ width: '20px', height: '20px' }}
-										></div>
-										<span>{data.metrics.checkinsCount} check ins</span>
-									</div>
-									<div className="flex items-center">
-										<div
-											className="rounded-lg mr-2"
-											style={{
-												width: '20px',
-												height: '20px',
-												background: '#FFC0CB'
-											}}
-										></div>
-										<span>{data.metrics.payinsCount} pay ins</span>
-									</div>
-								</div>
-								<button
-									className="p-4 mt-6 w-full rounded-2xl bg-gray-100 dark:bg-gray-900"
-									onClick={() => router.push('/overview')}
-								>
-									View Activity
-								</button>
-							</div>
-						</div>
-						<div className="w-full p-0 xl:w-full xl:p-0 md:w-6/12 md:pl-3">
-							<div className="-card --shadow px-8 py-5 mt-5 md:px-10">
-								{pot.data?.users && <MemberCard users={pot.data?.users} />}
-							</div>
 						</div>
 					</div>
 				</div>

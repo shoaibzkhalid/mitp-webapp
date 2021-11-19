@@ -9,7 +9,9 @@ export default function LoginCallback() {
 	const router = useRouter()
 
 	const getTokenMutation = useMutation('get-token', (code: string) =>
-		Api.tokensGetFromPayPal(code)
+		userState
+			.load()
+			.then(() => Api.tokensGetFromPayPal(code))
 			.then(d => {
 				runInAction(() => {
 					userState.tokens.accessToken = d.accessToken

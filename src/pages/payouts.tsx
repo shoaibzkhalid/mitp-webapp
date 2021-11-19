@@ -14,7 +14,7 @@ export default wrapDashboardLayout(function PayoutsPage() {
 	const { isLoading, data } = useSelectedPot()
 
 	if (!isLoading && data === null) {
-		router.push('/pot/new')
+		router.push('/create')
 	}
 
 	const { data: transactionsData } = useQuery(
@@ -116,6 +116,8 @@ function PaymentMethod() {
 	)
 
 	const paypalConnection = data?.find(c => c.service === 'paypal')
+	const router = useRouter()
+	const pot = useSelectedPot()
 
 	return (
 		<>
@@ -131,7 +133,21 @@ function PaymentMethod() {
 					<Spinner></Spinner>
 				</div>
 			) : !paypalConnection ? (
-				<button className="-button -primary">Link PayPal</button>
+				<button
+					className="-button -primary"
+					onClick={() => {
+						localStorage.setItem(
+							'post-login-action',
+							JSON.stringify({
+								type: 'goto-pot',
+								potId: pot.data!.pot.id
+							})
+						)
+						router.push('/paypal/login-initiate')
+					}}
+				>
+					Link PayPal
+				</button>
 			) : (
 				<div>
 					<div>

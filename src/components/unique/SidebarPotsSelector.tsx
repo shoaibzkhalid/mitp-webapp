@@ -32,7 +32,7 @@ export const SidebarPotsSelector = observer(function SidebarPotsSelector() {
 				runInAction(() => {
 					const v = e.target.value
 					if (v === 'new') {
-						router.push('/pot/new')
+						router.push('/create')
 					} else {
 						selectedPotState.moneyPotId = v
 					}

@@ -20,7 +20,7 @@ export default wrapDashboardLayout(function RealIndexPage() {
 	const { isLoading, data } = useSelectedPot()
 
 	if (!isLoading && data === null) {
-		router.push('/pot/new')
+		router.push('/create')
 		return null
 	}
 
