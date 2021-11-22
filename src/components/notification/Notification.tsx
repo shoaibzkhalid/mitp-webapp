@@ -8,6 +8,8 @@ interface NotificationProps {
 export default function Notification(props: NotificationProps) {
 	const { message } = props
 	return (
-		<div className={clsx(classes.notification, classes.visible)}>{message}</div>
+		<div className={clsx(classes.notification, classes.visible)}>
+			{message}!
+		</div>
 	)
 }
