@@ -27,15 +27,10 @@ export function ProfileSettingModalInner({ closeModal }: ModalProps) {
 							className="inline-block w-full max-w-sm"
 							src="/img/ava.png"
 						/>
-						<svg
-							className="inline-block absolute right-0 bottom-0 cursor-pointer"
-							style={{
-								maxHeight: 35,
-								maxWidth: 35,
-							}}
-						>
-							<use xlinkHref="/img/sprite.svg#icon-edit"></use>
-						</svg>
+						<img className="inline-block absolute right-2 -bottom-2 cursor-pointer" src="/img/edit-icon.svg" style={{
+							maxHeight: 70,
+							maxWidth: 70,							
+						}} />
 					</div>
 				</div>
 
