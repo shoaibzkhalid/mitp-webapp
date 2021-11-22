@@ -5,10 +5,13 @@ import clsx from 'clsx'
 import { themeState } from '../../state/react/useTheme'
 import { runInAction } from 'mobx'
 import { userState } from '../../state/user'
+import ReactModal from 'react-modal'
+import { ProfileSettingModalInner } from '../modals/ProfileSettingModalInner'
 
 export const ProfileMenu = observer(function ProfileMenu() {
 	const { theme } = themeState
 	const [profileMenuActive, setProfileMenuActive] = useState<boolean>(false)
+	const [openProfileModal, setOpenProfileModal] = useState<boolean>(false)
 
 	return (
 		<div
@@ -17,18 +20,24 @@ export const ProfileMenu = observer(function ProfileMenu() {
 				theme === 'dark' ? classes.profile_dark : ''
 			)}
 		>
+			<ReactModal
+				isOpen={openProfileModal}
+				onRequestClose={() => setOpenProfileModal(false)}
+				style={{
+					content: {
+						minWidth: 320,
+						maxWidth: 600
+					}
+				}}
+			>
+				<ProfileSettingModalInner
+					closeModal={() => setOpenProfileModal(false)}
+				/>
+			</ReactModal>
 			<div
 				className={classes.sidebar__details}
 				style={{ display: profileMenuActive ? 'block' : 'none' }}
 			>
-				{/* <a className={classes.sidebar__link} href="#">
-					<div className={classes.sidebar__icon}>
-						<svg className={classes.icon_profile}>
-							<use xlinkHref="/img/sprite.svg#icon-profile"></use>
-						</svg>
-					</div>
-					<div className={classes.sidebar__text}>Profile</div>
-				</a> */}
 				<a
 					className={classes.sidebar__link}
 					href="#"
@@ -49,6 +58,23 @@ export const ProfileMenu = observer(function ProfileMenu() {
 						</svg>
 					</div>
 					<div className={classes.sidebar__text}>Log out</div>
+				</a>
+
+				<a
+					className={classes.sidebar__link}
+					href="#"
+					onClick={e => {
+						e.preventDefault()
+						e.stopPropagation()
+						setOpenProfileModal(true)
+					}}
+				>
+					<div className={classes.sidebar__icon}>
+						<svg className={classes.icon_logout}>
+							<use xlinkHref="/img/sprite.svg#icon-profile"></use>
+						</svg>
+					</div>
+					<div className={classes.sidebar__text}>Profile Setting</div>
 				</a>
 			</div>
 			<div

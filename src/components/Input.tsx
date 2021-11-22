@@ -13,6 +13,8 @@ interface InputProps {
 	className?: string
 	labelClassName?: string
 	inputClassName?: string
+
+	inputStyle?: any
 }
 export function Input(props: InputProps) {
 	const id = useMemo(() => cuid(), [])
@@ -26,15 +28,16 @@ export function Input(props: InputProps) {
 			)}
 			<div className="shadow-md rounded-md">
 				<input
+					style={props.inputStyle}
 					type={props.type || 'text'}
 					id={id}
 					disabled={props.disabled}
 					placeholder={props.placeholder}
 					value={props.value}
 					onInput={e => props.setValue?.(e.currentTarget.value)}
-					className={clsx(
+					className={clsx(						
+						props.inputClassName,
 						'w-full rounded-md p-3 bg-white dark:bg-transparent',
-						props.inputClassName
 					)}
 				/>
 			</div>
