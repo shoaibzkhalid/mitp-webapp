@@ -83,7 +83,7 @@ export default observer(function PotChart() {
 				},
 				tooltip: {
 					enabled: false
-				}
+				},
 			},
 			yaxis: {
 				axisBorder: {
@@ -95,7 +95,28 @@ export default observer(function PotChart() {
 				tooltip: {
 					enabled: false
 				}
-			}
+			},
+			responsive: [
+				{
+					breakpoint: 420,
+					options: {
+						xaxis: {
+							labels: {
+								rotate: 0,
+								style: {
+									fontSize: '10px'
+								}
+							}
+						},
+						plotOptions: {
+							bar: {
+								barHeight: '100%',
+								columnWidth: '50%'
+							}
+						},
+					}
+				}
+			]
 		}
 	}, [])
 

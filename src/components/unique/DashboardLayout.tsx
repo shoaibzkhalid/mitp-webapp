@@ -28,7 +28,7 @@ const DashboardLayout = observer(function DashboardLayout(props: {
 
 	const isMobile = useMediaQuery('(max-width: 1024px)')
 	const [sidebarState] = useContext(SidebarContext)
-
+	// className={clsx('h-screen',isMobile ? undefined:'flex flex-row')}
 	return (
 		<>
 			<Head>

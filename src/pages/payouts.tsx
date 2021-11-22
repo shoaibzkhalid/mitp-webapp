@@ -8,6 +8,7 @@ import { Square } from '../components/Square'
 import { wrapDashboardLayout } from '../components/unique/DashboardLayout'
 import { userState } from '../state/user'
 import { useSelectedPot } from '../state/react/useSelectedPot'
+import { Header } from '../components/unique/Header'
 
 export default wrapDashboardLayout(function PayoutsPage() {
 	const router = useRouter()
@@ -28,13 +29,24 @@ export default wrapDashboardLayout(function PayoutsPage() {
 				<title>Payouts - Camelot</title>
 			</Head>
 
-			<div className="px-10 xl:px-12 md:px-8" style={{ maxWidth: '1400px', margin: '0 auto' }}>
-				<div className="py-12 font-poppins">
+			<div style={{ maxWidth: '1400px', margin: '0 auto' }}>
+				<div className="w-full flex flex-col flex-col-reverse xl:flex-row">
+					<div
+						className="border-b border-gray-200 dark:border-gray-700 md:py-1 md:px-3 xl:px-12 xl:pt-12 xl:w-4/12 xl:border-b-0"
+						style={{
+							padding: '25px 20px'
+						}}
+					>
+						<Header />
+					</div>
+				</div>
+
+				<div className="py-12 font-poppins px-10 xl:px-12 md:px-8">
 					<div className="text-2xl mb-3">Hi {userState.user!.firstName},</div>
 					<div className="text-5xl font-semibold">Payouts 💰</div>
 				</div>
 
-				<div className="grid lg:grid-cols-3">
+				<div className="grid lg:grid-cols-3 px-10 xl:px-12 md:px-8">
 					<div className="col-span-2">
 						<div className="-card --shadow p-8 h-full">
 							<PaymentMethod></PaymentMethod>
@@ -62,7 +74,7 @@ export default wrapDashboardLayout(function PayoutsPage() {
 
 				<hr className="my-10" />
 
-				<div className="-card --shadow">
+				<div className="-card --shadow px-10 xl:px-12 md:px-8">
 					<div className="-table-responsive">
 						<table className="-table">
 							<thead>
