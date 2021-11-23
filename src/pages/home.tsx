@@ -22,6 +22,9 @@ import { CheckInSuccessModalInner } from '../components/modals/CheckInSuccessMod
 import { Intro } from '../components/Intro'
 import { Header } from '../components/unique/Header'
 
+import classes from './../components/notification/Styles.module.css'
+import clsx from 'clsx'
+
 const PotChart = dynamic(() => import('../components/home/PotChart'), {
 	ssr: false
 })
@@ -146,14 +149,14 @@ export default wrapDashboardLayout(function OverviewPage() {
 	return (
 		<>
 			<Head>
-				<title>{`Home - ${data?.pot.title}`}</title>
+				<title>{`Your Group - ${data?.pot.title}`}</title>
 			</Head>
 			<Intro
 				label="homepage"
 				enabled={userState.loaded && pot.data}
 				steps={getIntroSteps}
 			/>
-			<div style={{ maxWidth: '1400px', margin: '0 auto' }}>				
+			<div style={{ maxWidth: '1400px', margin: '0 auto' }}>
 				<div className="w-full flex flex-col flex-col-reverse xl:flex-row">
 					<div
 						id="walkthrough_potname"
@@ -164,12 +167,12 @@ export default wrapDashboardLayout(function OverviewPage() {
 							{data.pot.title}
 						</div>
 						<div className="text-gray-400 text-xl">{`Group Admin:  ${userState.user?.firstName}`}</div>
-					</div>										
-					
+					</div>
+
 					<div className="pl-8 pr-4 py-7 border-b border-gray-200 dark:border-gray-700 md:py-1 md:px-3 xl:px-12 xl:pt-12 xl:w-4/12 xl:border-b-0">
 						<div className="font-poppins flex justify-between items-center xl:justify-center lg:justify-end">
-						<Header />
-							<div className="text-center text-lg">							
+							<Header />
+							<div className="text-center text-lg">
 								<div className="text-gray-500 text-base hidden md:block">
 									{pot.data?.users.length} member
 									{pot.data?.users.length !== 1 && 's'}
@@ -426,7 +429,6 @@ export default wrapDashboardLayout(function OverviewPage() {
 					</div>
 				</div>
 			</div>
-
 			{notificationMessage !== '' && (
 				<Notification message={notificationMessage} />
 			)}
