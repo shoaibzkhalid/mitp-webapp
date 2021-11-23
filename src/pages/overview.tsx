@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import ReactModal from 'react-modal'
 import { CheckInButton } from '../components/CheckInButton'
 import { UserViewLogsModalInner } from '../components/modals/UserViewLogsModalInner'
@@ -19,17 +19,27 @@ import { Header } from '../components/unique/Header'
 export default wrapDashboardLayout(function RealIndexPage() {
 	const router = useRouter()
 	const { isLoading, data } = useSelectedPot()
+	const [duration, setDuration] = useState<string>('')
 
 	if (!isLoading && data === null) {
 		router.push('/create')
 		return null
 	}
 
+	useEffect(() => {
+		setInterval(function () {
+			const timeUntilWeekEnd = formatDuration(
+				Math.floor(dayjs().endOf('week').diff() / 1000)
+			)
+			setDuration(timeUntilWeekEnd)
+		}, 1000)
+	}, [])
+
 	const month = dayjs().startOf('month')
 	const currWeek = dayjs().diff(month, 'week') + 1
-	const timeUntilWeekEnd = formatDuration(
-		Math.floor(dayjs().endOf('week').diff() / 1000)
-	)
+	// const timeUntilWeekEnd = formatDuration(
+	// 	Math.floor(dayjs().endOf('week').diff() / 1000)
+	// )
 	const weekStartDay = dayjs().startOf('week')
 	const weekEndDay = dayjs().endOf('week')
 
@@ -39,12 +49,13 @@ export default wrapDashboardLayout(function RealIndexPage() {
 	)
 	const [photoModalIsOpen, setPhotoModalIsOpen] = useState(false)
 	const [sucessModalIsOpen, setSucessModalIsOpen] = useState(false)
+	const pot = useSelectedPot()
 
 	// px-10 xl:px-12 md:px-8
 	return (
 		<>
 			<Head>
-				<title>Overview - Camelot</title>
+				<title>{`Your Group - ${data?.pot.title}`}</title>
 			</Head>
 
 			<div style={{ maxWidth: '1400px', margin: '0 auto' }}>
@@ -76,14 +87,16 @@ export default wrapDashboardLayout(function RealIndexPage() {
 
 				<div className="px-10 xl:px-12 md:px-8">
 					<div className="py-12 font-poppins">
-						<div className="text-2xl mb-3">Hi {userState.user!.firstName},</div>
-						<div className="text-5xl font-semibold">Welcome back 👋</div>
+						<div className="text-2xl mb-3">{data?.pot.title}</div>
+						<div className="text-5xl font-semibold">
+							{pot.data?.users.length} member
+							{pot.data?.users.length !== 1 && 's'}
+						</div>
 					</div>
 
 					<div className="bg-primary rounded-3xl p-16 text-white">
-						<div className="text-4xl font-bold">
-							Check ins due in {timeUntilWeekEnd}
-						</div>
+						<div className="text-4xl font-bold">Check ins due in...</div>
+						<div className="mt-1">{duration}</div>
 						<div className="my-5">
 							{formatDateRange(weekStartDay, weekEndDay)}, Week {currWeek} of 4
 						</div>
@@ -152,18 +165,25 @@ export default wrapDashboardLayout(function RealIndexPage() {
 										{data.users.map(u => {
 											return (
 												<tr>
-													<td style={{
-														paddingRight: 0
-													}}>
-														<img src="/img/avatar.png" style={{
-															minHeight: 60,
-															minWidth: 60
-														}} />
+													<td
+														style={{
+															paddingRight: 0
+														}}
+													>
+														<img
+															src="/img/avatar.png"
+															style={{
+																minHeight: 60,
+																minWidth: 60
+															}}
+														/>
 													</td>
-													<td style={{
-														paddingLeft: 0
-													}}>
-														<div className="flex flex-row items-center font-bold">															
+													<td
+														style={{
+															paddingLeft: 0
+														}}
+													>
+														<div className="flex flex-row items-center font-bold">
 															<span style={{ marginLeft: 20 }}>
 																{u.firstName} {u.lastName}
 															</span>

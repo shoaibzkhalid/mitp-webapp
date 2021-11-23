@@ -26,7 +26,7 @@ export default wrapDashboardLayout(function PayoutsPage() {
 	return (
 		<>
 			<Head>
-				<title>Payouts - Camelot</title>
+				<title>{`Your Group - ${data?.pot.title}`}</title>
 			</Head>
 
 			<div style={{ maxWidth: '1400px', margin: '0 auto' }}>

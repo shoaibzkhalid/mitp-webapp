@@ -149,7 +149,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 	return (
 		<>
 			<Head>
-				<title>{`Home - ${data?.pot.title}`}</title>
+				<title>{`Your Group - ${data?.pot.title}`}</title>
 			</Head>
 			<Intro
 				label="homepage"
