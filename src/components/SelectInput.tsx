@@ -9,6 +9,8 @@ interface SelectProps {
 	className?: string
 	labelClassName?: string
 	selectClassName?: string
+	placeholder?: string
+	height?: string
 
 	options: Array<{
 		label: string
@@ -30,12 +32,13 @@ export function SelectInput(props: SelectProps) {
 
 			<div className="shadow-md rounded-md">
 				<select
+					placeholder={props.placeholder}
 					id={props.id}
 					className={clsx(
 						'w-full rounded-md p-3 bg-white dark:bg-transparent',
 						props.selectClassName
 					)}
-					style={{ height: '48px' }}
+					style={{ height: props.height ? undefined:'48px' }}
 					onChange={e => props.setValue(e.target.value)}
 				>
 					{props.options.map(option => (

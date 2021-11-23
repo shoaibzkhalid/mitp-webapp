@@ -15,11 +15,14 @@ import { formatDuration } from '../utils/formatDuration'
 import { CheckInPhotoModalInner } from '../components/modals/CheckInPhotoModalInner'
 import { CheckInSuccessModalInner } from '../components/modals/CheckInSuccessModalInner'
 import { Header } from '../components/unique/Header'
+import CopyInviteLink from '../components/notification/CopyInviteLink'
+import Notification from '../components/notification'
 
 export default wrapDashboardLayout(function RealIndexPage() {
 	const router = useRouter()
 	const { isLoading, data } = useSelectedPot()
 	const [duration, setDuration] = useState<string>('')
+	const [notificationMessage, setNotificationMessage] = useState<string>('')
 
 	if (!isLoading && data === null) {
 		router.push('/create')
@@ -75,25 +78,29 @@ export default wrapDashboardLayout(function RealIndexPage() {
 				</ReactModal>
 
 				<div className="w-full flex flex-col flex-col-reverse xl:flex-row">
-					<div
-						className="border-b border-gray-200 dark:border-gray-700 md:py-1 md:px-3 xl:px-12 xl:pt-12 xl:w-4/12 xl:border-b-0"
-						style={{
-							padding: '25px 20px'
-						}}
-					>
-						<Header />
-					</div>
-				</div>
-
-				<div className="px-10 xl:px-12 md:px-8">
-					<div className="py-12 font-poppins">
+					<div className="font-poppins px-10 pt-4 pb-1 xl:w-8/12 xl:px-12 md:px-8 md:pt-12">
 						<div className="text-2xl mb-3">{data?.pot.title}</div>
 						<div className="text-5xl font-semibold">
 							{pot.data?.users.length} member
 							{pot.data?.users.length !== 1 && 's'}
 						</div>
 					</div>
+					<div className="xl:m-auto pl-8 pr-4 py-7 border-b border-gray-200 dark:border-gray-700 md:py-1 md:px-3 xl:px-12 xl:pt-12 xl:w-4/12 xl:border-b-0">
+						<div className="lg:p-3 font-poppins flex justify-between items-center xl:justify-center lg:justify-end">
+							<Header />
+							<div className="text-center text-lg">
+								<div
+									className="cursor-pointer text-xl py-3 px-6 rounded-2xl bg-gray-900 text-white md:mt-2 md:text-xl md:text-blue-600 md:p-0 md:bg-white dark:bg-gray-900"
+									onClick={() => CopyInviteLink(data, setNotificationMessage)}
+								>
+									&mdash; copy invite link &mdash;
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 
+				<div className="px-10 xl:px-12 md:px-8 mt-10">
 					<div className="bg-primary rounded-3xl p-16 text-white">
 						<div className="text-4xl font-bold">Check ins due in...</div>
 						<div className="mt-1">{duration}</div>
@@ -210,7 +217,11 @@ export default wrapDashboardLayout(function RealIndexPage() {
 														)}
 													</td>
 													<td className="text-blue-600">
-														${parseInt(u.amount).toFixed(2)}
+														{userState.ready ? (
+															`${parseInt(u.amount).toFixed(2)}`
+														)  : (
+															<>Need to ready up</>
+														)}
 													</td>
 													<td>
 														<button
@@ -230,6 +241,9 @@ export default wrapDashboardLayout(function RealIndexPage() {
 					</div>
 				</div>
 			</div>
+			{notificationMessage !== '' && (
+				<Notification message={notificationMessage} info="copied" />
+			)}
 		</>
 	)
 })

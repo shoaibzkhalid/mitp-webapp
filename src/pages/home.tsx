@@ -9,21 +9,17 @@ import { wrapDashboardLayout } from '../components/unique/DashboardLayout'
 import { userState } from '../state/user'
 import { selectedPotState, useSelectedPot } from '../state/react/useSelectedPot'
 import dynamic from 'next/dynamic'
-import { AppEnv } from '../env'
 import Notification from '../components/notification'
 import dayjs from 'dayjs'
 import { SidebarContext } from '../state/contexts/sidebarContext'
 import { toggleSideBar, getCheckInProgress } from '../utils/common'
-import { copyToClipboard } from '../state/utils/copyToClipboard'
 import ReactModal from 'react-modal'
 import { useNextAppElement } from '../state/react/useNextAppElement'
 import { CheckInPhotoModalInner } from './../components/modals/CheckInPhotoModalInner'
 import { CheckInSuccessModalInner } from '../components/modals/CheckInSuccessModalInner'
 import { Intro } from '../components/Intro'
 import { Header } from '../components/unique/Header'
-
-import classes from './../components/notification/Styles.module.css'
-import clsx from 'clsx'
+import CopyInviteLink from '../components/notification/CopyInviteLink'
 
 const PotChart = dynamic(() => import('../components/home/PotChart'), {
 	ssr: false
@@ -35,6 +31,7 @@ const CheckinUpdateChart = dynamic(
 )
 
 export default wrapDashboardLayout(function OverviewPage() {
+
 	const [notificationMessage, setNotificationMessage] = useState<string>('')
 
 	const [checkinUserChartValue, setCheckinUserChartValue] = useState<number[]>([
@@ -44,6 +41,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 	const router = useRouter()
 	const { isLoading, data } = useSelectedPot()
 	const pot = useSelectedPot()
+
 	const [photoModalIsOpen, setPhotoModalIsOpen] = useState(false)
 	const [sucessModalIsOpen, setSucessModalIsOpen] = useState(false)
 
@@ -84,14 +82,6 @@ export default wrapDashboardLayout(function OverviewPage() {
 			data.users.find(u => u.id === userState.user?.id)?.checkinsThisWeek || 0,
 		[data]
 	)
-
-	const copyInviteLink = () => {
-		copyToClipboard(`${AppEnv.webBaseUrl}/pot/${data.pot.slug}`)
-		setNotificationMessage(`${AppEnv.webBaseUrl}/pot/${data.pot.slug} copied`)
-		setTimeout(function () {
-			setNotificationMessage('')
-		}, 4000)
-	}
 
 	const date1 = dayjs(data.pot.createdAt).format('YYYY-MM-DD')
 	const date2 = dayjs()
@@ -179,9 +169,9 @@ export default wrapDashboardLayout(function OverviewPage() {
 								</div>
 								<div
 									className="cursor-pointer text-sm py-3 px-6 rounded-2xl bg-gray-900 text-white md:mt-2 md:text-lg md:text-blue-600 md:p-0 md:bg-white dark:bg-gray-900"
-									onClick={() => copyInviteLink()}
+									onClick={() => CopyInviteLink(data, setNotificationMessage)}
 								>
-									&mdash; copy invite url &mdash;
+									&mdash; copy invite link &mdash;
 								</div>
 							</div>
 						</div>
@@ -430,7 +420,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 				</div>
 			</div>
 			{notificationMessage !== '' && (
-				<Notification message={notificationMessage} />
+				<Notification message={notificationMessage} info="copied" />
 			)}
 		</>
 	)
