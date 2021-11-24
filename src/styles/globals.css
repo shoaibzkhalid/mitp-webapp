@@ -142,3 +142,17 @@ input:checked ~ .dot {
 input:checked ~ .checkbox-bg {
 	background-color: #7fba7a;
 }
+
+@media (max-width: 480px) {
+	.overview-containers {
+		padding-left: 15px;
+		padding-right: 15px;
+	}
+	.days-holder div {
+		margin-left: 0.25rem;
+		margin-right: 0.25rem;
+	}
+	.overview-page-checkin-btn {
+		padding: 10px 30px;
+	}
+}

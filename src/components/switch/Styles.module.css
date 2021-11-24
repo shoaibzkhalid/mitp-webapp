@@ -1,4 +1,6 @@
 .switch {
+	margin-bottom: 10px;
+	margin-top: 10px;
 	display: inline-block;
 	position: relative;
 	-webkit-user-select: none;

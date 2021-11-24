@@ -47,7 +47,7 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 
 	return (
 		<div
-			style={{ padding: '140px 0 72px 0' }}
+			style={{ padding: userState.ready? '140px 0 70px 0':'140px 0 100px 0' }}
 			className="w-56 h-screen fixed top-0 left-0 border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 md:w-80"
 		>
 			<div style={{ height: 140 }} className="absolute top-0 left-0 right-0">
@@ -193,12 +193,14 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 				</div>
 			</div>
 
-			<div className="flex flex-col justify-center items-center pt-2">
-				<Switch />
+			<div className="flex flex-col justify-center items-center">
+				<div className="pt-2">
+					<Switch />
+				</div>
 				{userState.ready ? (
 					<></>
 				) : (
-					<div className="text-xs pt-2 px-4 italic font-thin">Hint: Tap on your avatar to view settings & ready up.</div>
+					<div className="text-xs text-center px-4 pt-2 italic font-thin">Hint: Tap on your avatar to view settings & ready up.</div>
 				)}
 			</div>
 		</div>

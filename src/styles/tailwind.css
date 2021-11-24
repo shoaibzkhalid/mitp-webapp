@@ -4,3 +4,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+    .xl:max-w-1400 {
+        max-width: 1400px
+    }
+
+    @media (min-width: 1024px) {
+        .lg:max-w-750 {
+            max-width: 750px
+        }
+    }
+
+    @media (min-width: 1280px) {
+        .lg:max-w-750 {
+            max-width: 750px
+        }
+    }
+}
