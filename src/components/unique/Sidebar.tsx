@@ -17,6 +17,7 @@ import { useSelectedPot } from '../../state/react/useSelectedPot'
 import { toggleSideBar } from '../../utils/common'
 import { observer } from 'mobx-react-lite'
 import { themeState } from '../../state/react/useTheme'
+import { userState } from '../../state/user'
 
 interface SidebarProps {
 	isMobile: boolean
@@ -192,8 +193,13 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 				</div>
 			</div>
 
-			<div className="flex justify-center items-center py-8">
+			<div className="flex flex-col justify-center items-center pt-2">
 				<Switch />
+				{userState.ready ? (
+					<></>
+				) : (
+					<div className="text-xs pt-2 px-4 italic font-thin">Hint: Tap on your avatar to view settings & ready up.</div>
+				)}
 			</div>
 		</div>
 	)

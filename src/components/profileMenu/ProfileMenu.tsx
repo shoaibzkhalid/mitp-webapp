@@ -7,11 +7,14 @@ import { runInAction } from 'mobx'
 import { userState } from '../../state/user'
 import ReactModal from 'react-modal'
 import { ProfileSettingModalInner } from '../modals/ProfileSettingModalInner'
+import { useNextAppElement } from '../../state/react/useNextAppElement'
 
 export const ProfileMenu = observer(function ProfileMenu() {
 	const { theme } = themeState
 	const [profileMenuActive, setProfileMenuActive] = useState<boolean>(false)
 	const [openProfileModal, setOpenProfileModal] = useState<boolean>(false)
+
+	const appElement = useNextAppElement()
 
 	return (
 		<div
@@ -23,6 +26,7 @@ export const ProfileMenu = observer(function ProfileMenu() {
 			<ReactModal
 				isOpen={openProfileModal}
 				onRequestClose={() => setOpenProfileModal(false)}
+				appElement={appElement}
 				style={{
 					content: {
 						minWidth: 320,

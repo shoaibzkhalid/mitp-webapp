@@ -9,6 +9,7 @@ export const userState = observable({
 		refreshToken: null as null | string
 	},
 	loaded: false,
+	ready: false,
 
 	async load() {
 		if (!userState.tokens.accessToken) {
@@ -42,6 +43,9 @@ export const userState = observable({
 	save() {
 		console.log('Saved new account tokens')
 		localStorage.setItem('mitp_tokens', JSON.stringify(userState.tokens))
+	},
+	toggleReady() {
+		userState.ready = !userState.ready;
 	}
 })
 
