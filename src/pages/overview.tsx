@@ -216,11 +216,11 @@ export default wrapDashboardLayout(function RealIndexPage() {
 															</div>
 														)}
 													</td>
-													<td className="text-blue-600">
+													<td style={{ color: '#9b9898' }}>
 														{userState.ready ? (
 															`${parseInt(u.amount).toFixed(2)}`
-														)  : (
-															<>Need to ready up</>
+														) : (
+															<>Not ready yet</>
 														)}
 													</td>
 													<td>
