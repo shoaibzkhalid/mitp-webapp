@@ -66,7 +66,7 @@ export default wrapDashboardLayout(function RealIndexPage() {
 				<title>{`Your Group - ${data?.pot.title}`}</title>
 			</Head>
 
-			<div className={clsx('max-w-1400')} style={{margin: '0 auto' }}>
+			<div className={clsx('max-w-1400')} style={{ margin: '0 auto' }}>
 				<ReactModal
 					isOpen={viewingLogsOfUserId !== null}
 					onRequestClose={() => setViewingLogsOfUserId(null)}
@@ -95,7 +95,7 @@ export default wrapDashboardLayout(function RealIndexPage() {
 							<Header />
 							<div className="text-center text-lg">
 								<div
-									className="cursor-pointer text-xl py-3 px-6 rounded-2xl bg-gray-900 text-white md:mt-2 md:text-xl md:text-blue-600 md:p-0 md:bg-white dark:bg-gray-900"
+									className="cursor-pointer text-sm py-3 px-6 rounded-2xl bg-gray-900 text-white md:mt-2 md:text-xl md:text-blue-600 md:p-0 md:bg-white dark:bg-gray-900"
 									onClick={() => CopyInviteLink(data, setNotificationMessage)}
 								>
 									&mdash; copy invite link &mdash;
@@ -127,17 +127,80 @@ export default wrapDashboardLayout(function RealIndexPage() {
 								fee.
 							</div>
 						</div>
-						
+
 						<div className="flex flex-col items-center justify-between">
 							<div className="border-2 border-dashed border-gray-400 rounded-lg p-2 xl:p-4">
 								<div className="flex days-holder">
-									<div className={clsx('mx-4 lg:mx-1 xl:mx-4 p-1', day === 1 ? 'border-2 border-red-400 rounded-full':undefined)}>Mo</div>
-									<div className={clsx('mx-4 lg:mx-1 xl:mx-4  p-1', day === 2 ? 'border-2 border-red-400 rounded-full':undefined)}>Tu</div>
-									<div className={clsx('mx-4 lg:mx-1 xl:mx-4  p-1', day === 3 ? 'border-2 border-red-400 rounded-full':undefined)}>We</div>
-									<div className={clsx('mx-4 lg:mx-1 xl:mx-4  p-1', day === 4 ? 'border-2 border-red-400 rounded-full':undefined)}>Th</div>
-									<div className={clsx('mx-4 lg:mx-1 xl:mx-4  p-1', day === 5 ? 'border-2 border-red-400 rounded-full':undefined)}>Fr</div>
-									<div className={clsx('mx-4 lg:mx-1 xl:mx-4  p-1', day === 6 ? 'border-2 border-red-400 rounded-full':undefined)}>Sa</div>
-									<div className={clsx('mx-4 lg:mx-1 xl:mx-4  p-1', day === 0 ? 'border-2 border-red-400 rounded-full':undefined)}>Su</div>
+									<div
+										className={clsx(
+											'mx-4 lg:mx-1 xl:mx-4 p-1',
+											day === 1
+												? 'border-2 border-red-400 rounded-full'
+												: undefined
+										)}
+									>
+										Mo
+									</div>
+									<div
+										className={clsx(
+											'mx-4 lg:mx-1 xl:mx-4  p-1',
+											day === 2
+												? 'border-2 border-red-400 rounded-full'
+												: undefined
+										)}
+									>
+										Tu
+									</div>
+									<div
+										className={clsx(
+											'mx-4 lg:mx-1 xl:mx-4  p-1',
+											day === 3
+												? 'border-2 border-red-400 rounded-full'
+												: undefined
+										)}
+									>
+										We
+									</div>
+									<div
+										className={clsx(
+											'mx-4 lg:mx-1 xl:mx-4  p-1',
+											day === 4
+												? 'border-2 border-red-400 rounded-full'
+												: undefined
+										)}
+									>
+										Th
+									</div>
+									<div
+										className={clsx(
+											'mx-4 lg:mx-1 xl:mx-4  p-1',
+											day === 5
+												? 'border-2 border-red-400 rounded-full'
+												: undefined
+										)}
+									>
+										Fr
+									</div>
+									<div
+										className={clsx(
+											'mx-4 lg:mx-1 xl:mx-4  p-1',
+											day === 6
+												? 'border-2 border-red-400 rounded-full'
+												: undefined
+										)}
+									>
+										Sa
+									</div>
+									<div
+										className={clsx(
+											'mx-4 lg:mx-1 xl:mx-4  p-1',
+											day === 0
+												? 'border-2 border-red-400 rounded-full'
+												: undefined
+										)}
+									>
+										Su
+									</div>
 								</div>
 								<div className="mt-6 text-sm text-gray-400 text-center">
 									Check in by Sunday 0/1
