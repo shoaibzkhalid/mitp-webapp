@@ -20,6 +20,7 @@ import { CheckInSuccessModalInner } from '../components/modals/CheckInSuccessMod
 import { Intro } from '../components/Intro'
 import { Header } from '../components/unique/Header'
 import CopyInviteLink from '../components/notification/CopyInviteLink'
+import { formatDuration } from '../utils/formatDuration'
 
 const PotChart = dynamic(() => import('../components/home/PotChart'), {
 	ssr: false
@@ -31,7 +32,6 @@ const CheckinUpdateChart = dynamic(
 )
 
 export default wrapDashboardLayout(function OverviewPage() {
-
 	const [notificationMessage, setNotificationMessage] = useState<string>('')
 
 	const [checkinUserChartValue, setCheckinUserChartValue] = useState<number[]>([
@@ -41,7 +41,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 	const router = useRouter()
 	const { isLoading, data } = useSelectedPot()
 	const pot = useSelectedPot()
-
+	const [duration, setDuration] = useState<string>('')
 	const [photoModalIsOpen, setPhotoModalIsOpen] = useState(false)
 	const [sucessModalIsOpen, setSucessModalIsOpen] = useState(false)
 
@@ -54,6 +54,19 @@ export default wrapDashboardLayout(function OverviewPage() {
 	if (!data) {
 		return <SpinnerBig />
 	}
+
+	useEffect(() => {
+		let timer = setInterval(function () {
+			const timeUntilWeekEnd = formatDuration(
+				Math.floor(dayjs().endOf('week').diff() / 1000)
+			)
+			setDuration(timeUntilWeekEnd)
+		}, 1000)
+
+		return () => {
+			clearInterval(timer)
+		}
+	}, [])
 
 	useEffect(() => {
 		const users = data.users.length
@@ -88,11 +101,9 @@ export default wrapDashboardLayout(function OverviewPage() {
 	const diff = date2.diff(date1)
 	const createdDuration = dayjs.duration(diff)
 
-	const [sidebarState, setSidebarState] = useContext(SidebarContext)
-
-	const handleClickToggleSideBar = () => {
-		toggleSideBar(!sidebarState.isOpen)
-		setSidebarState({ isOpen: !sidebarState.isOpen })
+	const dummyData = {
+		usersRemaining: 12,
+		minAmount: 5
 	}
 
 	function getIntroSteps() {
@@ -235,9 +246,19 @@ export default wrapDashboardLayout(function OverviewPage() {
 
 						<div id="walkthrough_pot" className="-card --shadow px-8 pb-8 pt-5">
 							<div className="flex items-center text-xl font-bold justify-between">
-								<div className="hidden md:block">{`Group pot of ${dayjs().format(
-									'MMMM'
-								)}`}</div>
+								<div className="hidden md:flex items-center">
+									Group Pot
+									<hr
+										style={{
+											backgroundColor: '#242731',
+											height: 4,
+											width: 22,
+											display: 'inline-block',
+											margin: '0px 4px'
+										}}
+									/>
+									{`${dayjs().format('MMMM')}`}
+								</div>
 								<select
 									className="px-5 py-4 w-full rounded-2xl text-base text-gray-500 outline-none border-gray-200 dark:bg-gray-900 dark:border-gray-900 md:w-44"
 									style={{ borderWidth: '1px' }}
@@ -248,8 +269,19 @@ export default wrapDashboardLayout(function OverviewPage() {
 
 							<div className="md:grid grid-cols-3">
 								<div>
-									<div className="flex text-5xl font-bold text-center my-6 md:text-7xl">
-										<div className="">${data.metrics.currentValue}</div>
+									<div className="flex text-5xl font-bold text-center my-1 md:text-7xl">
+										<div>
+											<div>${data.metrics.currentValue}</div>
+											<div className="mt-1 text-sm text-gray-500 text-left">
+												<span className="text-green-500">
+													{dummyData.usersRemaining} people
+												</span>{' '}
+												pay in ${dummyData.minAmount} at end of the week.
+											</div>
+											<div className="mt-1 text-sm text-gray-300 font-thin text-left underline">
+												Week end in.. {duration}
+											</div>
+										</div>
 
 										<div className="flex ml-3 mt-3 items-center text-primary text-sm md:hidden">
 											<div className="h-10 pr-3">
@@ -272,7 +304,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 										</div>
 									</div>
 									<div>
-										<div className="font-bold text-xs">
+										<div className="mt-4 font-bold text-xs">
 											You get paid for being part of this group.
 										</div>
 										<div className="text-xs">
