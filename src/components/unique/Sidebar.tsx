@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import clsx from 'clsx'
-import { useRouter } from 'next/router'
+import Router , { useRouter } from 'next/router'
 import React, { useContext, useMemo, useState } from 'react'
 import ReactModal from 'react-modal'
 import { CheckInRulesModalInner } from '../modals/CheckInRulesModalInner'
@@ -47,7 +47,9 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 
 	return (
 		<div
-			style={{ padding: userState.ready? '140px 0 70px 0':'140px 0 100px 0' }}
+			style={{
+				padding: userState.ready ? '140px 0 70px 0' : '140px 0 100px 0'
+			}}
 			className="w-56 h-screen fixed top-0 left-0 border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 md:w-80"
 		>
 			<div style={{ height: 140 }} className="absolute top-0 left-0 right-0">
@@ -139,22 +141,48 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 								</ReactModal>
 							</>
 						) : (
-							<Link href={link[0]}>
-								<a
-									className={clsx(
-										`px-5 py-4 flex flex-row items-center rounded-xl text-sm font-bold transition-colors`,
-										activeLink === link
-											? `bg-primary text-white`
-											: 'text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-white'
-									)}
-									target={link[5] ? '_blank' : '_self'}
-								>
-									{link[3]}
-									<div className="ml-4">{link[2]}</div>
-								</a>
-
-								{}
-							</Link>
+							<>
+								{link[0] === '/howitworks' ? (
+									<>
+										<a
+											onClick={(e) => {
+												e.preventDefault()
+												userState.setHowItWorks(true);
+												Router.push('/home')
+											}}
+											className={clsx(
+												`cursor-pointer px-5 py-4 flex flex-row items-center rounded-xl text-sm font-bold transition-colors`,
+												activeLink === link
+													? `bg-primary text-white`
+													: 'text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-white'
+											)}
+										>
+											{link[3]}
+											<div className="ml-4">{link[2]}</div>
+										</a>
+										{}
+									</>
+								) : (
+									<>
+										<Link href={link[0]}>
+											<a
+												id={link[0] === '/overview' ? 'weekly_overview' : ''}
+												className={clsx(
+													`px-5 py-4 flex flex-row items-center rounded-xl text-sm font-bold transition-colors`,
+													activeLink === link
+														? `bg-primary text-white`
+														: 'text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-white'
+												)}
+												target={link[5] ? '_blank' : '_self'}
+											>
+												{link[3]}
+												<div className="ml-4">{link[2]}</div>
+											</a>
+											{}
+										</Link>
+									</>
+								)}
+							</>
 						)}
 					</div>
 				))}
@@ -200,7 +228,9 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 				{userState.ready ? (
 					<></>
 				) : (
-					<div className="text-xs text-center px-4 pt-2 italic font-thin">Hint: Tap on your avatar to view settings & ready up.</div>
+					<div className="text-xs text-center px-4 pt-2 italic font-thin">
+						Hint: Tap on your avatar to view settings & ready up.
+					</div>
 				)}
 			</div>
 		</div>
@@ -240,6 +270,14 @@ const links: any[][] = [
 			<use xlinkHref="/img/sprite.svg#icon-settings"></use>
 		</svg>,
 		UserSettingsModalInner
+	],
+	[
+		'/howitworks',
+		[],
+		'How It Works',
+		<svg className="-icon">
+			<use xlinkHref="/img/sprite.svg#icon-settings"></use>
+		</svg>
 	],
 	[
 		'https://forms.gle/riuAuH1cr6YC5j567',
