@@ -18,9 +18,11 @@ import { useNextAppElement } from '../state/react/useNextAppElement'
 import { CheckInPhotoModalInner } from './../components/modals/CheckInPhotoModalInner'
 import { CheckInSuccessModalInner } from '../components/modals/CheckInSuccessModalInner'
 import { Intro } from '../components/Intro'
+import { HowItWorks } from '../components/HowItWorks'
 import { Header } from '../components/unique/Header'
 import CopyInviteLink from '../components/notification/CopyInviteLink'
 import { formatDuration } from '../utils/formatDuration'
+import clsx from 'clsx'
 
 const PotChart = dynamic(() => import('../components/home/PotChart'), {
 	ssr: false
@@ -135,16 +137,47 @@ export default wrapDashboardLayout(function OverviewPage() {
 					element: document.getElementById('walkthrough_checkins'),
 					title: 'Welcome to the group!',
 					intro:
-						'Users must tap the “check in” button on mobile or desktop and upload photo proof they’ve completed the group activity successfully before the week is over. The group activity can be seen at the top of the homepage.'
+						'Users must tap the “check in” button on mobile or desktop and upload photo proof they’ve completed the group activity successfully before the week is over. The group activity can be seen at the top of the homepage.',
+					tooltipClass: clsx('bg-white text-black dark:bg-dark dark:text-white')
 				},
 				{
 					element: document.getElementById('walkthrough_pot'),
-					intro: `This is your group’s pot. Members of your group who fail their check-in before the week is up pay in to the pot. You get paid at the end of the month based on how big the pot is.`
+					intro: `This is your group’s pot. Members of your group who fail their check-in before the week is up pay in to the pot. You get paid at the end of the month based on how big the pot is.`,
+					tooltipClass: clsx('bg-white text-black dark:bg-dark dark:text-white')
 				},
 				{
-					intro: `Review & agree to this groups rules when you're ready to join it. Tap "tutorial" at anytime if you want to see this walkthrough again.`
+					intro: `Review & agree to this groups rules when you're ready to join it. Tap "tutorial" at anytime if you want to see this walkthrough again.`,
+					tooltipClass: clsx('bg-white text-black dark:bg-dark dark:text-white')
 				}
 			]
+	}
+
+	function getHowItWorksSteps() {
+		return [
+			{
+				element: document.getElementById('checkin_div'),
+				title: 'Check In',
+				intro: `Check in before the week is up with photo proof you've completed the activity. (Screenshots work too)`,
+				tooltipClass: clsx('bg-white text-black dark:bg-dark dark:text-white')
+			},
+			{
+				element: document.getElementById('weekly_overview'),
+				title: 'Weekly Overview',
+				intro: `In Weekly Overview you will see all check ins by your group. View others photo logs, or check your own. All members must complete their check ins before the end of the week.`,
+				tooltipClass: clsx('bg-white text-black dark:bg-dark dark:text-white')
+			},
+			{
+				element: document.getElementById('walkthrough_pot'),
+				intro: `Those that fail to complete their weekly check ins pay in to the group pot. The amount they pay in for failing the week can be changed by you (the group admin) in your pot settings. We gave you $5 in your pot to help you launch your legendary new group. Invite friends to activate those credits.`,
+				tooltipClass: clsx('bg-white text-black dark:bg-dark dark:text-white'),
+				position: 'left'
+			},
+			{
+				title: 'Bookmark',
+				intro: `Last Step:  Take a minute to add this page to your bookmarks bar by tapping on the icon above.`,
+				tooltipClass: clsx('bg-white text-black dark:bg-dark dark:text-white')
+			}
+		]
 	}
 
 	return (
@@ -156,6 +189,11 @@ export default wrapDashboardLayout(function OverviewPage() {
 				label="homepage"
 				enabled={userState.loaded && pot.data}
 				steps={getIntroSteps}
+			/>
+			<HowItWorks
+				label="homepage"
+				enabled={userState.howItWorks}
+				steps={getHowItWorksSteps}
 			/>
 			<div style={{ maxWidth: '1400px', margin: '0 auto' }}>
 				<div className="w-full flex flex-col flex-col-reverse xl:flex-row">
@@ -191,7 +229,10 @@ export default wrapDashboardLayout(function OverviewPage() {
 
 				<div className="w-full flex flex-col xl:flex-row">
 					<div className="px-10 w-full xl:px-12 md:px-8">
-						<div className="pb-24 pt-24 flex flex-col items-center md:px-10">
+						<div
+							className="pb-24 pt-24 flex flex-col items-center md:px-10"
+							id="checkin_div"
+						>
 							<div
 								id="walkthrough_checkins"
 								className="text-center text-xl text-gray-600"

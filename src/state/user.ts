@@ -10,6 +10,7 @@ export const userState = observable({
 	},
 	loaded: false,
 	ready: false,
+	howItWorks: false,
 
 	async load() {
 		if (!userState.tokens.accessToken) {
@@ -46,6 +47,10 @@ export const userState = observable({
 	},
 	toggleReady() {
 		userState.ready = !userState.ready;
+	},
+
+	setHowItWorks(val: boolean) {
+		userState.howItWorks = val;
 	}
 })
 

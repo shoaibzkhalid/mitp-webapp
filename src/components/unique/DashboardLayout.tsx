@@ -3,7 +3,7 @@ import { when } from 'mobx'
 import { observer } from 'mobx-react-lite'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import {
 	SidebarContext,
 	SidebarContextProvider
@@ -28,7 +28,7 @@ const DashboardLayout = observer(function DashboardLayout(props: {
 
 	const isMobile = useMediaQuery('(max-width: 1024px)')
 	const [sidebarState] = useContext(SidebarContext)
-	// className={clsx('h-screen',isMobile ? undefined:'flex flex-row')}
+	
 	return (
 		<>
 			<Head>
