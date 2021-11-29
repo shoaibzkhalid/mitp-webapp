@@ -70,7 +70,7 @@ body {
 }
 .-table td,
 .-table th {
-	@apply p-4;
+	padding: 1.5rem 1rem;
 }
 .-table-responsive {
 	overflow-x: auto;
