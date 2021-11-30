@@ -3,17 +3,14 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react'
 import ReactModal from 'react-modal'
-import { CheckInButton } from '../components/CheckInButton'
 import { UserViewLogsModalInner } from '../components/modals/UserViewLogsModalInner'
 import { Square } from '../components/Square'
 import { wrapDashboardLayout } from '../components/unique/DashboardLayout'
 import { useNextAppElement } from '../state/react/useNextAppElement'
 import { userState } from '../state/user'
-import { selectedPotState, useSelectedPot } from '../state/react/useSelectedPot'
-import { formatDateRange } from '../utils/formatDateRange'
+import { useSelectedPot } from '../state/react/useSelectedPot'
 import { formatDuration } from '../utils/formatDuration'
-import { CheckInPhotoModalInner } from '../components/modals/CheckInPhotoModalInner'
-import { CheckInSuccessModalInner } from '../components/modals/CheckInSuccessModalInner'
+import { NotifyMeModalInner } from '../components/modals/NotifyMeModalInner'
 import { Header } from '../components/unique/Header'
 import CopyInviteLink from '../components/notification/CopyInviteLink'
 import Notification from '../components/notification'
@@ -56,8 +53,7 @@ export default wrapDashboardLayout(function RealIndexPage() {
 	const [viewingLogsOfUserId, setViewingLogsOfUserId] = useState(
 		null as string | null
 	)
-	const [photoModalIsOpen, setPhotoModalIsOpen] = useState(false)
-	const [sucessModalIsOpen, setSucessModalIsOpen] = useState(false)
+	const [notifyModalIsOpen, setNotifyModalIsOpen] = useState(false)
 	const pot = useSelectedPot()
 
 	return (
@@ -80,6 +76,18 @@ export default wrapDashboardLayout(function RealIndexPage() {
 							openSuccessModal={() => console.log()}
 						></UserViewLogsModalInner>
 					)}
+				</ReactModal>
+
+				<ReactModal
+					isOpen={notifyModalIsOpen}
+					onRequestClose={() => setNotifyModalIsOpen(false)}
+					appElement={appElement}
+				>
+					<NotifyMeModalInner
+						closeModal={() => {
+							setNotifyModalIsOpen(false)
+						}}
+					/>
 				</ReactModal>
 
 				<div className="w-full flex flex-col flex-col-reverse xl:flex-row">
@@ -114,14 +122,17 @@ export default wrapDashboardLayout(function RealIndexPage() {
 							<div className="mt-3 sm:mt-1 text-sm md:text-lg font-poppins">
 								{duration}
 							</div>
-							<CheckInButton
-								className="overview-page-checkin-btn mt-5 px-20 py-4 max-w-xs text-gray-900 rounded-2xl text-md bg-white dark:bg-dark dark:text-white"
-								background={'white'}
-								cameraPic={false}
-								setPhotoModalIsOpen={(isOpen: boolean) =>
-									setPhotoModalIsOpen(isOpen)
-								}
-							></CheckInButton>
+							<button
+								className="flex items-center overview-page-checkin-btn m-auto mt-5 sm:m-0 sm:mt-5 px-20 py-4 max-w-xs text-gray-900 rounded-2xl text-lg bg-white dark:bg-dark dark:text-white"
+								onClick={() => {
+									setNotifyModalIsOpen(true)
+								}}
+							>
+								<span className="mr-3">
+									<img src="/img/bell-icon.svg" />
+								</span>
+								Notify Me
+							</button>
 							<div className="pt-10 text-xs font-poppins font-thin tracking-widest">
 								Those who don’t check in by Sunday pay group pot $5 or swear jar
 								fee.
@@ -212,44 +223,6 @@ export default wrapDashboardLayout(function RealIndexPage() {
 							</div>
 						</div>
 					</div>
-
-					<ReactModal
-						isOpen={photoModalIsOpen}
-						onRequestClose={() => setPhotoModalIsOpen(false)}
-						appElement={appElement}
-						style={{
-							content: {
-								height: '50%',
-								top: '20%'
-							}
-						}}
-					>
-						<CheckInPhotoModalInner
-							closeModal={() => setPhotoModalIsOpen(false)}
-							potId={selectedPotState.moneyPotId}
-							openSuccessModal={() => {
-								setSucessModalIsOpen(true)
-							}}
-						></CheckInPhotoModalInner>
-					</ReactModal>
-					<ReactModal
-						isOpen={sucessModalIsOpen}
-						onRequestClose={() => setSucessModalIsOpen(false)}
-						appElement={appElement}
-						style={{
-							content: {
-								height: '70%',
-								top: '10%'
-							}
-						}}
-					>
-						<CheckInSuccessModalInner
-							closeModal={() => setSucessModalIsOpen(false)}
-							openSuccessModal={() => {
-								setSucessModalIsOpen(false)
-							}}
-						></CheckInSuccessModalInner>
-					</ReactModal>
 
 					<div className="-card --shadow mt-6 p-4">
 						{!data ? (
@@ -396,80 +369,154 @@ export default wrapDashboardLayout(function RealIndexPage() {
 									<tbody>
 										{data.users.map(u => {
 											return (
-												<tr>
-													<td
-														style={{
-															paddingRight: 0
-														}}
-													>
-														<img
-															src="/img/avatar.png"
+												<>
+													<tr className="border-b-2">
+														<td
 															style={{
-																minHeight: 60,
-																minWidth: 60
+																paddingRight: 0
 															}}
-														/>
-													</td>
-													<td
-														style={{
-															paddingLeft: 0
-														}}
-													>
-														<div className="flex flex-row items-center font-bold">
-															<span style={{ marginLeft: 20 }}>
-																{u.firstName} {u.lastName}
-															</span>
-														</div>
-													</td>
-													<td>Thursday, 7:22 PM</td>
-													<td>
-														{u.checkinsThisWeek >= data.pot.checkinCount ? (
-															<div className="flex flex-row items-center text-green-500">
-																<Square
-																	className="bg-green-500 mr-2"
-																	length="1.2rem"
-																></Square>
-																Completed
-															</div>
-														) : (
-															<div className="flex flex-row items-center text-red-500">
-																<Square
-																	className="bg-red-500 mr-2"
-																	length="1.2rem"
-																></Square>
-																Not yet
-															</div>
-														)}
-													</td>
-													<td className="font-poppins font-thin text-primary">
-														{userState.ready ? (
-															`$${parseInt(u.amount).toFixed(2)}`
-														) : (
-															<>Not ready yet</>
-														)}
-													</td>
-													<td>
-														<button
-															style={{
-																padding: '10px 30px',
-																fontWeight: 100,
-																background:
-																	'linear-gradient(166.98deg, #8679E2 -3.04%, #6C5DD3 90.61%)'
-															}}
-															className="-button -primary -sm"
-															onClick={() => setViewingLogsOfUserId(u.id)}
 														>
-															View
-														</button>
-													</td>
-												</tr>
+															<img
+																src="/img/avatar.png"
+																style={{
+																	minHeight: 60,
+																	minWidth: 60
+																}}
+															/>
+														</td>
+														<td
+															style={{
+																paddingLeft: 0
+															}}
+														>
+															<div className="flex flex-row items-center font-bold">
+																<span style={{ marginLeft: 20 }}>
+																	{u.firstName} {u.lastName}
+																</span>
+															</div>
+														</td>
+														<td>Thursday, 7:22 PM</td>
+														<td>
+															{u.checkinsThisWeek >= data.pot.checkinCount ? (
+																<div className="flex flex-row items-center text-green-500">
+																	<Square
+																		className="bg-green-500 mr-2"
+																		length="1.2rem"
+																	></Square>
+																	Completed
+																</div>
+															) : (
+																<div className="flex flex-row items-center text-red-500">
+																	<Square
+																		className="bg-red-500 mr-2"
+																		length="1.2rem"
+																	></Square>
+																	Not yet
+																</div>
+															)}
+														</td>
+														<td className="font-poppins font-thin text-primary">
+															{userState.ready ? (
+																`$${parseInt(u.amount).toFixed(2)}`
+															) : (
+																<>Not ready yet</>
+															)}
+														</td>
+														<td>
+															<button
+																style={{
+																	padding: '10px 30px',
+																	fontWeight: 100,
+																	background:
+																		'linear-gradient(166.98deg, #8679E2 -3.04%, #6C5DD3 90.61%)'
+																}}
+																className="-button -primary -sm"
+																onClick={() => setViewingLogsOfUserId(u.id)}
+															>
+																View
+															</button>
+														</td>
+													</tr>
+												</>
 											)
 										})}
+										{data.users.length < 2 ? (
+											<>
+												{[0, 1].map(index => {
+													return (
+														<tr
+															className={clsx(
+																index !== 1 ? 'border-b-2' : undefined
+															)}
+														>
+															<td>
+																<div
+																	className="border-2 border-dashed border-primary rounded-lg p-5"
+																	style={{
+																		maxWidth: 110,
+																		maxHeight: 100
+																	}}
+																>
+																	<img
+																		className=""
+																		src="/img/add-friend-icon.svg"
+																		style={{
+																			minHeight: 60,
+																			minWidth: 60
+																		}}
+																	/>
+																</div>
+															</td>
+															<td
+																style={{
+																	paddingLeft: 0
+																}}
+															>
+																<div className="flex flex-row items-center font-bold">
+																	<span
+																		style={{ marginLeft: 20 }}
+																		className="text-primary font-thin font-poppins"
+																	>
+																		Add Friend
+																	</span>
+																</div>
+															</td>
+														</tr>
+													)
+												})}
+											</>
+										) : (
+											<></>
+										)}
 									</tbody>
 								</table>
 							</div>
 						)}
 					</div>
+
+					{data?.users.length < 2 ? (
+						<>
+							<div className="flex flex-col justify-center items-center py-10">
+								<img src="/img/weekly-overview-social-icon.svg" />
+								<span className="text-gray-400 mt-10">
+									Friends you invite to this session will be shown here
+								</span>
+								<button
+									style={{
+										padding: '12px 35px',
+										fontWeight: 100,
+										background:
+											'linear-gradient(166.98deg, #8679E2 -3.04%, #6C5DD3 90.61%)'
+									}}
+									className="-button -primary -sm mt-5"
+								>
+									Copy Invite Link
+								</button>
+							</div>
+						</>
+					) : (
+						<></>
+					)}
 				</div>
 			</div>
 			{notificationMessage !== '' && (
