@@ -1,56 +1,101 @@
-import { ApiPotLog, ApiTransaction } from './types'
-import axios from 'axios'
+import { ApiPotLog, ApiMoneyBundle } from './types'
+import axios, { AxiosResponse } from 'axios'
 import { AppEnv } from './env'
-import { getApiReqOptions } from './state/api/_helpers'
 import publicApi from './state/api/public'
 import userApi from './state/api/user'
 import userPotsApi from './state/api/userPots'
+import { userState } from './state/user'
 
 const r = axios.create({
 	baseURL: AppEnv.apiBaseUrl
 })
 
+function handleResponse(d: AxiosResponse) {
+	if (d.status !== 200) {
+		console.log('API Error:', d.status, d.data)
+		const e: any = new Error('Non-200 status code API response')
+		e.status = d.status
+		throw e
+	}
+	return d.data?.data ?? d.data
+}
+
 export const Api = {
+	r,
+
 	public: publicApi,
 	user: userApi,
 	userPots: userPotsApi,
 
-	async transactionsList() {
-		return r.get('transaction', await getApiReqOptions()).then(
-			d =>
-				d.data.data as {
-					currentCredits: string
-					transactions: ApiTransaction[]
-				}
-		)
+	async get<T = any>(url: string, params?: object): Promise<T> {
+		return r
+			.get(url, {
+				params,
+				headers: {
+					authorization: userState.tokens.refreshToken
+						? `Bearer ${await userState.getAccessToken()}`
+						: ''
+				},
+				validateStatus: () => true
+			})
+			.then(handleResponse)
 	},
 
-	async logsCreate(moneyPotId: string, file: File) {
+	async post<T = any>(url: string, data?: object, params?: object): Promise<T> {
+		return r
+			.post(url, data, {
+				params,
+				headers: {
+					authorization: userState.tokens.refreshToken
+						? `Bearer ${await userState.getAccessToken()}`
+						: ''
+				},
+				validateStatus: () => true
+			})
+			.then(handleResponse)
+	},
+
+	async delete<T = any>(
+		url: string,
+		data?: object,
+		params?: object
+	): Promise<T> {
+		return r
+			.delete(url, {
+				params,
+				data,
+				headers: {
+					authorization: userState.tokens.refreshToken
+						? `Bearer ${await userState.getAccessToken()}`
+						: ''
+				},
+				validateStatus: () => true
+			})
+			.then(handleResponse)
+	},
+
+	transactionsList: () =>
+		Api.get<{
+			currentCredits: string
+			transactions: ApiMoneyBundle[]
+		}>('transaction'),
+
+	logsCreate: (moneyPotId: string, file: File) => {
 		const fd = new FormData()
 		fd.append('picture', file)
-		return r.post(`money-pot/${moneyPotId}/log`, fd, await getApiReqOptions()).catch(error => console.log(error.response))
+		return Api.post(`money-pot/${moneyPotId}/log`, fd)
 	},
 
-	async logsList(moneyPotId: string, userId: string) {
-		return r
-			.get(`money-pot/${moneyPotId}/user/${userId}`, await getApiReqOptions())
-			.then(d => d.data.data.logs as ApiPotLog[])
-	},
+	logsList: (moneyPotId: string, userId: string) =>
+		Api.get<{ logs: ApiPotLog[] }>(`money-pot/${moneyPotId}/user/${userId}`),
 
-	async tokensGetFromPayPal(code: string) {
-		return r
-			.get('paypal/login-callback', {
-				params: {
-					code
-				},
-				...(await getApiReqOptions().catch(e => null))
-			})
-			.then(
-				d =>
-					d.data.data.tokens as {
-						accessToken: string
-						refreshToken: string
-					}
-			)
-	}
+	tokensGetFromPayPal: (code: string) =>
+		Api.get<{
+			tokens: {
+				accessToken: string
+				refreshToken: string
+			}
+		}>('paypal/login-callback', {
+			code
+		}).then(d => d.tokens)
 }

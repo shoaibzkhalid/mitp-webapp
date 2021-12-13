@@ -1,6 +1,8 @@
 import { observable, reaction, runInAction } from 'mobx'
 import { Api } from '../api'
 import { ApiUser } from '../types'
+import dayjs from 'dayjs'
+import jwtDecode from 'jwt-decode'
 
 export const userState = observable({
 	user: null as null | ApiUser,
@@ -46,11 +48,39 @@ export const userState = observable({
 		localStorage.setItem('mitp_tokens', JSON.stringify(userState.tokens))
 	},
 	toggleReady() {
-		userState.ready = !userState.ready;
+		userState.ready = !userState.ready
 	},
-
 	setHowItWorks(val: boolean) {
-		userState.howItWorks = val;
+		userState.howItWorks = val
+	},
+	async getAccessToken() {
+		if (!userState.tokens.refreshToken) throw new Error('User not logged in')
+
+		let doRefresh = false
+		if (!userState.tokens.accessToken) doRefresh = true
+		else {
+			const tokenData: any = jwtDecode(userState.tokens.accessToken)
+			doRefresh = dayjs()
+				.add(1, 'minute')
+				.isAfter(tokenData.exp * 1000)
+		}
+		if (doRefresh) {
+			const tokens = await Api.r.post(
+				'/auth/refresh',
+				{},
+				{
+					headers: {
+						authorization: 'Bearer ' + userState.tokens.refreshToken
+					}
+				}
+			)
+
+			runInAction(() => {
+				userState.tokens.accessToken = tokens.data.data.accessToken
+			})
+		}
+
+		return userState.tokens.accessToken
 	}
 })
 

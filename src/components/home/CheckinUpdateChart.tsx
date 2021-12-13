@@ -70,7 +70,7 @@ export default observer(function CheckinUpdateChart() {
 			series={[
 				{
 					name: 'Check in',
-					data: [442, 380, 275, 430, 509, 463, 407, 533, 470]
+					data: [0, 0, 0, 0, 0, 0, 0, 0, 0]
 				}
 			]}
 		/>

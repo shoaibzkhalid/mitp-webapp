@@ -48,8 +48,6 @@ export default observer(function PotNew() {
 		}
 	)
 
-	// const friend = pot.data?.pot.
-
 	const createAccountMutation = useMutation(
 		'create-pot',
 		async () => {

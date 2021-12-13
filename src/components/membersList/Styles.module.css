@@ -1,0 +1,30 @@
+.membersList__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #E4E4E4;
+}
+
+.membersList__row:last-child {
+    border-bottom: 0;
+}
+
+.membersList__left {
+    display: flex;  
+    align-items: center;
+}
+
+.membersList__image {
+    border-radius: 50%; 
+    height: 60px;
+    margin-right: 20px;
+}
+
+.membersList__kickbtn {
+    color: #6C5DD3;
+}
+
+.membersList__icon {
+    height: 20px;
+    display: inline-block;
+}

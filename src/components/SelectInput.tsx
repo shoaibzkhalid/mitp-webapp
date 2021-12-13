@@ -14,10 +14,10 @@ interface SelectProps {
 
 	options: Array<{
 		label: string
-		value: string
+		value: number | string
 	}>
-	value?: string
-	setValue: (value: string) => unknown
+	value?: number | string
+	setValue: (value: string | number) => unknown
 }
 export function SelectInput(props: SelectProps) {
 	const id = useMemo(() => cuid(), [])
@@ -30,7 +30,7 @@ export function SelectInput(props: SelectProps) {
 				</label>
 			)}
 
-			<div className="shadow-md rounded-md">
+			<div className="shadow-md rounded-md pr-2">
 				<select
 					placeholder={props.placeholder}
 					id={props.id}
@@ -38,7 +38,7 @@ export function SelectInput(props: SelectProps) {
 						'w-full rounded-md p-3 bg-white dark:bg-transparent',
 						props.selectClassName
 					)}
-					style={{ height: props.height ? undefined:'48px' }}
+					style={{ height: props.height ? undefined : '48px' }}
 					onChange={e => props.setValue(e.target.value)}
 				>
 					{props.options.map(option => (

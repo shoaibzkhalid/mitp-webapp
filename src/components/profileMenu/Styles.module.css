@@ -1,5 +1,10 @@
 .sidebar__profile {
 	margin-top: 25px;
+	border: 2px solid #6c5dd3;
+	border-radius: 12px;
+}
+.sidebar__profile:hover {
+	border: 2px solid transparent;
 }
 .sidebar__details {
 	position: relative;
@@ -144,14 +149,18 @@
 	-webkit-box-align: center;
 	-ms-flex-align: center;
 	align-items: center;
-	width: 24px;
-	height: 24px;
+	width: 30px;
+	height: 30px;
 	font-size: 0;
+	bottom: 15px;
+	right: 10px;
+	z-index: 9999;
 }
 .sidebar__arrow .icon {
 	font-size: 16px;
 	fill: #11142d;
 }
+
 .icon_profile {
 	font-size: 21px;
 	width: 0.81em;

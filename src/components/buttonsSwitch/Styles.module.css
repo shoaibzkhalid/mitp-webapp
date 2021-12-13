@@ -1,0 +1,29 @@
+.btnswitch {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: 4em auto 4em auto;
+    width: 90%;
+}
+
+.btnswitch__left {
+    border-radius: 15px 0px 0px 15px;       
+}
+.btnswitch__right {
+    border-radius: 0 15px 15px 0;   
+}
+
+.btnswitch__left, .btnswitch__right {
+    border: 2px solid #FF754C;
+    background-color: #fff;
+    color: #000;
+    height: 50px;
+    width: 50%;
+}
+
+@media screen and (max-width: 767px) {
+    .btnswitch {    
+        width: 100%;
+    }
+}
+

@@ -14,7 +14,7 @@ export default observer(function PotChart() {
 
 	const options = useMemo(() => {
 		return {
-			labels: ['Week 1', 'Week 2', 'Week 3', 'This Week'],
+			labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
 			colors: [purple, blue],
 			chart: {
 				height: '100%',
@@ -83,7 +83,7 @@ export default observer(function PotChart() {
 				},
 				tooltip: {
 					enabled: false
-				},
+				}
 			},
 			yaxis: {
 				axisBorder: {
@@ -113,7 +113,7 @@ export default observer(function PotChart() {
 								barHeight: '100%',
 								columnWidth: '50%'
 							}
-						},
+						}
 					}
 				}
 			]
@@ -136,7 +136,7 @@ export default observer(function PotChart() {
 					}
 				]}
 			/>
-			<p>Group Activity last 30 days</p>
+			<p>Group Activity in the last 4 weeks</p>
 		</div>
 	)
 })

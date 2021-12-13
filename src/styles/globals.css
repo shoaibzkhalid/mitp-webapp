@@ -126,6 +126,18 @@ body {
 	scrollbar-width: none;
 }
 
+.create-page-frequency-arrow.relative {
+	top: 3px;
+	left: 10px;
+}
+
+/* Change home page bar chart label color in dark mode */
+.dark .apexcharts-text {
+	fill: #fff;
+}
+.dark .profile-menu__arrow {
+	color: #fff;
+}
 .no-scroll {
 	overflow: hidden;
 }
@@ -155,4 +167,38 @@ input:checked ~ .checkbox-bg {
 	.overview-page-checkin-btn {
 		padding: 10px 30px;
 	}
+}
+
+/* Group Details modal changes*/
+
+.group-details-modal__title {
+	font-size: 16px;
+	color: #bebec7;
+}
+
+.btnswitch__btn.active {
+	border: 0;
+	background-color: #6c5dd3;
+	color: #fff;
+}
+
+.group-details-modal .group-details-modal__input {
+	width: 50%;
+}
+
+.group-details-modal .group-details-modal__text-area {
+	width: 100%;
+}
+
+.group-details-modal .group-details-modal__input input {
+	background-color: #f7f7f7;
+}
+.group-details-modal__input-label {
+	font-size: 16px;
+	color: #bebec7;
+}
+/* Custom 3px border for payment-withdraw button of payouts page*/
+
+.payments__button-wrapper .-secondary {
+	border: 3px solid rgb(107, 114, 128);
 }

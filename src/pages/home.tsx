@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -11,18 +11,17 @@ import { selectedPotState, useSelectedPot } from '../state/react/useSelectedPot'
 import dynamic from 'next/dynamic'
 import Notification from '../components/notification'
 import dayjs from 'dayjs'
-import { SidebarContext } from '../state/contexts/sidebarContext'
-import { toggleSideBar, getCheckInProgress } from '../utils/common'
+import { getCheckInProgress } from '../utils/common'
 import ReactModal from 'react-modal'
 import { useNextAppElement } from '../state/react/useNextAppElement'
 import { CheckInPhotoModalInner } from './../components/modals/CheckInPhotoModalInner'
 import { CheckInSuccessModalInner } from '../components/modals/CheckInSuccessModalInner'
-import { Intro } from '../components/Intro'
-import { HowItWorks } from '../components/HowItWorks'
+import { Intro } from '../components/intros/Intro'
+import { HowItWorksIntro } from '../components/intros/HowItWorksIntro'
 import { Header } from '../components/unique/Header'
 import CopyInviteLink from '../components/notification/CopyInviteLink'
 import { formatDuration } from '../utils/formatDuration'
-import clsx from 'clsx'
+import { toggleSideBar } from '../utils/common'
 
 const PotChart = dynamic(() => import('../components/home/PotChart'), {
 	ssr: false
@@ -58,16 +57,17 @@ export default wrapDashboardLayout(function OverviewPage() {
 	}
 
 	useEffect(() => {
-		let timer = setInterval(function () {
+		toggleSideBar(false)
+		const update = () => {
 			const timeUntilWeekEnd = formatDuration(
 				Math.floor(dayjs().endOf('week').diff() / 1000)
 			)
 			setDuration(timeUntilWeekEnd)
-		}, 1000)
-
-		return () => {
-			clearInterval(timer)
 		}
+		update()
+
+		let timer = setInterval(update, 1000)
+		return () => clearInterval(timer)
 	}, [])
 
 	useEffect(() => {
@@ -98,126 +98,58 @@ export default wrapDashboardLayout(function OverviewPage() {
 		[data]
 	)
 
+	const potAdminUser = useMemo(() => data.users.find(u => u.admin), [data])
+
 	const date1 = dayjs(data.pot.createdAt).format('YYYY-MM-DD')
 	const date2 = dayjs()
 	const diff = date2.diff(date1)
 	const createdDuration = dayjs.duration(diff)
 
-	const dummyData = {
-		usersRemaining: 12,
-		minAmount: 5
-	}
+	const daysLeft = dayjs()
+		.endOf('week')
+		.add(1, 'second') // to make the end of the week the start of the next week
+		.diff(dayjs().startOf('day'), 'days')
 
-	function getIntroSteps() {
-		// One user === the pot was created. More users === the user joined a pot
-		if (pot.data!.users.length === 1)
-			return [
-				{
-					element: document.getElementById('walkthrough_potname'),
-					title: 'Welcome to your new group!',
-					intro:
-						'This is the activity of your group your members do to complete their check ins with the rest of the group. You can change your group activity or add details to it like time, location, or specific requirements (IE; Types of Exercises Allowed) later.'
-				},
-				{
-					element: document.getElementById('walkthrough_checkins'),
-					intro: `Users must tap the “check in” button on mobile or desktop and upload photo proof they’ve completed the group activity successfully before the week is over.`
-				},
-				{
-					element: document.getElementById('walkthrough_pot'),
-					title: 'This is your group’s pot.',
-					intro: `Members of your group who fail their check-in before the week is up pay in to the pot. Note: You set the minimum pay-in for your group, and can always set the value to zero, so group members are able to set their own.`
-				},
-				{
-					intro: `We recommend you take a minute to finish setup, but you can also invite friends or explore. This is your group, and you’re at the helm. Tap "tutorial" at anytime if you want to see this walkthrough again.`
-				}
-			]
-		else
-			return [
-				{
-					element: document.getElementById('walkthrough_checkins'),
-					title: 'Welcome to the group!',
-					intro:
-						'Users must tap the “check in” button on mobile or desktop and upload photo proof they’ve completed the group activity successfully before the week is over. The group activity can be seen at the top of the homepage.',
-					tooltipClass: clsx('bg-white text-black dark:bg-dark dark:text-white')
-				},
-				{
-					element: document.getElementById('walkthrough_pot'),
-					intro: `This is your group’s pot. Members of your group who fail their check-in before the week is up pay in to the pot. You get paid at the end of the month based on how big the pot is.`,
-					tooltipClass: clsx('bg-white text-black dark:bg-dark dark:text-white')
-				},
-				{
-					intro: `Review & agree to this groups rules when you're ready to join it. Tap "tutorial" at anytime if you want to see this walkthrough again.`,
-					tooltipClass: clsx('bg-white text-black dark:bg-dark dark:text-white')
-				}
-			]
-	}
-
-	function getHowItWorksSteps() {
-		return [
-			{
-				element: document.getElementById('checkin_div'),
-				title: 'Check In',
-				intro: `Check in before the week is up with photo proof you've completed the activity. (Screenshots work too)`,
-				tooltipClass: clsx('bg-white text-black dark:bg-dark dark:text-white')
-			},
-			{
-				element: document.getElementById('weekly_overview'),
-				title: 'Weekly Overview',
-				intro: `In Weekly Overview you will see all check ins by your group. View others photo logs, or check your own. All members must complete their check ins before the end of the week.`,
-				tooltipClass: clsx('bg-white text-black dark:bg-dark dark:text-white')
-			},
-			{
-				element: document.getElementById('walkthrough_pot'),
-				intro: `Those that fail to complete their weekly check ins pay in to the group pot. The amount they pay in for failing the week can be changed by you (the group admin) in your pot settings. We gave you $5 in your pot to help you launch your legendary new group. Invite friends to activate those credits.`,
-				tooltipClass: clsx('bg-white text-black dark:bg-dark dark:text-white'),
-				position: 'left'
-			},
-			{
-				title: 'Bookmark',
-				intro: `Last Step:  Take a minute to add this page to your bookmarks bar by tapping on the icon above.`,
-				tooltipClass: clsx('bg-white text-black dark:bg-dark dark:text-white')
-			}
-		]
-	}
+	const failedUsers = pot.data?.users.filter(
+		user => pot.data.pot.checkinCount - user.checkinsThisWeek > daysLeft
+	).length
 
 	return (
 		<>
 			<Head>
 				<title>{`Your Group - ${data?.pot.title}`}</title>
 			</Head>
+
 			<Intro
 				label="homepage"
 				enabled={userState.loaded && pot.data}
-				steps={getIntroSteps}
+				isJustCreated={pot.data!.users.length === 1}
 			/>
-			<HowItWorks
-				label="homepage"
-				enabled={userState.howItWorks}
-				steps={getHowItWorksSteps}
-			/>
-			<div style={{ maxWidth: '1400px', margin: '0 auto' }}>
-				<div className="w-full flex flex-col flex-col-reverse xl:flex-row">
+			<HowItWorksIntro label="homepage" enabled={userState.howItWorks} />
+
+			<div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+				<div className="w-full flex flex-col-reverse xl:flex-row">
 					<div
 						id="walkthrough_potname"
-						className="px-10 pt-4 pb-1 xl:w-8/12 xl:px-12 md:px-8 md:pt-12"
+						className="px-6 pt-4 pb-1 xl:w-10/12 md:pt-12"
 					>
-						<div className="text-3xl font-medium">The Group Pot Of</div>
-						<div className="text-6xl font-semibold" style={{ lineHeight: 1.5 }}>
+						<div className="text-2xl">The Group Pot Of</div>
+						<div className="text-5xl font-semibold" style={{ lineHeight: 1.5 }}>
 							{data.pot.title}
 						</div>
-						<div className="text-gray-400 text-xl">{`Group Admin:  ${userState.user?.firstName}`}</div>
+						<div className="text-gray-400 text-xl">{`Group Admin:  ${potAdminUser?.firstName}`}</div>
 					</div>
 
-					<div className="pl-8 pr-4 py-7 border-b border-gray-200 dark:border-gray-700 md:py-1 md:px-3 xl:px-12 xl:pt-12 xl:w-4/12 xl:border-b-0">
+					<div className="px-6 py-7 border-b border-gray-200 dark:border-gray-700 sm:px-0 md:py-1 xl:pt-12 xl:w-2/12 xl:border-b-0">
 						<div className="font-poppins flex justify-between items-center xl:justify-center lg:justify-end">
 							<Header />
-							<div className="text-center text-lg">
-								<div className="text-gray-500 text-base hidden md:block">
+							<div className="text-center text-sm">
+								<div className="text-gray-500 text-sm hidden md:block">
 									{pot.data?.users.length} member
 									{pot.data?.users.length !== 1 && 's'}
 								</div>
 								<div
-									className="cursor-pointer text-sm py-3 px-6 rounded-2xl bg-gray-900 text-white md:mt-2 md:text-lg md:text-blue-600 md:p-0 md:bg-white dark:bg-gray-900"
+									className="cursor-pointer text-sm py-3 px-6 rounded-2xl bg-gray-900 text-white md:mt-2 md:text-sm md:text-blue-600 md:p-0 md:bg-white dark:bg-gray-900"
 									onClick={() => CopyInviteLink(data, setNotificationMessage)}
 								>
 									&mdash; copy invite link &mdash;
@@ -227,8 +159,8 @@ export default wrapDashboardLayout(function OverviewPage() {
 					</div>
 				</div>
 
-				<div className="w-full flex flex-col xl:flex-row">
-					<div className="px-10 w-full xl:px-12 md:px-8">
+				<div className="w-full flex flex-col xl:flex-row px-6">
+					<div className="w-full">
 						<div
 							className="pb-24 pt-24 flex flex-col items-center md:px-10"
 							id="checkin_div"
@@ -241,9 +173,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 							</div>
 							<CheckInButton
 								disabled={checkinCountUser >= data.pot.checkinCount}
-								setPhotoModalIsOpen={(isOpen: boolean) =>
-									setPhotoModalIsOpen(isOpen)
-								}
+								setPhotoModalIsOpen={setPhotoModalIsOpen}
 							></CheckInButton>
 							<div className="mt-3 text-gray-400 text-sm">{`Take photo proof of ${data.pot.title}, ${data.pot.description}.`}</div>
 							<ReactModal
@@ -304,20 +234,21 @@ export default wrapDashboardLayout(function OverviewPage() {
 									className="px-5 py-4 w-full rounded-2xl text-base text-gray-500 outline-none border-gray-200 dark:bg-gray-900 dark:border-gray-900 md:w-44"
 									style={{ borderWidth: '1px' }}
 								>
-									<option value="new">Less 30 days</option>
+									<option value="new">Last 4 weeks</option>
 								</select>
 							</div>
 
 							<div className="md:grid grid-cols-3">
 								<div>
-									<div className="flex text-5xl font-bold text-center my-1 md:text-7xl">
+									<div className="text-5xl font-bold text-center my-1 md:text-7xl w-full">
 										<div>
 											<div>${data.metrics.currentValue}</div>
 											<div className="mt-1 text-sm text-gray-500 text-left">
 												<span className="text-green-500">
-													{dummyData.usersRemaining} people
+													{failedUsers} people
 												</span>{' '}
-												pay in ${dummyData.minAmount} at end of the week.
+												pay in at least ${pot.data.pot.minAmount} at end of the
+												week.
 											</div>
 											<div className="mt-1 text-sm text-gray-300 font-thin text-left underline">
 												Week end in.. {duration}
@@ -365,7 +296,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 										<Link href="/overview">Group Check Ins</Link>
 									</div>
 									<hr />
-									<div className="flex flex-row mt-3 items-center hidden md:flex">
+									<div className="flex flex-row mt-3 items-center md:flex">
 										<div className="h-10 pr-3">
 											<CheckinUpdateChart />
 										</div>
@@ -381,11 +312,11 @@ export default wrapDashboardLayout(function OverviewPage() {
 													<use xlinkHref="/img/sprite.svg#icon-arrow-up-fat"></use>
 												</svg>
 											</div>
-											<span className="text-green-600">6%</span>
+											<span className="text-green-600">0%</span>
 										</div>
 									</div>
 									<p className="mt-6">
-										Check ins are 6% higher this month than average.
+										Check ins are 0% higher this month than average.
 									</p>
 								</div>
 								<div className="col-span-2">
@@ -406,9 +337,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 										<span>Check Ins</span>
 									</div>
 									<div className="text-3xl font-bold mt-3">
-										{data.metrics.checkinsCount !== 0
-											? data.metrics.checkinsCount
-											: '3'}
+										{data.metrics.checkinsCount}
 									</div>
 									<div
 										className="relative bg-gray-200 mt-3"
@@ -417,7 +346,10 @@ export default wrapDashboardLayout(function OverviewPage() {
 										<div
 											className="absolute top-0 left-0 bottom-0 bg-purple-500"
 											style={{
-												width: getCheckInProgress(3, 'checkin')
+												width: getCheckInProgress(
+													data.metrics.checkinsCount,
+													'checkin'
+												)
 											}}
 										></div>
 									</div>
@@ -434,9 +366,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 										<span>Weekly 🔥</span>
 									</div>
 									<div className="text-3xl font-bold mt-3">
-										{data.metrics.checkinsCount !== 0
-											? data.metrics.currentValue
-											: '10'}
+										{data.pot.streak}
 									</div>
 									<div
 										className="relative bg-gray-200 mt-3"
@@ -445,7 +375,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 										<div
 											className="absolute top-0 left-0 bottom-0 bg-pink-400"
 											style={{
-												width: getCheckInProgress(10, 'streak')
+												width: getCheckInProgress(data.pot.streak, 'streak')
 											}}
 										></div>
 									</div>
@@ -462,9 +392,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 										<span>Pay Ins</span>
 									</div>
 									<div className="text-3xl font-bold mt-3">
-										{data.metrics.payinsCount !== 0
-											? data.metrics.payinsCount
-											: '50'}
+										{data.metrics.payinsCount}
 									</div>
 									<div
 										className="relative bg-gray-200 mt-3"
@@ -473,7 +401,10 @@ export default wrapDashboardLayout(function OverviewPage() {
 										<div
 											className="absolute top-0 left-0 bottom-0 bg-blue-500"
 											style={{
-												width: getCheckInProgress(50, 'payin')
+												width: getCheckInProgress(
+													data.metrics.payinsCount,
+													'payin'
+												)
 											}}
 										></div>
 									</div>

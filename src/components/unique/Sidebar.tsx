@@ -6,7 +6,8 @@ import ReactModal from 'react-modal'
 import { CheckInRulesModalInner } from '../modals/CheckInRulesModalInner'
 import { PayInRulesModalInner } from '../modals/PayInRulesModalInner'
 import { PayoutScheduleModalInner } from '../modals/PayoutScheduleModalInner'
-import { UserSettingsModalInner } from '../modals/UserSettingsModalInner'
+// import { UserSettingsModalInner } from '../modals/UserSettingsModalInner'
+import { GroupSettingsModal } from '../modals/GroupSettingsModal'
 import { SidebarPotsSelector } from './SidebarPotsSelector'
 import { useNextAppElement } from '../../state/react/useNextAppElement'
 import { SidebarContext } from '../../state/contexts/sidebarContext'
@@ -37,8 +38,13 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 	const [openButtonModal, setOpenButtonModal] = useState(null as any)
 	const appElement = useNextAppElement()
 	const [sidebarState, setSidebarState] = useContext(SidebarContext)
-	const pot = useSelectedPot()
+	const { data } = useSelectedPot()
 	const isMobile = useMediaQuery('(max-width: 1024px)')
+
+	const potUser = useMemo(
+		() => data?.users.find(u => u.id === userState.user.id),
+		[data]
+	)
 
 	const handleClickToggleSideBar = () => {
 		setSidebarState({ isOpen: false })
@@ -230,7 +236,7 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 				<div className="pt-2">
 					<Switch />
 				</div>
-				{userState.ready ? (
+				{potUser?.readyUpAt ? (
 					<></>
 				) : (
 					<div className="text-xs text-center px-4 pt-2 italic font-thin">
@@ -274,7 +280,8 @@ const links: any[][] = [
 		<svg className="-icon">
 			<use xlinkHref="/img/sprite.svg#icon-settings"></use>
 		</svg>,
-		UserSettingsModalInner
+		// UserSettingsModalInner
+		GroupSettingsModal
 	],
 	[
 		'/howitworks',

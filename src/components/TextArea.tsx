@@ -4,20 +4,18 @@ import { useMemo } from 'react'
 
 interface InputProps {
 	label?: string | JSX.Element
-	type?: string
+	// type?: string
 	disabled?: boolean
 	placeholder?: string
 	value?: any
 	setValue?: (value: any) => any
-	onBlur?: () => any
-
 	className?: string
 	labelClassName?: string
 	inputClassName?: string
-
 	inputStyle?: any
+	rows?:any
 }
-export function Input(props: InputProps) {
+export function TextArea(props: InputProps) {
 	const id = useMemo(() => cuid(), [])
 
 	return (
@@ -28,20 +26,20 @@ export function Input(props: InputProps) {
 				</label>
 			)}
 			<div className="shadow-md rounded-md">
-				<input
-					style={props.inputStyle}
-					type={props.type || 'text'}
+				<textarea
+					style={props.inputStyle}		
 					id={id}
+					rows={props.rows}
 					disabled={props.disabled}
 					placeholder={props.placeholder}
 					value={props.value}
-					onInput={e => props.setValue?.(e.currentTarget.value)}
-					className={clsx(
+					onChange={e => props.setValue?.(e.currentTarget.value)}
+					className={clsx(						
 						props.inputClassName,
-						'w-full rounded-md p-3 bg-white dark:bg-transparent'
+						'w-full rounded-md p-3 bg-white dark:bg-transparent',
 					)}
-					onBlur={e => (props.onBlur ? props.onBlur() : console.log())}
 				/>
+                
 			</div>
 		</div>
 	)

@@ -1,28 +1,29 @@
-import axios from 'axios'
-import { AppEnv } from '../../env'
+import { Api } from '../../api'
 import { ApiUser, ApiUserConnection } from '../../types'
-import { getApiReqOptions } from './_helpers'
-
-const r = axios.create({
-	baseURL: AppEnv.apiBaseUrl
-})
 
 export default {
-	async get() {
-		return r
-			.get('user/me', await getApiReqOptions())
-			.then(d => d.data.data as ApiUser)
+	get: () => Api.get<ApiUser>('user/me'),
+
+	update: (data: { firstName: string; lastName: string; email: string }) =>
+		Api.post<ApiUser>('user/me', data),
+
+	updateAvatar: (file: File) => {
+		const fd = new FormData()
+		fd.append('picture', file)
+		return Api.post(`user/me/avatar`, fd)
 	},
 
-	async update(data: { firstName: string; lastName: string; email: string }) {
-		return r
-			.post('user/me', data, await getApiReqOptions())
-			.then(d => d.data.data as ApiUser)
-	},
+	listConnections: () => Api.get<ApiUserConnection[]>('user/me/connection'),
 
-	async listConnections() {
-		return r
-			.get('/user/me/connection', await getApiReqOptions())
-			.then(d => d.data.data as ApiUserConnection[])
-	}
+	payin: (amount: number) =>
+		Api.post<{
+			approveUrl: string
+		}>('payin', {
+			amount: (BigInt(amount) * BigInt(100)).toString()
+		}),
+
+	payinConfirm: (token: string) =>
+		Api.post('payin-confirm', {
+			token
+		})
 }

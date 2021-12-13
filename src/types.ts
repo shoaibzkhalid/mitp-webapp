@@ -8,6 +8,9 @@ export interface ApiUser extends ModelBase {
 	firstName: string
 	lastName: string
 	email: string
+	avatarUri: string
+	admin: boolean
+	readyUpAt: Date | string | null
 }
 
 export interface ApiPot extends ModelBase {
@@ -18,6 +21,8 @@ export interface ApiPot extends ModelBase {
 	checkinCount: number
 	visibility: number
 	startedAt: string
+	streak: number
+	inviteAdminMode: boolean
 }
 
 export interface ApiPotLog extends ModelBase {
@@ -35,17 +40,15 @@ export interface ApiUser_MoneyPot extends ModelBase {
 	userId: string
 }
 
-export interface ApiTransaction extends ModelBase {
-	delta: string
-	status: string
-	note: string
-	metadata: object | null
-	from?: any
-	fromId: string
-	fromKind: string
-	to?: any
-	toId: string
-	toKind: string
+export interface ApiMoneyBundle extends ModelBase {
+	amount: string
+	accountId: string
+	releasedAt: string
+	introducedAt: string
+	parentIds: string[]
+	parentAccountIds: string[]
+	isSpent: boolean
+	metadata: any
 }
 
 export interface ApiUserConnection extends ModelBase {

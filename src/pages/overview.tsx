@@ -16,6 +16,7 @@ import CopyInviteLink from '../components/notification/CopyInviteLink'
 import Notification from '../components/notification'
 import { useMediaQuery } from '../state/react/useMediaQuery'
 import clsx from 'clsx'
+import { toggleSideBar } from '../utils/common'
 
 export default wrapDashboardLayout(function RealIndexPage() {
 	const router = useRouter()
@@ -24,13 +25,15 @@ export default wrapDashboardLayout(function RealIndexPage() {
 	const [notificationMessage, setNotificationMessage] = useState<string>('')
 
 	const isMobile = useMediaQuery('(max-width: 768px)')
+	const selectedPot = useSelectedPot()
 
-	if (!isLoading && data === null) {
+	if (!selectedPot.isLoading && selectedPot.data === null) {
 		router.push('/create')
 		return null
 	}
 
 	useEffect(() => {
+		toggleSideBar(false)
 		let timer = setInterval(function () {
 			const timeUntilWeekEnd = formatDuration(
 				Math.floor(dayjs().endOf('week').diff() / 1000)
@@ -56,13 +59,21 @@ export default wrapDashboardLayout(function RealIndexPage() {
 	const [notifyModalIsOpen, setNotifyModalIsOpen] = useState(false)
 	const pot = useSelectedPot()
 
+	const users =
+		selectedPot.data?.users.sort((u1, u2) => {
+			if (u1.lastCheckinAt === null && u2.lastCheckinAt === null) return 0
+			if (u1.lastCheckinAt === null) return 1
+			if (u2.lastCheckinAt === null) return -1
+			return +new Date(u2.lastCheckinAt) - +new Date(u1.lastCheckinAt)
+		}) ?? []
+
 	return (
 		<>
 			<Head>
 				<title>{`Your Group - ${data?.pot.title}`}</title>
 			</Head>
 
-			<div className={clsx('max-w-1400')} style={{ margin: '0 auto' }}>
+			<div style={{ margin: '0 auto', maxWidth: '1100px' }}>
 				<ReactModal
 					isOpen={viewingLogsOfUserId !== null}
 					onRequestClose={() => setViewingLogsOfUserId(null)}
@@ -91,7 +102,7 @@ export default wrapDashboardLayout(function RealIndexPage() {
 				</ReactModal>
 
 				<div className="w-full flex flex-col flex-col-reverse xl:flex-row">
-					<div className="font-poppins px-10 pt-4 pb-1 xl:w-8/12 xl:px-12 md:px-8 md:pt-12">
+					<div className="font-poppins pt-4 pb-1 xl:w-8/12 md:pt-12 px-6">
 						<div className="text-2xl mb-3">{data?.pot.title}</div>
 						<div className="text-5xl font-semibold">
 							{pot.data?.users.length} member
@@ -113,7 +124,7 @@ export default wrapDashboardLayout(function RealIndexPage() {
 					</div>
 				</div>
 
-				<div className="w-full px-8 md:px-10 xl:px-12 md:px-8 mt-10">
+				<div className="w-full mt-10 px-6">
 					<div className="overview-containers bg-primary rounded-3xl px-14 pt-8 pb-6 text-white flex flex-col md:flex-row justify-between">
 						<div className="text-center md:text-left mb-8 md:mb-0">
 							<div className="text-3xl md:text-4xl lg:text-2xl xl:text-4xl font-bold">
@@ -377,10 +388,13 @@ export default wrapDashboardLayout(function RealIndexPage() {
 															}}
 														>
 															<img
-																src="/img/avatar.png"
+																src={
+																	u.avatarUri ? u.avatarUri : '/img/avatar.png'
+																}
 																style={{
-																	minHeight: 60,
-																	minWidth: 60
+																	height: 110,
+																	width: 110,
+																	borderRadius: '10px'
 																}}
 															/>
 														</td>
@@ -416,7 +430,7 @@ export default wrapDashboardLayout(function RealIndexPage() {
 															)}
 														</td>
 														<td className="font-poppins font-thin text-primary">
-															{userState.ready ? (
+															{u.readyUpAt !== null ? (
 																`$${parseInt(u.amount).toFixed(2)}`
 															) : (
 																<>Not ready yet</>

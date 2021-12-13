@@ -14,7 +14,7 @@ import classes from './create.module.css'
 function createPotNewState() {
 	return observable({
 		step: 0,
-		title: 'Workout for at least 10 minutes',
+		title: '',
 		description: '',
 		checkinCount: 1,
 		minAmount: 0
@@ -31,7 +31,6 @@ export default observer(function PotNew() {
 	if (!userState.loaded) return <SpinnerBig />
 
 	const steps = useMemo(() => {
-		// return userState.user ? [StepRequirements, StepTribute] : [StepRequirements]
 		return [StepRequirements]
 	}, [])
 
@@ -65,73 +64,91 @@ export default observer(function PotNew() {
 		}
 	)
 
-	const nextStep = () => {
-		if (state.step < steps.length - 1) {
-			return runInAction(() => {
-				state.step += 1
-			})
-		}
+	const generateSession = () => {
+		createPotMutation.mutate(state)
+	}
 
+	const createLaterSession = () => {
+		state.title = 'Workout for at least 10 minutes'
 		createPotMutation.mutate(state)
 	}
 
 	const StepComponent = steps[state.step]
-	const stepImg = [
-		'/img/Target_optimized.gif',
-		'/img/Piggy Bank_optimized.gif',
-		'/img/Piggy Bank_optimized.gif',
-		'/img/Gift_optimized.gif'
-	]
+
 	return (
-		<div className="relative sm:h-screen">
+		<div
+			className={clsx(
+				classes.onboarding_container,
+				'relative sm:h-screen md:overflow-hidden sm:overflow-auto'
+			)}
+			style={{
+				background: '#24008b'
+			}}
+		>
 			<div
 				className={clsx(
-					'w-full h-full flex flex-col pt-8 px-4 pb-4 text-white sm:flex-row sm:pt-14 sm:px-14 sm:pb-8 xl:pb-4 xl:pt-16 2xl:pt-32 2xl:px-32 2xl:pb-20',
+					'w-full h-screen flex flex-col text-white sm:flex-row sm:px-14 xl:pt-16 2xl:pt-32 2xl:px-32 lg:pt-16 md:pt-16 sm:pt-16 pt-4',
 					classes.onboarding__card
 				)}
 			>
-				<div className="w-full p-3 sm:w-6/12">
+				<div className="w-full p-3 sm:w-6/12" style={{ background: '#24008b' }}>
 					<StepComponent
 						state={state}
 						setStepCompleted={setStepCompleted}
 					></StepComponent>
 					<div className="flex justify-center sm:hidden">
-						<img src={stepImg[state.step]} style={{ height: '350px' }} />
+						<img
+							src={'/img/Target_optimized.gif'}
+							style={{ height: '350px' }}
+						/>
 					</div>
-					<div className="flex justify-center">
-						{/* {!userState.user ? ( */}
+					<div className="flex flex-col items-center">
 						<button
 							className={clsx(
 								'w-6/12 text-center py-4 rounded-md mt-10 shadow-md lg:mt-16 xl:mt-20 2xl:mt-24 lg:text-xl xl:text-2xl',
 								classes.onboarding__button
 							)}
 							disabled={!stepCompleted || createPotMutation.isLoading}
-							onClick={nextStep}
+							onClick={generateSession}
 						>
 							Generate session
 						</button>
+						<div className="w-full flex justify-end mt-4 bottom-20 block sm:hidden sm:mt-24 lg:mt-0 sm:absolute text-white">
+							<button
+								className="flex items-center text-xl xl:text-2xl 2xl:text-3xl xl:pr-34 lg:pr-24 md:pr-16"
+								onClick={createLaterSession}
+							>
+								Do this later
+								<svg className="ml-2 w-3 h-3 fill-current sm:w-5 h-5">
+									<use xlinkHref="/img/sprite.svg#icon-arrow-right"></use>
+								</svg>
+							</button>
+						</div>
 					</div>
 				</div>
 
-				<div className="w-full relative flex flex-col items-center justify-center px-3 sm:w-6/12">
-					<div className="flex absolute justify-center hidden sm:block sm:top-10 lg:-top-10">
+				<div
+					className="w-full relative flex flex-col items-center px-3 sm:w-6/12"
+					style={{ background: '#24008b' }}
+				>
+					<div className="hidden sm:block sm:top-10 lg:-top-10 pb-16">
 						<img
-							src={stepImg[state.step]}
+							src={'/img/Target_optimized.gif'}
 							className={classes.onboarding__image}
 						/>
 					</div>
-					<div className="w-full flex justify-end mt-4 bottom-8 sm:mt-24 sm:absolute">
-						<button
-							className="flex items-center text-xl xl:text-2xl 2xl:text-3xl"
-							onClick={nextStep}
-						>
-							Do this later
-							<svg className="ml-2 w-3 h-3 fill-current sm:w-5 h-5">
-								<use xlinkHref="/img/sprite.svg#icon-arrow-right"></use>
-							</svg>
-						</button>
-					</div>
 				</div>
+			</div>
+			<div className="w-full justify-end mt-4 bottom-20 hidden sm:flex sm:mt-24 lg:mt-0 sm:absolute text-white">
+				<button
+					className="flex items-center text-xl xl:text-2xl 2xl:text-3xl xl:pr-34 lg:pr-24 md:pr-16"
+					onClick={createLaterSession}
+				>
+					Do this later
+					<svg className="ml-2 w-3 h-3 fill-current sm:w-5 h-5">
+						<use xlinkHref="/img/sprite.svg#icon-arrow-right"></use>
+					</svg>
+				</button>
 			</div>
 		</div>
 	)
@@ -143,76 +160,195 @@ interface StepProps {
 }
 
 const StepRequirements = observer((props: StepProps) => {
+	const [suggestionDropdown, setSuggestionDropDown] = useState<boolean>(false)
+	const [perWeekDropdown, setPerWeekDropDown] = useState<boolean>(false)
+	const [perWeekSelection, setPerWeekSelection] = useState('Once per week')
+
 	useEffect(
 		() => props.setStepCompleted(props.state.title.length > 0),
 		[props.state.title, props.state.checkinCount]
 	)
 
+	const openQuickSuggestionMenu = () => {
+		setSuggestionDropDown(!suggestionDropdown)
+	}
+
+	const updatePerWeekSelection = e => {
+		setPerWeekSelection(e.currentTarget.innerHTML)
+		setPerWeekDropDown(!perWeekDropdown)
+	}
+
+	const updateTitle = (e: any): void => {
+		runInAction(() => {
+			props.state.title = e.currentTarget.innerHTML
+		})
+		setSuggestionDropDown(false)
+	}
+
 	return (
 		<div>
-			<h1 className="text-3xl font-bold lg:text-4xl xl:text-5xl 2xl:text-7xl">
-				Create your Session
+			<h1 className="font-bold text-3xl lg:text-4xl xl:text-5xl 2xl:text-7xl">
+				Create New Pot
 			</h1>
 			<p className="mt-4 text-left sm:text-xl lg:text-2xl 2xl:text-3xl sm:mt-10">
-				Get your own private group chat for accountability with your friends and
-				family.
+				You're seconds away from getting your own group for accountability with
+				friends.
 			</p>
-			<div className="mt-10 xl:mt-14 2xl:mt-28 sm:text-2xl lg:text-xl 2xl:text-4xl">
-				What do they have to do?
+			<div className="flex items-center mt-10 xl:mt-14 2xl:mt-28 sm:text-xl lg:text-2xl 2xl:text-3xl">
+				Set the activity your group does together
+				<div
+					className={clsx(
+						classes.tooltip,
+						'sm:text-2xl lg:text-xl 2xl:text-4xl'
+					)}
+				>
+					<img
+						src="/img/info.png"
+						alt=""
+						className={clsx(classes.info_img, 'pl-1')}
+					/>
+					<span className={classes.tooltiptext}>
+						This is the activity your group does together. Type in your own, or
+						choose from the dropdown menu
+					</span>
+				</div>
 			</div>
-			<Input
-				placeholder="Workout for at least 10 minutes"
-				type="text"
-				className="mt-8 text-white"
-				inputClassName={clsx('outline-none sm:text-2xl', classes.session__text)}
-				setValue={v =>
-					runInAction(() => {
-						props.state.title = v
-					})
-				}
-			></Input>
+			<div className="relative">
+				<Input
+					placeholder="Workout for at least 10 minutes"
+					type="text"
+					className="mt-4 text-white"
+					inputClassName={clsx(
+						'outline-none pr-10 md:text-lg lg:text-2xl',
+						classes.session__text
+					)}
+					value={props.state.title}
+					setValue={v =>
+						runInAction(() => {
+							props.state.title = v
+						})
+					}
+				></Input>
+
+				<div
+					// style={{display: "flex", justifyContent: "flex-end"}}
+					className="cursor-pointer mt-3 pr-3 absolute flex right-0"
+					onClick={() => {
+						setPerWeekDropDown(!perWeekDropdown)
+					}}
+				>
+					<span>{perWeekSelection}</span>
+					<div>
+						<svg className="create_icon_down__2Hk64 relative create-page-frequency-arrow">
+							<use href="/img/sprite.svg#icon-arrow-down-fat"></use>
+						</svg>
+					</div>
+				</div>
+				<div
+					className={clsx('flex justify-end absolute right-1')}
+					style={{ color: 'rgb(167, 153, 209);' }}
+				>
+					<ul
+						style={{ padding: '0px 5px' }}
+						className={clsx(
+							'w-full border-none whitespace-nowrap flex flex-col items-center right-0 mt-3',
+							perWeekDropdown ? 'block' : 'hidden',
+							classes.per_week_ul
+						)}
+					>
+						<li
+							className={clsx(classes.per_week_menu)}
+							onClick={updatePerWeekSelection}
+						>
+							Once per week
+						</li>
+						<li
+							className={clsx(classes.per_week_menu)}
+							onClick={updatePerWeekSelection}
+						>
+							Twice per week
+						</li>
+						<li
+							className={clsx(classes.per_week_menu)}
+							onClick={updatePerWeekSelection}
+						>
+							3x per week
+						</li>
+						<li
+							className={clsx(classes.per_week_menu)}
+							onClick={updatePerWeekSelection}
+						>
+							4x per week
+						</li>
+						<li
+							className={clsx(classes.per_week_menu)}
+							onClick={updatePerWeekSelection}
+						>
+							5x per week
+						</li>
+						<li
+							className={clsx(classes.per_week_menu)}
+							onClick={updatePerWeekSelection}
+						>
+							6x per week
+						</li>
+						<li
+							className={clsx(classes.per_week_menu)}
+							onClick={updatePerWeekSelection}
+						>
+							7x per week
+						</li>
+					</ul>
+				</div>
+
+				<div
+					className="cursor-pointer"
+					onClick={() => openQuickSuggestionMenu()}
+				>
+					<svg className={clsx(classes.icon_down, 'absolute')}>
+						<use xlinkHref="/img/sprite.svg#icon-arrow-down-fat"></use>
+					</svg>
+				</div>
+				<ul
+					id="quick-suggestion"
+					className={clsx(
+						classes.quick_suggestion,
+						'absolute w-full mt-1 py-2',
+						suggestionDropdown ? classes.open : ''
+					)}
+				>
+					<li className={classes.menu_option} onClick={updateTitle}>
+						Run, jog, or walk for at least a mile
+					</li>
+					<li className={classes.menu_option} onClick={updateTitle}>
+						Run, jog, or walk for at least half a mile
+					</li>
+					<li className={classes.menu_option} onClick={updateTitle}>
+						Complete a workout at the gym
+					</li>
+					<li className={classes.menu_option} onClick={updateTitle}>
+						Get out of bed before 7am
+					</li>
+					<li className={classes.menu_option} onClick={updateTitle}>
+						Cook a healthy meal weekly
+					</li>
+					<li className={classes.menu_option} onClick={updateTitle}>
+						Learn something weekly
+					</li>
+					<li className={classes.menu_option} onClick={updateTitle}>
+						Language learning weekly
+					</li>
+					<li className={classes.menu_option} onClick={updateTitle}>
+						Weekly Productivity, study, work, and solve difficult problems
+					</li>
+					<li className={classes.menu_option} onClick={updateTitle}>
+						Weekly Programming, build and share your code
+					</li>
+					<li className={classes.menu_option} onClick={updateTitle}>
+						Weekly Studying, complete an hour of studying
+					</li>
+				</ul>
+			</div>
 		</div>
-	)
-})
-
-const StepTribute = observer((props: StepProps) => {
-	return (
-		<>
-			<h1 className="text-3xl font-bold lg:text-5xl 2xl:text-7xl">
-				Set the missed week tribute
-			</h1>
-
-			<div className="italic py-4 opacity-75 sm:text-xl lg:text-2xl 2xl:text-3xl sm:mt-10">
-				Can be changed anytime, and does not become active until members ready
-				up.
-			</div>
-
-			<label
-				className="block mt-8 sm:text-2xl lg:text-xl 2xl:text-4xl"
-				htmlFor="selectInput"
-			>
-				Members pay at least this when they skip weekly check-in
-			</label>
-			<select
-				id="selectInput"
-				className={clsx(
-					'px-5 py-4 mt-4 w-full shadow-md rounded-md sm:text-2xl',
-					classes.onboarding__select
-				)}
-				onChange={e =>
-					runInAction(() => {
-						props.state.minAmount = parseInt(e.target.value)
-					})
-				}
-			>
-				{[0, 5, 10, 15, 20, 30, 40, 50].map(v => {
-					return (
-						<option value={'' + v} selected={props.state.minAmount === v}>
-							{v === 0 ? 'No contribution' : `${v}$`}
-						</option>
-					)
-				})}
-			</select>
-		</>
 	)
 })

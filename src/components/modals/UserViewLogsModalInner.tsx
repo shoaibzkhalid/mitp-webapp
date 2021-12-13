@@ -31,15 +31,22 @@ export function UserViewLogsModalInner(
 
 			{!userLogs.data ? (
 				<SpinnerBig />
-			) : userLogs.data.length === 0 ? (
+			) : userLogs.data.logs.length === 0 ? (
 				<div className="text-gray-500">No logs.</div>
 			) : (
-				userLogs.data.map(log => {
+				userLogs.data.logs.map(log => {
 					return (
 						<div className="mb-7">
 							<div>{dayjs(log.createdAt).format('DD MMM YYYY, HH:mm A')}</div>
 							{log.pictureUri ? (
-								<img src={log.pictureUri} />
+								<img
+									src={log.pictureUri}
+									style={{
+										height: 110,
+										width: 110,
+										borderRadius: '10px'
+									}}
+								/>
 							) : (
 								<div className="text-gray-500">No image.</div>
 							)}
