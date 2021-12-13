@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import dayjs from 'dayjs'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
@@ -11,10 +11,16 @@ import { userState } from '../state/user'
 import { useSelectedPot } from '../state/react/useSelectedPot'
 import { Header } from '../components/unique/Header'
 import { toggleSideBar } from '../utils/common'
+import ReactModal from 'react-modal'
+import { WithdrawModalInner } from '../components/modals/WithdrawModalInner'
+import { useNextAppElement } from '../state/react/useNextAppElement'
 
 export default wrapDashboardLayout(function PayoutsPage() {
 	const router = useRouter()
 	const { isLoading, data } = useSelectedPot()
+	const appElement = useNextAppElement()
+
+	const [withdrawModalIsOpen, setWithdrawModalIsOpen] = useState(false)
 
 	useEffect(() => {
 		toggleSideBar(false)
@@ -34,6 +40,14 @@ export default wrapDashboardLayout(function PayoutsPage() {
 			<Head>
 				<title>{`Your Group - ${data?.pot.title}`}</title>
 			</Head>
+
+			<ReactModal
+				isOpen={withdrawModalIsOpen}
+				onRequestClose={() => setWithdrawModalIsOpen(false)}
+				appElement={appElement}
+			>
+				<WithdrawModalInner closeModal={() => setWithdrawModalIsOpen(false)} />
+			</ReactModal>
 
 			<div style={{ maxWidth: '1100px', margin: '0 auto' }}>
 				<div className="w-full flex flex-col-reverse xl:flex-row">
@@ -80,6 +94,9 @@ export default wrapDashboardLayout(function PayoutsPage() {
 							<button
 								className="-button -secondary"
 								disabled={!transactionsData?.currentCredits}
+								onClick={() => {
+									setWithdrawModalIsOpen(true)
+								}}
 							>
 								Withdraw
 							</button>
