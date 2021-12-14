@@ -202,3 +202,52 @@ input:checked ~ .checkbox-bg {
 .payments__button-wrapper .-secondary {
 	border: 3px solid rgb(107, 114, 128);
 }
+
+.radio-holder .container {
+	display: block;
+	position: relative;
+	padding-left: 35px;
+	margin-bottom: 12px;
+	cursor: pointer;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+.radio-holder .container input {
+	position: absolute;
+	opacity: 0;
+	cursor: pointer;
+}
+.radio-holder .checkmark {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 20px;
+	width: 20px;
+	background-color: #eee;
+	border-radius: 50%;
+}
+
+.radio-holder .container input:checked ~ .checkmark {
+	background-color: #7fba7a;
+}
+
+.radio-holder .checkmark:after {
+	content: '';
+	position: absolute;
+	display: none;
+}
+
+.radio-holder .container input:checked ~ .checkmark:after {
+	display: block;
+}
+
+.radio-holder .container .checkmark:after {
+	top: 0px;
+	left: 0px;
+	width: 0px;
+	height: 0px;
+	border-radius: 50%;
+	background: white;
+}
