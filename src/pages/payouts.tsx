@@ -27,7 +27,7 @@ export default wrapDashboardLayout(function PayoutsPage() {
 	}, [])
 
 	if (!isLoading && data === null) {
-		router.push('/create')
+		router.push('/new')
 	}
 
 	const { data: transactionsData } = useQuery(

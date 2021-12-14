@@ -42,7 +42,7 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 	const isMobile = useMediaQuery('(max-width: 1024px)')
 
 	const potUser = useMemo(
-		() => data?.users.find(u => u.id === userState.user.id),
+		() => data?.users.find(u => u.id === userState.user?.id),
 		[data]
 	)
 

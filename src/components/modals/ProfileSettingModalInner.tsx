@@ -26,7 +26,7 @@ export function ProfileSettingModalInner({ closeModal }: ModalProps) {
 	const inputFile = useRef(null)
 
 	const potUser = useMemo(
-		() => data.users.find(u => u.id === userState.user.id),
+		() => data?.users.find(u => u.id === userState.user?.id),
 		[data]
 	)
 

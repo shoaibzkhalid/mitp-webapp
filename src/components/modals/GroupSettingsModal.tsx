@@ -24,7 +24,7 @@ export function GroupSettingsModal({ closeModal }: ModalProps) {
 	const potAdminUser = useMemo(() => data.users.find(u => u.admin), [data])
 
 	const potUser = useMemo(
-		() => data.users.find(u => u.id === userState.user.id),
+		() => data?.users.find(u => u.id === userState.user?.id),
 		[data]
 	)
 

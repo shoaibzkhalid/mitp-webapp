@@ -37,6 +37,10 @@ export const userState = observable({
 
 		runInAction(() => {
 			userState.user = user
+			// userState.user = null
+			// userState.tokens.accessToken = null
+			// userState.tokens.refreshToken = null
+			// localStorage.setItem('mitp_tokens', '')
 		})
 
 		if (user) {

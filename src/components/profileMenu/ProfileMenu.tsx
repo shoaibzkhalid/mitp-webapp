@@ -76,8 +76,8 @@ export const ProfileMenu = observer(function ProfileMenu() {
 					<img
 						className={classes.sidebar__pic}
 						src={
-							userState.user!.avatarUri
-								? userState.user.avatarUri
+							userState?.user?.avatarUri
+								? userState?.user.avatarUri
 								: '/img/ava.png'
 						}
 						alt=""
@@ -85,7 +85,7 @@ export const ProfileMenu = observer(function ProfileMenu() {
 				</div>
 				<div className={classes.sidebar__desc}>
 					<div className={classes.sidebar__man}>
-						{userState.user?.firstName}
+						{userState?.user?.firstName}
 					</div>
 					<div className={clsx(classes.sidebar__status, classes.caption)}>
 						{/* Free account */}
