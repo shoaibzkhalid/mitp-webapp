@@ -104,9 +104,12 @@ export function ProfileSettingModalInner({ closeModal }: ModalProps) {
 	return (
 		<>
 			<div className="px-0 sm:px-6">
-				<div className="text-xl font-poppins flex items-center justify-center pt-4">
-					<div>{data?.pot.title}</div>
-					<div className="absolute right-2 sm:right-12">
+				<div className="text-lg font-poppins flex items-center justify-center pt-4">
+					<div className="">
+						Manage ready up status & modify how you appear to others in your
+						group [{data?.pot.title}]
+					</div>
+					<div className="absolute right-2 sm:right-8">
 						<button
 							className="-button -round hover:shadow-lg text-sm"
 							onClick={() => closeModal()}
@@ -204,8 +207,8 @@ export function ProfileSettingModalInner({ closeModal }: ModalProps) {
 									className="sr-only"
 									onChange={e => changeReady(e)}
 								/>
-								<div className="checkbox-bg block bg-gray-600 w-14 h-8 rounded-full"></div>
-								<div className="dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition"></div>
+								<div className="checkbox-bg block bg-gray-600 w-24 h-12 rounded-full"></div>
+								<div className="dot absolute left-1 top-1 bg-white w-10 h-10 rounded-full transition"></div>
 							</div>
 						</label>
 					</div>

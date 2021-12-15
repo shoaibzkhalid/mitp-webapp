@@ -86,8 +86,16 @@ export default observer(function PotNew() {
 			}}
 		>
 			<div
+				className="xl:pt-8 2xl:pt-8 sm:px-20 2xl:px-32 lg:pt-8 md:pt-8 sm:pt-8 pt-4 flex justify-end text-white text-xl cursor-pointer"
+				onClick={() => {
+					router.push('/home')
+				}}
+			>
+				X
+			</div>
+			<div
 				className={clsx(
-					'w-full h-screen flex flex-col text-white sm:flex-row sm:px-14 xl:pt-16 2xl:pt-32 2xl:px-32 lg:pt-16 md:pt-16 sm:pt-16 pt-4',
+					'w-full h-screen flex flex-col text-white sm:flex-row sm:px-14 xl:pt-12 2xl:pt-24 2xl:px-24 lg:pt-10 md:pt-10 sm:pt-10 pt-4',
 					classes.onboarding__card
 				)}
 			>
@@ -144,7 +152,7 @@ export default observer(function PotNew() {
 					className="flex items-center text-xl xl:text-2xl 2xl:text-3xl xl:pr-34 lg:pr-24 md:pr-16"
 					onClick={createLaterSession}
 				>
-					Do this later
+					Setup with defaults
 					<svg className="ml-2 w-3 h-3 fill-current sm:w-5 h-5">
 						<use xlinkHref="/img/sprite.svg#icon-arrow-right"></use>
 					</svg>
@@ -187,8 +195,8 @@ const StepRequirements = observer((props: StepProps) => {
 
 	return (
 		<div>
-			<h1 className="font-bold text-3xl lg:text-4xl xl:text-5xl 2xl:text-7xl">
-				Create New Pot
+			<h1 className="font-bold text-2xl lg:text-3xl xl:text-4xl 2xl:text-6xl">
+				What activity does your group need to do?
 			</h1>
 			<p className="mt-4 text-left sm:text-xl lg:text-2xl 2xl:text-3xl sm:mt-10">
 				You're seconds away from getting your own group for accountability with
