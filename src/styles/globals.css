@@ -147,7 +147,7 @@ body {
 }
 
 input:checked ~ .dot {
-	transform: translateX(100%);
+	transform: translateX(120%);
 	/* background-color: #48bb78; */
 }
 
