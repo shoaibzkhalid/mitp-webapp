@@ -114,9 +114,6 @@ export default wrapDashboardLayout(function OverviewPage() {
 		user => pot.data.pot.checkinCount - user.checkinsThisWeek > daysLeft
 	).length
 
-	// const searchParams = new URLSearchParams(window.location.search)
-	// const pageState = searchParams.get('state')
-	const pageState = 'blank'
 	return (
 		<>
 			<Head>
@@ -148,20 +145,18 @@ export default wrapDashboardLayout(function OverviewPage() {
 					<div className="px-6 py-7 border-b border-gray-200 dark:border-gray-700 sm:px-0 md:py-1 xl:pt-12 xl:w-2/12 xl:border-b-0">
 						<div className="font-poppins flex justify-between items-center xl:justify-center lg:justify-end">
 							<Header />
-							{pageState !== 'blank' && (
-								<div className="text-center text-sm">
-									<div className="text-gray-500 text-sm hidden md:block">
-										{pot.data?.users.length} member
-										{pot.data?.users.length !== 1 && 's'}
-									</div>
-									<div
-										className="cursor-pointer text-sm py-3 px-6 rounded-2xl bg-gray-900 text-white md:mt-2 md:text-sm md:text-blue-600 md:p-0 md:bg-white dark:bg-gray-900"
-										onClick={() => CopyInviteLink(data, setNotificationMessage)}
-									>
-										&mdash; copy invite link &mdash;
-									</div>
+							<div className="text-center text-sm">
+								<div className="text-gray-500 text-sm hidden md:block">
+									{pot.data?.users.length} member
+									{pot.data?.users.length !== 1 && 's'}
 								</div>
-							)}
+								<div
+									className="cursor-pointer text-sm py-3 px-6 rounded-2xl bg-gray-900 text-white md:mt-2 md:text-sm md:text-blue-600 md:p-0 md:bg-white dark:bg-gray-900"
+									onClick={() => CopyInviteLink(data, setNotificationMessage)}
+								>
+									&mdash; copy invite link &mdash;
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
