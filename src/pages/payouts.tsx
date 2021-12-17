@@ -62,7 +62,7 @@ export default wrapDashboardLayout(function PayoutsPage() {
 				</div>
 
 				<div className="px-6 py-12 font-poppins">
-					<div className="text-2xl mb-3">Hi {userState.user!.firstName},</div>
+					<div className="text-2xl mb-3">Hi {userState?.user?.firstName},</div>
 					<div className="text-5xl font-semibold">Payouts 💰</div>
 				</div>
 

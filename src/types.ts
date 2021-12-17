@@ -23,6 +23,7 @@ export interface ApiPot extends ModelBase {
 	startedAt: string
 	streak: number
 	inviteAdminMode: boolean
+	timeZone: string
 }
 
 export interface ApiPotLog extends ModelBase {

@@ -244,7 +244,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 								<div>
 									<div className="text-5xl font-bold text-center my-1 md:text-7xl w-full">
 										<div>
-											<div className="mt-5">${data?.metrics.currentValue}</div>
+											<div className="mt-5">${data?.metrics.currentValue/100}</div>
 											<div className="mt-1 text-sm text-gray-500 text-left">
 												<span className="text-green-500">
 													{failedUsers} people

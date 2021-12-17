@@ -18,7 +18,8 @@ export function GroupSettingsModal({ closeModal }: ModalProps) {
 		description: data?.pot.description,
 		payInMinimum: data?.pot.minAmount,
 		checkInFrequency: data?.pot.checkinCount,
-		inviteMode: !data?.pot.inviteAdminMode ? 'anyone' : 'only'
+		inviteMode: !data?.pot.inviteAdminMode ? 'anyone' : 'only',
+		timeZone: data?.pot.timeZone
 	})
 
 	const potAdminUser = useMemo(() => data.users.find(u => u.admin), [data])
@@ -45,15 +46,15 @@ export function GroupSettingsModal({ closeModal }: ModalProps) {
 	})
 
 	const updatePortGroup = () => {
-		const params = {
+		updatePotMutation.mutate({
 			title: groupDetails?.groupTitle,
 			description: groupDetails?.description,
 			checkinCount: groupDetails?.checkInFrequency,
 			minAmount: groupDetails?.payInMinimum,
 			visibility: data.pot.visibility,
-			inviteAdminMode: groupDetails?.inviteMode === 'anyone' ? false : true
-		}
-		updatePotMutation.mutate(params)
+			inviteAdminMode: groupDetails?.inviteMode === 'anyone' ? false : true,
+			timeZone: groupDetails?.timeZone
+		})
 	}
 
 	const updatePotMutation = useMutation(
