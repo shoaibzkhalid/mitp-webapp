@@ -51,6 +51,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 	const [openGroupDetailModal, setOpenGroupDetailModal] = useState(false)
 	const [viewRuleDropDown, setViewRuleDropDown] = useState(false)
 	const [openReadyUpModal, setOpenReadyUpModal] = useState(false)
+	const [potView, setPotView] = useState('Total Pot')
 
 	const appElement = useNextAppElement()
 
@@ -61,6 +62,11 @@ export default wrapDashboardLayout(function OverviewPage() {
 	if (!data) {
 		return <SpinnerBig />
 	}
+
+	let totalPotValue = 0
+	data?.users?.map(user => {
+		totalPotValue += Number(user.amount) * 4
+	})
 
 	useEffect(() => {
 		toggleSideBar(false)
@@ -324,8 +330,13 @@ export default wrapDashboardLayout(function OverviewPage() {
 								<select
 									className="px-5 py-4 w-full rounded-2xl text-base text-gray-500 outline-none border-gray-200 dark:bg-gray-900 dark:border-gray-900 md:w-44"
 									style={{ borderWidth: '1px' }}
+									value={potView}
+									onChange={e => {
+										setPotView(e.target.value)
+									}}
 								>
-									<option value="new">Last 4 weeks</option>
+									<option value={'Total Pot'}>Total Pot</option>
+									<option value={'Real Time'}>Real Time</option>
 								</select>
 							</div>
 
@@ -334,7 +345,11 @@ export default wrapDashboardLayout(function OverviewPage() {
 									<div className="text-5xl font-bold text-center my-1 md:text-7xl w-full">
 										<div>
 											<div className="mt-5">
-												${data?.metrics.currentValue / 100}
+												{potView === 'Total Pot' ? (
+													<>${totalPotValue}</>
+												) : (
+													<>${data?.metrics.currentValue / 100}</>
+												)}
 											</div>
 											<div className="mt-1 text-sm text-gray-500 text-left">
 												<span className="text-green-500">
