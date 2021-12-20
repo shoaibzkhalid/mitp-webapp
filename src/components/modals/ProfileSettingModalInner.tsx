@@ -160,7 +160,7 @@ export function ProfileSettingModalInner({ closeModal }: ModalProps) {
 
 				<div className="mt-10">
 					<div className="flex items-center justify-between">
-						<div className="font-bold text-xl">Swear Jar Free</div>
+						<div className="font-bold text-xl">Swear Jar Fee</div>
 						<div className="text-primary cursor-pointer">
 							<Link href="/payouts">-My payouts-</Link>
 						</div>

@@ -198,11 +198,11 @@ const StepRequirements = observer((props: StepProps) => {
 			<h1 className="font-bold text-2xl lg:text-3xl xl:text-4xl 2xl:text-6xl">
 				What activity does your group need to do?
 			</h1>
-			<p className="mt-4 text-left sm:text-xl lg:text-2xl 2xl:text-3xl sm:mt-10">
+			<p className="text-left sm:text-lg lg:text-xl 2xl:text-2xl sm:mt-8 text-gray-200 font-light">
 				You're seconds away from getting your own group for accountability with
 				friends.
 			</p>
-			<div className="flex items-center mt-10 xl:mt-14 2xl:mt-28 sm:text-xl lg:text-2xl 2xl:text-3xl">
+			<div className="flex items-center mt-10 xl:mt-14 2xl:mt-28 sm:text-lg lg:text-xl 2xl:text-2xl">
 				Set the activity your group does together
 				<div
 					className={clsx(

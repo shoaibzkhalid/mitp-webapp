@@ -175,7 +175,13 @@ export default wrapDashboardLayout(function OverviewPage() {
 								closeModal={() => setOpenGroupDetailModal(false)}
 							/>
 						</ReactModal>
-						<div className="text-gray-400 text-xl">{`Group Admin:  ${potAdminUser?.firstName}`}</div>
+						<div className="text-gray-400 text-xl">
+              {potAdminUser?.firstName ? (
+								<>{`Group Admin:  ${potAdminUser?.firstName}`}</>
+							) : (
+								<></>
+							)}
+            </div>
 					</div>
 
 					<div className="px-6 py-7 border-b border-gray-200 dark:border-gray-700 sm:px-0 md:py-1 xl:pt-12 xl:w-2/12 xl:border-b-0">
