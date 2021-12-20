@@ -253,7 +253,7 @@ const StepRequirements = observer((props: StepProps) => {
 					</div>
 				</div>
 				<div
-					className={clsx('flex justify-end absolute right-1')}
+					className={clsx('flex justify-end absolute right-1 top-20')}
 					style={{ color: 'rgb(167, 153, 209);' }}
 				>
 					<ul

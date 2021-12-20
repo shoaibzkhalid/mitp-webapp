@@ -54,7 +54,7 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 	return (
 		<div
 			style={{
-				padding: userState.ready ? '140px 0 70px 0' : '140px 0 100px 0'
+				padding: potUser?.readyUpAt ? '140px 0 160px 0' : '140px 0 190px 0'
 			}}
 			className="w-56 h-screen fixed top-0 left-0 border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 md:w-80"
 		>
@@ -225,15 +225,13 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 						</ReactModal>
 					</div>
 				))}
-				<div className="mt-auto">
-					<div className="border-t border-gray-300 dark:border-gray-700 mx-5 mt-7 mb-10">
-						<ProfileMenu />
-					</div>
-				</div>
 			</div>
 
-			<div className="flex flex-col justify-center items-center">
-				<div className="pt-2">
+			<div className="flex flex-col justify-center items-center relative">
+				{/* <div className="px-5 w-full relative"> */}
+				<ProfileMenu potUser={potUser} />
+				{/* </div> */}
+				<div className="mt-20">
 					<Switch />
 				</div>
 				{potUser?.readyUpAt ? (
