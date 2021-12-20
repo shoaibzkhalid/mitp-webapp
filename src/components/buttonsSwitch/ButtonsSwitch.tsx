@@ -32,7 +32,7 @@ const ButtonsSwitch = ({
 	}
 
 	return (
-		<div className={clsx(classes.btnswitch)}>
+		<div className={clsx(classes.btnswitch, 'my-5')}>
 			<button
 				id="anyone"
 				className={clsx(
