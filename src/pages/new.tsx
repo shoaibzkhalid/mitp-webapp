@@ -42,7 +42,10 @@ export default wrapDashboardLayout(function NewPage() {
 					</div>
 				</div>
 
-				<div className="flex justify-center items-center h-screen">
+				<div
+					className="flex justify-center items-center"
+					style={{ height: 'calc(100vh - 80px)' }}
+				>
 					<div className="">
 						<div className="flex justify-center mr-4">
 							<img src="/img/add-task.svg" />
