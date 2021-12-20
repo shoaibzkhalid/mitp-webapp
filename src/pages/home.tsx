@@ -22,6 +22,9 @@ import { Header } from '../components/unique/Header'
 import CopyInviteLink from '../components/notification/CopyInviteLink'
 import { formatDuration } from '../utils/formatDuration'
 import { toggleSideBar } from '../utils/common'
+import { GroupSettingsModal } from '../components/modals/GroupSettingsModal'
+import { ProfileSettingModalInner } from '../components/modals/ProfileSettingModalInner'
+import clsx from 'clsx'
 
 const PotChart = dynamic(() => import('../components/home/PotChart'), {
 	ssr: false
@@ -45,6 +48,9 @@ export default wrapDashboardLayout(function OverviewPage() {
 	const [duration, setDuration] = useState<string>('')
 	const [photoModalIsOpen, setPhotoModalIsOpen] = useState(false)
 	const [sucessModalIsOpen, setSucessModalIsOpen] = useState(false)
+	const [openGroupDetailModal, setOpenGroupDetailModal] = useState(false)
+	const [viewRuleDropDown, setViewRuleDropDown] = useState(false)
+	const [openReadyUpModal, setOpenReadyUpModal] = useState(false)
 
 	const appElement = useNextAppElement()
 
@@ -100,6 +106,11 @@ export default wrapDashboardLayout(function OverviewPage() {
 
 	const potAdminUser = useMemo(() => data?.users.find(u => u.admin), [data])
 
+	const potUser = useMemo(
+		() => data?.users.find(u => u.id === userState.user?.id),
+		[data]
+	)
+
 	const date1 = dayjs(data?.pot.createdAt).format('YYYY-MM-DD')
 	const date2 = dayjs()
 	const diff = date2.diff(date1)
@@ -138,12 +149,37 @@ export default wrapDashboardLayout(function OverviewPage() {
 						<div className="text-2xl">The Group Pot Of</div>
 						<div className="text-5xl font-semibold" style={{ lineHeight: 1.5 }}>
 							{data?.pot.title}
+							{potUser?.admin && (
+								<span
+									className="ml-2 cursor-pointer inline-block"
+									onClick={() => setOpenGroupDetailModal(true)}
+								>
+									<svg className="w-6 h-6 fill-current">
+										<use xlinkHref="/img/sprite.svg#icon-edit"></use>
+									</svg>
+								</span>
+							)}
 						</div>
+						<ReactModal
+							isOpen={openGroupDetailModal}
+							onRequestClose={() => setOpenGroupDetailModal(false)}
+							appElement={appElement}
+							style={{
+								content: {
+									minWidth: 320,
+									maxWidth: 600
+								}
+							}}
+						>
+							<GroupSettingsModal
+								closeModal={() => setOpenGroupDetailModal(false)}
+							/>
+						</ReactModal>
 						<div className="text-gray-400 text-xl">{`Group Admin:  ${potAdminUser?.firstName}`}</div>
 					</div>
 
 					<div className="px-6 py-7 border-b border-gray-200 dark:border-gray-700 sm:px-0 md:py-1 xl:pt-12 xl:w-2/12 xl:border-b-0">
-						<div className="font-poppins flex justify-between items-center xl:justify-center lg:justify-end">
+						<div className="font-poppins flex flex-col justify-between items-center xl:justify-center lg:justify-end">
 							<Header />
 							<div className="text-center text-sm">
 								<div className="text-gray-500 text-sm hidden md:block">
@@ -155,6 +191,59 @@ export default wrapDashboardLayout(function OverviewPage() {
 									onClick={() => CopyInviteLink(data, setNotificationMessage)}
 								>
 									&mdash; copy invite link &mdash;
+								</div>
+								<div
+									className="mt-10 text-gray-400 w-full absolute"
+									style={{ width: '150px' }}
+								>
+									<div
+										className="flex items-center justify-center cursor-pointer"
+										onClick={() => {
+											setViewRuleDropDown(!viewRuleDropDown)
+										}}
+									>
+										View Rules
+										<span className="inline-block pl-1">
+											<svg
+												style={{ width: '16px', height: '16px' }}
+												className="fill-current"
+											>
+												<use href="/img/sprite.svg#icon-arrow-down-fat"></use>
+											</svg>
+										</span>
+									</div>
+									<div
+										className={clsx(
+											'border border-gray-400 p-1 mt-2 text-left',
+											viewRuleDropDown ? 'block' : 'hidden'
+										)}
+										style={{ wordWrap: 'break-word' }}
+									>
+										<p
+											className="mb-2 text-gray-800 font-bold cursor-pointer"
+											onClick={() => setOpenReadyUpModal(true)}
+										>
+											Swear jar rules
+										</p>
+										{`Check in with photo proof (screenshot or take photo) you've
+										completed "${data?.pot.title}" by Sunday at
+										midnight or pay in swear jar fee of $${pot.data?.pot.minAmount} or more.`}
+										<ReactModal
+											isOpen={openReadyUpModal}
+											onRequestClose={() => setOpenReadyUpModal(false)}
+											appElement={appElement}
+											style={{
+												content: {
+													minWidth: 320,
+													maxWidth: 600
+												}
+											}}
+										>
+											<ProfileSettingModalInner
+												closeModal={() => setOpenReadyUpModal(false)}
+											/>
+										</ReactModal>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -244,7 +333,9 @@ export default wrapDashboardLayout(function OverviewPage() {
 								<div>
 									<div className="text-5xl font-bold text-center my-1 md:text-7xl w-full">
 										<div>
-											<div className="mt-5">${data?.metrics.currentValue/100}</div>
+											<div className="mt-5">
+												${data?.metrics.currentValue / 100}
+											</div>
 											<div className="mt-1 text-sm text-gray-500 text-left">
 												<span className="text-green-500">
 													{failedUsers} people

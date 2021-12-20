@@ -22,6 +22,8 @@ export default wrapDashboardLayout(function PayoutsPage() {
 
 	const [withdrawModalIsOpen, setWithdrawModalIsOpen] = useState(false)
 
+	const pot = useSelectedPot()
+
 	useEffect(() => {
 		toggleSideBar(false)
 	}, [])
@@ -88,6 +90,16 @@ export default wrapDashboardLayout(function PayoutsPage() {
 							<button
 								className="-button -primary mr-4"
 								disabled={!transactionsData?.currentCredits}
+								onClick={() => {
+									localStorage.setItem(
+										'post-login-action',
+										JSON.stringify({
+											type: 'goto-pot',
+											potId: pot.data!.pot.id
+										})
+									)
+									router.push('/paypal/login-initiate')
+								}}
 							>
 								Add Credits
 							</button>
