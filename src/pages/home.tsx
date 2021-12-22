@@ -22,6 +22,10 @@ import { Header } from '../components/unique/Header'
 import CopyInviteLink from '../components/notification/CopyInviteLink'
 import { formatDuration } from '../utils/formatDuration'
 import { toggleSideBar } from '../utils/common'
+import Login from '../components/Authentication/Login'
+import Logout from '../components/Authentication/Logout'
+import { Api } from '../api'
+import { useMutation } from 'react-query'
 import { GroupSettingsModal } from '../components/modals/GroupSettingsModal'
 import { ProfileSettingModalInner } from '../components/modals/ProfileSettingModalInner'
 import clsx from 'clsx'
@@ -42,6 +46,8 @@ export default wrapDashboardLayout(function OverviewPage() {
 		0, 0, 0
 	])
 
+	const [authStatus, setAuthStatus] = useState(false)
+	const [authUserData, setAuthUserData] = useState('')
 	const router = useRouter()
 	const { isLoading, data } = useSelectedPot()
 	const pot = useSelectedPot()
@@ -51,7 +57,6 @@ export default wrapDashboardLayout(function OverviewPage() {
 	const [openGroupDetailModal, setOpenGroupDetailModal] = useState(false)
 	const [viewRuleDropDown, setViewRuleDropDown] = useState(false)
 	const [openReadyUpModal, setOpenReadyUpModal] = useState(false)
-
 	const appElement = useNextAppElement()
 
 	if (!isLoading && data === null) {
@@ -176,18 +181,30 @@ export default wrapDashboardLayout(function OverviewPage() {
 							/>
 						</ReactModal>
 						<div className="text-gray-400 text-xl">
-              {potAdminUser?.firstName ? (
+							{potAdminUser?.firstName ? (
 								<>{`Group Admin:  ${potAdminUser?.firstName}`}</>
 							) : (
 								<></>
 							)}
-            </div>
+						</div>
 					</div>
 
 					<div className="px-6 py-7 border-b border-gray-200 dark:border-gray-700 sm:px-0 md:py-1 xl:pt-12 xl:w-2/12 xl:border-b-0">
 						<div className="font-poppins flex flex-col justify-between items-center xl:justify-center lg:justify-end">
 							<Header />
 							<div className="text-center text-sm">
+								{/* {authStatus ? (
+									<Logout authSuccess={setAuthStatus} />
+								) : (
+									<Login
+										authSuccess={setAuthStatus}
+										userData={setAuthUserData}
+									/>
+								)} */}
+
+								{/* <a href="javascript:void(0)" onClick={checkLoginStatus}>
+									Check Login Status
+								</a> */}
 								<div className="text-gray-500 text-sm hidden md:block">
 									{pot.data?.users.length} member
 									{pot.data?.users.length !== 1 && 's'}

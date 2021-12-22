@@ -15,6 +15,9 @@ export default {
 
 	listConnections: () => Api.get<ApiUserConnection[]>('user/me/connection'),
 
+	googleUserLogin: (data: { googleAccessToken: string }) =>
+		Api.post<any>('googleUserAuth', data),
+
 	payin: (amount: number) =>
 		Api.post<{
 			approveUrl: string

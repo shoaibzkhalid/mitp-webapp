@@ -19,6 +19,8 @@ import { toggleSideBar } from '../../utils/common'
 import { observer } from 'mobx-react-lite'
 import { themeState } from '../../state/react/useTheme'
 import { userState } from '../../state/user'
+import Login from '../Authentication/Login'
+import Logout from '../Authentication/Logout'
 
 interface SidebarProps {
 	isMobile: boolean
@@ -40,6 +42,8 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 	const [sidebarState, setSidebarState] = useContext(SidebarContext)
 	const { data } = useSelectedPot()
 	const isMobile = useMediaQuery('(max-width: 1024px)')
+	const [authStatus, setAuthStatus] = useState(false)
+	const [authUserData, setAuthUserData] = useState('')
 
 	const potUser = useMemo(
 		() => data?.users.find(u => u.id === userState.user?.id),
@@ -113,7 +117,17 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 						)}
 					</div>
 
-					<p className="mt-2 text-gray-500 text-sm md:text-base">v1.0.1</p>
+					{/* <p className="mt-2 text-gray-500 text-sm md:text-base">v1.0.1</p> */}
+					<div className="authentication-section mt-4 w-full">
+						{authStatus ? (
+							<Logout
+								authSuccess={setAuthStatus}
+								userName={authUserData['givenName']}
+							/>
+						) : (
+							<Login authSuccess={setAuthStatus} userData={setAuthUserData} />
+						)}
+					</div>
 				</div>
 			</div>
 			<div className="overflow-y-auto w-full h-full px-5 pb-5 border-b border-gray-200 dark:border-gray-700 -sidebar-main md:px-6">

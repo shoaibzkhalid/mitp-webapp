@@ -256,3 +256,11 @@ input:checked ~ .checkbox-bg {
 	pointer-events: none;
 	opacity: 0.4;
 }
+
+/* Google signin button css */
+.google-o-auth-button-login , .google-o-auth-button-logout {
+	margin-left: -8px;
+	width: calc(100% + 15px);
+	color: #000 !important;
+	font-weight: 700 !important;
+}

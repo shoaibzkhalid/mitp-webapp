@@ -13,40 +13,56 @@ export function Intro(props: IntroProps) {
 		if (props.isJustCreated)
 			return [
 				{
-					element: document.getElementById('walkthrough_potname'),
-					title: 'Welcome to your new group!',
-					intro:
-						'This is the activity of your group your members do to complete their check ins with the rest of the group. You can change your group activity or add details to it like time, location, or specific requirements (IE; Types of Exercises Allowed) later.'
+					element: document.getElementById('checkin_div'),
+					title: 'Check In',
+					intro: `Check in before the week is up with photo proof you've completed the activity. (Screenshots work too)`,
+					tooltipClass: clsx('bg-white text-black dark:bg-dark dark:text-white')
 				},
 				{
-					element: document.getElementById('walkthrough_checkins'),
-					intro: `Users must tap the “check in” button on mobile or desktop and upload photo proof they’ve completed the group activity successfully before the week is over.`
+					element: document.getElementById('weekly_overview'),
+					title: 'Weekly Overview',
+					intro: `In Weekly Overview you will see all check ins by your group. View others photo logs, or check your own. All members must complete their check ins before the end of the week.`,
+					tooltipClass: clsx('bg-white text-black dark:bg-dark dark:text-white')
 				},
 				{
 					element: document.getElementById('walkthrough_pot'),
-					title: 'This is your group’s pot.',
-					intro: `Members of your group who fail their check-in before the week is up pay in to the pot. Note: You set the minimum pay-in for your group, and can always set the value to zero, so group members are able to set their own.`
+					intro: `Those that fail to complete their weekly check ins pay in to the group pot. The amount they pay in for failing the week can be changed by you (the group admin) in your pot settings. We gave you $5 in your pot to help you launch your legendary new group. Invite friends to activate those credits.`,
+					tooltipClass: clsx(
+						'bg-white text-black dark:bg-dark dark:text-white'
+					),
+					position: 'left'
 				},
 				{
-					intro: `We recommend you take a minute to finish setup, but you can also invite friends or explore. This is your group, and you’re at the helm. Tap "tutorial" at anytime if you want to see this walkthrough again.`
+					title: 'Bookmark',
+					intro: `Last Step:  Take a minute to add this page to your bookmarks bar by tapping on the icon above.`,
+					tooltipClass: clsx('bg-white text-black dark:bg-dark dark:text-white')
 				}
 			]
 		else
 			return [
 				{
-					element: document.getElementById('walkthrough_checkins'),
-					title: 'Welcome to the group!',
-					intro:
-						'Users must tap the “check in” button on mobile or desktop and upload photo proof they’ve completed the group activity successfully before the week is over. The group activity can be seen at the top of the homepage.',
+					element: document.getElementById('checkin_div'),
+					title: 'Check In',
+					intro: `Check in before the week is up with photo proof you've completed the activity. (Screenshots work too)`,
+					tooltipClass: clsx('bg-white text-black dark:bg-dark dark:text-white')
+				},
+				{
+					element: document.getElementById('weekly_overview'),
+					title: 'Weekly Overview',
+					intro: `In Weekly Overview you will see all check ins by your group. View others photo logs, or check your own. All members must complete their check ins before the end of the week.`,
 					tooltipClass: clsx('bg-white text-black dark:bg-dark dark:text-white')
 				},
 				{
 					element: document.getElementById('walkthrough_pot'),
-					intro: `This is your group’s pot. Members of your group who fail their check-in before the week is up pay in to the pot. You get paid at the end of the month based on how big the pot is.`,
-					tooltipClass: clsx('bg-white text-black dark:bg-dark dark:text-white')
+					intro: `Those that fail to complete their weekly check ins pay in to the group pot. The amount they pay in for failing the week can be changed by you (the group admin) in your pot settings. We gave you $5 in your pot to help you launch your legendary new group. Invite friends to activate those credits.`,
+					tooltipClass: clsx(
+						'bg-white text-black dark:bg-dark dark:text-white'
+					),
+					position: 'left'
 				},
 				{
-					intro: `Review & agree to this groups rules when you're ready to join it. Tap "tutorial" at anytime if you want to see this walkthrough again.`,
+					title: 'Bookmark',
+					intro: `Last Step:  Take a minute to add this page to your bookmarks bar by tapping on the icon above.`,
 					tooltipClass: clsx('bg-white text-black dark:bg-dark dark:text-white')
 				}
 			]
