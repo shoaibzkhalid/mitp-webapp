@@ -173,7 +173,7 @@ input:checked ~ .checkbox-bg {
 
 .group-details-modal__title {
 	font-size: 16px;
-	color: #bebec7;
+	color: #5f6164;
 }
 
 .btnswitch__btn.active {
@@ -183,19 +183,23 @@ input:checked ~ .checkbox-bg {
 }
 
 .group-details-modal .group-details-modal__input {
-	width: 50%;
+	width: 100%;
 }
 
 .group-details-modal .group-details-modal__text-area {
 	width: 100%;
 }
 
+/* .group-details-modal .group-details-modal__text-area:focus {
+	outline: none;
+} */
+
 .group-details-modal .group-details-modal__input input {
 	background-color: #f7f7f7;
 }
 .group-details-modal__input-label {
 	font-size: 16px;
-	color: #bebec7;
+	color: #5f6164;
 }
 /* Custom 3px border for payment-withdraw button of payouts page*/
 
