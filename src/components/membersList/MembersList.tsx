@@ -32,7 +32,8 @@ const MembersList = ({ membersList, isAdmin }) => {
 			<div
 				className={clsx(
 					'members-list__row pt-4 pb-4',
-					classes.membersList__row
+					classes.membersList__row,
+					isAdmin ? '' : 'bg-gray-100 rounded-2xl px-6 my-2'
 				)}
 			>
 				<div className={clsx('members-list__left', classes.membersList__left)}>
@@ -45,8 +46,21 @@ const MembersList = ({ membersList, isAdmin }) => {
 						className={clsx(classes.membersList__image)}
 						alt="user image"
 					/>
-					<span className="members-list__user-name">{member.firstName}</span>
+					<span
+						className={clsx(
+							'members-list__user-name',
+							isAdmin ? '' : 'font-bold text-lg'
+						)}
+					>
+						{member.firstName}
+					</span>
 				</div>
+
+				{isAdmin ? (
+					<></>
+				) : (
+					<>{member.admin && <div className="text-blue-600">Admin</div>}</>
+				)}
 
 				<div
 					className={clsx('members-list__right', classes.membersList__right)}
@@ -71,14 +85,24 @@ const MembersList = ({ membersList, isAdmin }) => {
 
 	return (
 		<div className={clsx('members-list', classes.membersList)}>
-			<span className={clsx('members-list__count', classes.membersList__count)}>
-				{' '}
-				<img
-					src="https://cdn-icons-png.flaticon.com/512/16/16480.png"
-					className={clsx('mr-4', classes.membersList__icon)}
-				/>{' '}
-				{membersList.length} {membersList.length > 1 ? 'Members' : 'Member'}
-			</span>
+			{isAdmin ? (
+				<>
+					<span
+						className={clsx('members-list__count', classes.membersList__count)}
+					>
+						<img
+							src="https://cdn-icons-png.flaticon.com/512/16/16480.png"
+							className={clsx('mr-4', classes.membersList__icon)}
+						/>
+						{membersList.length} {membersList.length > 1 ? 'Members' : 'Member'}
+					</span>
+				</>
+			) : (
+				<div className="flex justify-between border border-primary py-2 px-4 rounded-lg">
+					<div className="text-xl font-bold">Total Members</div>
+					<div className="text-xl font-bold">{membersList.length}</div>
+				</div>
+			)}
 			{membersTemplate}
 		</div>
 	)

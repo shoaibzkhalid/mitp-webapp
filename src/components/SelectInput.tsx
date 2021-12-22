@@ -12,6 +12,8 @@ interface SelectProps {
 	placeholder?: string
 	height?: string
 
+	borders?: boolean
+
 	options: Array<{
 		label: string
 		value: number | string
@@ -30,7 +32,12 @@ export function SelectInput(props: SelectProps) {
 				</label>
 			)}
 
-			<div className="shadow-md rounded-md pr-2">
+			<div
+				className={clsx(
+					'rounded-md pr-2',
+					props.borders ? 'border' : 'shadow-md'
+				)}
+			>
 				<select
 					placeholder={props.placeholder}
 					id={props.id}

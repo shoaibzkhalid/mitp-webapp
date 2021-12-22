@@ -13,7 +13,7 @@ interface InputProps {
 	labelClassName?: string
 	inputClassName?: string
 	inputStyle?: any
-	rows?:any
+	rows?: any
 }
 export function TextArea(props: InputProps) {
 	const id = useMemo(() => cuid(), [])
@@ -25,21 +25,20 @@ export function TextArea(props: InputProps) {
 					{props.label}
 				</label>
 			)}
-			<div className="shadow-md rounded-md">
+			<div className="border-solid border border-gray-200 rounded-md">
 				<textarea
-					style={props.inputStyle}		
+					style={props.inputStyle}
 					id={id}
 					rows={props.rows}
 					disabled={props.disabled}
 					placeholder={props.placeholder}
 					value={props.value}
 					onChange={e => props.setValue?.(e.currentTarget.value)}
-					className={clsx(						
+					className={clsx(
 						props.inputClassName,
-						'w-full rounded-md p-3 bg-white dark:bg-transparent',
+						'w-full rounded-md p-3 bg-white dark:bg-transparent focus:outline-none'
 					)}
 				/>
-                
 			</div>
 		</div>
 	)
