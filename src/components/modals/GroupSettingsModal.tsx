@@ -182,11 +182,11 @@ export function GroupSettingsModal({ closeModal }: ModalProps) {
 						<div className="flex">
 							<SelectInput
 								borders={true}
-								label="Pay Ins Minimum"
+								label="Minimum swear jar fee"
 								className="group-details-modal__input mt-6 mb-6 mr-1"
 								labelClassName="group-details-modal__input-label"
-								options={[5, 10, 15, 20, 30, 40, 50].map(i => ({
-									label: i === 5 ? `Group Minimum: $${i}` : i + '$',
+								options={[0, 5, 10, 15, 20, 30, 40, 50].map(i => ({
+									label: i === 0 ? `Minimum: $${i}` : i + '$',
 									value: i
 								}))}
 								disabled={false}
@@ -201,7 +201,7 @@ export function GroupSettingsModal({ closeModal }: ModalProps) {
 							<SelectInput
 								borders={true}
 								className="group-details-modal__input mt-6 mb-6 ml-1"
-								label="Min contribution amount"
+								label="Check ins required per week"
 								labelClassName="group-details-modal__input-label"
 								disabled={false}
 								options={frequencyOptions.map((i, index: number) => ({
@@ -219,9 +219,10 @@ export function GroupSettingsModal({ closeModal }: ModalProps) {
 						</div>
 
 						{isAdmin && (
-							<h3 className="group-details-modal__title mt-8 mb-8">
+							<h3 className="group-details-modal__title mb-8">
 								This is the minimum amount a group member pays for missing their
-								weekly check in.
+								weekly check in to the group. All group members can set their
+								swear jar fee at the group minimum or higher.
 							</h3>
 						)}
 

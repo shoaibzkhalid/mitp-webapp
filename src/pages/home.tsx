@@ -7,28 +7,22 @@ import { CheckInButton } from '../components/CheckInButton'
 import { SpinnerBig } from '../components/SpinnerBig'
 import { wrapDashboardLayout } from '../components/unique/DashboardLayout'
 import { userState } from '../state/user'
-import { selectedPotState, useSelectedPot } from '../state/react/useSelectedPot'
+import { useSelectedPot } from '../state/react/useSelectedPot'
 import dynamic from 'next/dynamic'
 import Notification from '../components/notification'
 import dayjs from 'dayjs'
 import { getCheckInProgress } from '../utils/common'
 import ReactModal from 'react-modal'
 import { useNextAppElement } from '../state/react/useNextAppElement'
-import { CheckInPhotoModalInner } from './../components/modals/CheckInPhotoModalInner'
-import { CheckInSuccessModalInner } from '../components/modals/CheckInSuccessModalInner'
 import { Intro } from '../components/intros/Intro'
 import { HowItWorksIntro } from '../components/intros/HowItWorksIntro'
 import { Header } from '../components/unique/Header'
 import CopyInviteLink from '../components/notification/CopyInviteLink'
-import { formatDuration } from '../utils/formatDuration'
 import { toggleSideBar } from '../utils/common'
-import Login from '../components/Authentication/Login'
-import Logout from '../components/Authentication/Logout'
-import { Api } from '../api'
-import { useMutation } from 'react-query'
 import { GroupSettingsModal } from '../components/modals/GroupSettingsModal'
 import { ProfileSettingModalInner } from '../components/modals/ProfileSettingModalInner'
 import clsx from 'clsx'
+import { AppEnv } from '../env'
 
 const PotChart = dynamic(() => import('../components/home/PotChart'), {
 	ssr: false
@@ -45,15 +39,9 @@ export default wrapDashboardLayout(function OverviewPage() {
 	const [checkinUserChartValue, setCheckinUserChartValue] = useState<number[]>([
 		0, 0, 0
 	])
-
-	const [authStatus, setAuthStatus] = useState(false)
-	const [authUserData, setAuthUserData] = useState('')
 	const router = useRouter()
 	const { isLoading, data } = useSelectedPot()
 	const pot = useSelectedPot()
-	const [duration, setDuration] = useState<string>('')
-	const [photoModalIsOpen, setPhotoModalIsOpen] = useState(false)
-	const [sucessModalIsOpen, setSucessModalIsOpen] = useState(false)
 	const [openGroupDetailModal, setOpenGroupDetailModal] = useState(false)
 	const [viewRuleDropDown, setViewRuleDropDown] = useState(false)
 	const [openReadyUpModal, setOpenReadyUpModal] = useState(false)
@@ -69,23 +57,13 @@ export default wrapDashboardLayout(function OverviewPage() {
 		return <SpinnerBig />
 	}
 
-	let totalPotValue = 0
-	data?.users?.map(user => {
-		totalPotValue += Number(user.amount) * 4
-	})
+	const totalPotValue = data?.users?.reduce(
+		(prev, curr) => prev + parseInt(curr.amount),
+		0
+	)
 
 	useEffect(() => {
 		toggleSideBar(false)
-		const update = () => {
-			const timeUntilWeekEnd = formatDuration(
-				Math.floor(dayjs().endOf('week').diff() / 1000)
-			)
-			setDuration(timeUntilWeekEnd)
-		}
-		update()
-
-		let timer = setInterval(update, 1000)
-		return () => clearInterval(timer)
 	}, [])
 
 	useEffect(() => {
@@ -200,18 +178,6 @@ export default wrapDashboardLayout(function OverviewPage() {
 						<div className="font-poppins flex flex-col justify-between items-center xl:justify-center lg:justify-end">
 							<Header />
 							<div className="text-center text-sm">
-								{/* {authStatus ? (
-									<Logout authSuccess={setAuthStatus} />
-								) : (
-									<Login
-										authSuccess={setAuthStatus}
-										userData={setAuthUserData}
-									/>
-								)} */}
-
-								{/* <a href="javascript:void(0)" onClick={checkLoginStatus}>
-									Check Login Status
-								</a> */}
 								<div className="text-gray-500 text-sm hidden md:block">
 									{pot.data?.users.length} member
 									{pot.data?.users.length !== 1 && 's'}
@@ -222,8 +188,21 @@ export default wrapDashboardLayout(function OverviewPage() {
 								>
 									&mdash; copy invite link &mdash;
 								</div>
+								<a
+									className="inline-block mt-4"
+									target="_blank"
+									href={
+										AppEnv.apiBaseUrl +
+										'/pdf/flyer1?link=' +
+										encodeURIComponent(
+											`${AppEnv.webBaseUrl}/pot/${data.pot.slug}`
+										)
+									}
+								>
+									Print QR Code
+								</a>
 								<div
-									className="mt-10 text-gray-400 w-full absolute"
+									className="mt-4 text-gray-400 w-full absolute"
 									style={{ width: '150px' }}
 								>
 									<div
@@ -294,46 +273,8 @@ export default wrapDashboardLayout(function OverviewPage() {
 							</div>
 							<CheckInButton
 								disabled={checkinCountUser >= data?.pot.checkinCount}
-								setPhotoModalIsOpen={setPhotoModalIsOpen}
 							></CheckInButton>
 							<div className="mt-3 text-gray-400 text-sm">{`Take photo proof of ${data?.pot.title}, ${data?.pot.description}.`}</div>
-							<ReactModal
-								isOpen={photoModalIsOpen}
-								onRequestClose={() => setPhotoModalIsOpen(false)}
-								appElement={appElement}
-								style={{
-									content: {
-										height: '50%',
-										top: '20%'
-									}
-								}}
-							>
-								<CheckInPhotoModalInner
-									closeModal={() => setPhotoModalIsOpen(false)}
-									potId={selectedPotState.moneyPotId}
-									openSuccessModal={() => {
-										setSucessModalIsOpen(true)
-									}}
-								></CheckInPhotoModalInner>
-							</ReactModal>
-							<ReactModal
-								isOpen={sucessModalIsOpen}
-								onRequestClose={() => setSucessModalIsOpen(false)}
-								appElement={appElement}
-								style={{
-									content: {
-										height: '70%',
-										top: '10%'
-									}
-								}}
-							>
-								<CheckInSuccessModalInner
-									closeModal={() => setSucessModalIsOpen(false)}
-									openSuccessModal={() => {
-										setSucessModalIsOpen(false)
-									}}
-								></CheckInSuccessModalInner>
-							</ReactModal>
 						</div>
 
 						<div id="walkthrough_pot" className="-card --shadow px-8 pb-8 pt-5">
@@ -381,9 +322,6 @@ export default wrapDashboardLayout(function OverviewPage() {
 												</span>{' '}
 												pay in at least ${pot.data?.pot.minAmount} at end of the
 												week.
-											</div>
-											<div className="mt-1 text-sm text-gray-300 font-thin text-left underline">
-												Week end in.. {duration}
 											</div>
 										</div>
 

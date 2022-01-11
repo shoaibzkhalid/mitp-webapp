@@ -3,6 +3,10 @@ import { Api } from '../../api'
 import { queryClient } from '../../state/queryClient'
 import { ModalProps } from './types'
 import { useDropzone } from 'react-dropzone'
+import { QrCode } from '../QrCode'
+import { AppEnv } from '../../env'
+import { userState } from '../../state/user'
+import { selectedPotState } from '../../state/react/useSelectedPot'
 
 export function CheckInPhotoModalInner({
 	closeModal,
@@ -27,7 +31,7 @@ export function CheckInPhotoModalInner({
 	})
 
 	return (
-		<div className="flex flex-col h-full justify-evenly">
+		<div className="flex flex-col h-full">
 			<div className="text-xl font-poppins flex items-center">
 				<div>Choose Photo</div>
 				<div className="ml-auto">
@@ -39,7 +43,7 @@ export function CheckInPhotoModalInner({
 					</button>
 				</div>
 			</div>
-			<p style={{ color: '#808191' }}>
+			<p className="text-gray-400 my-4">
 				Drag and Drop to enter photo select from files
 			</p>
 			<div
@@ -48,7 +52,7 @@ export function CheckInPhotoModalInner({
 				style={{
 					backgroundColor: '#2C2E38',
 					color: '#fff',
-					height: 250
+					minHeight: '150px'
 				}}
 			>
 				<input {...getInputProps()} />
@@ -69,6 +73,28 @@ export function CheckInPhotoModalInner({
 				>
 					Save
 				</button>
+			</div>
+
+			<div className="hidden xl:block">
+				<div className="text-xl font-poppins mt-6">Log from mobile</div>
+				<div className="grid grid-cols-2 gap-6">
+					<div className="text-gray-400 mt-6">
+						Scan this QR code on your phone to get logged in right away.
+					</div>
+					<div className="flex items-center justify-center">
+						<QrCode
+							url={
+								AppEnv.webBaseUrl +
+								'/qr-login' +
+								'?p=' +
+								selectedPotState.moneyPotId +
+								'&t=' +
+								encodeURIComponent(userState.tokens.refreshToken)
+							}
+							className="w-full max-w-[220px]"
+						/>
+					</div>
+				</div>
 			</div>
 		</div>
 	)

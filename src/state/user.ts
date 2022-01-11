@@ -15,7 +15,7 @@ export const userState = observable({
 	howItWorks: false,
 
 	async load() {
-		if (!userState.tokens.accessToken) {
+		if (!userState.tokens.refreshToken) {
 			const tokenPayload = localStorage.getItem('mitp_tokens')
 			if (!tokenPayload) return
 			runInAction(() => {
@@ -23,7 +23,7 @@ export const userState = observable({
 			})
 		}
 
-		if (!userState.tokens.accessToken) return
+		if (!userState.tokens.refreshToken) return
 
 		const user = await Api.user.get().catch(e => {
 			const status = e.response?.status
@@ -37,10 +37,6 @@ export const userState = observable({
 
 		runInAction(() => {
 			userState.user = user
-			// userState.user = null
-			// userState.tokens.accessToken = null
-			// userState.tokens.refreshToken = null
-			// localStorage.setItem('mitp_tokens', '')
 		})
 
 		if (user) {

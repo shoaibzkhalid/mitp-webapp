@@ -18,5 +18,11 @@ export default {
 				accessToken: string
 				refreshToken: string
 			}
-		}>('user', user).then(d => d.tokens)
+		}>('user', user).then(d => d.tokens),
+
+	googleAuth: (token: string) =>
+		Api.post<{
+			accessToken: string
+			refreshToken: string
+		}>('auth/google', { token })
 }

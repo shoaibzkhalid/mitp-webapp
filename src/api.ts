@@ -41,17 +41,6 @@ export const Api = {
 			.then(handleResponse)
 	},
 
-	// async getNew<T = any>( googleAccessToken: string,): Promise<T> {
-	// 	return r
-	// 		.get('googleAuthTest', {
-	// 			headers: {
-	// 				authorization: googleAccessToken
-	// 			},
-	// 			validateStatus: () => true
-	// 		})
-	// 		.then(handleResponse)
-	// },
-
 	async post<T = any>(url: string, data?: object, params?: object): Promise<T> {
 		return r
 			.post(url, data, {

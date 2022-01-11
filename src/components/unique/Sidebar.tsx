@@ -1,26 +1,23 @@
 import Link from 'next/link'
 import clsx from 'clsx'
 import Router, { useRouter } from 'next/router'
-import React, { useContext, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import ReactModal from 'react-modal'
 import { CheckInRulesModalInner } from '../modals/CheckInRulesModalInner'
 import { PayInRulesModalInner } from '../modals/PayInRulesModalInner'
 import { PayoutScheduleModalInner } from '../modals/PayoutScheduleModalInner'
-// import { UserSettingsModalInner } from '../modals/UserSettingsModalInner'
 import { GroupSettingsModal } from '../modals/GroupSettingsModal'
 import { SidebarPotsSelector } from './SidebarPotsSelector'
 import { useNextAppElement } from '../../state/react/useNextAppElement'
-import { SidebarContext } from '../../state/contexts/sidebarContext'
 import Switch from '../switch'
 import ProfileMenu from '../profileMenu'
 import { useMediaQuery } from '../../state/react/useMediaQuery'
 import { useSelectedPot } from '../../state/react/useSelectedPot'
 import { toggleSideBar } from '../../utils/common'
 import { observer } from 'mobx-react-lite'
-import { themeState } from '../../state/react/useTheme'
 import { userState } from '../../state/user'
-import Login from '../Authentication/Login'
-import Logout from '../Authentication/Logout'
+import { Login } from '../Authentication/Login'
+import { Logout } from '../Authentication/Logout'
 
 interface SidebarProps {
 	isMobile: boolean
@@ -39,21 +36,17 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 	)
 	const [openButtonModal, setOpenButtonModal] = useState(null as any)
 	const appElement = useNextAppElement()
-	const [sidebarState, setSidebarState] = useContext(SidebarContext)
-	const { data } = useSelectedPot()
+	const selectedPot = useSelectedPot()
 	const isMobile = useMediaQuery('(max-width: 1024px)')
-	const [authStatus, setAuthStatus] = useState(false)
-	const [authUserData, setAuthUserData] = useState('')
 
 	const potUser = useMemo(
-		() => data?.users.find(u => u.id === userState.user?.id),
-		[data]
+		() => selectedPot.data?.users.find(u => u.id === userState.user?.id),
+		[selectedPot.data]
 	)
 
-	const handleClickToggleSideBar = () => {
-		setSidebarState({ isOpen: false })
-		toggleSideBar(false)
-	}
+	const isGoogleConnected = !!userState.user?.connections.find(
+		c => c.service === 'google'
+	)
 
 	return (
 		<div
@@ -67,7 +60,7 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 					{props.isMobile && (
 						<button
 							className="absolute mr-auto left-4"
-							onClick={() => handleClickToggleSideBar()}
+							onClick={() => toggleSideBar(false)}
 						>
 							<svg className="w-6 h-6 fill-current">
 								<use xlinkHref="/img/sprite.svg#icon-close"></use>
@@ -119,14 +112,7 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 
 					{/* <p className="mt-2 text-gray-500 text-sm md:text-base">v1.0.1</p> */}
 					<div className="authentication-section mt-4 w-full">
-						{authStatus ? (
-							<Logout
-								authSuccess={setAuthStatus}
-								userName={authUserData['givenName']}
-							/>
-						) : (
-							<Login authSuccess={setAuthStatus} userData={setAuthUserData} />
-						)}
+						{isGoogleConnected ? <Logout /> : <Login />}
 					</div>
 				</div>
 			</div>
@@ -252,7 +238,7 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 					<></>
 				) : (
 					<div className="text-xs text-center px-4 pt-2 italic font-thin">
-						Hint: Tap on your avatar to view settings & ready up.
+						Hint: Tap on your avatar to view settings &amp; ready up.
 					</div>
 				)}
 			</div>
@@ -284,16 +270,6 @@ const links: any[][] = [
 		<svg className="-icon">
 			<use xlinkHref="/img/sprite.svg#icon-wallet"></use>
 		</svg>
-	],
-	[
-		'/settings',
-		[],
-		'Group Details',
-		<svg className="-icon">
-			<use xlinkHref="/img/sprite.svg#icon-settings"></use>
-		</svg>,
-		// UserSettingsModalInner
-		GroupSettingsModal
 	],
 	[
 		'/howitworks',

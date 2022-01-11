@@ -64,10 +64,11 @@ export const ProfileMenu = observer(function ProfileMenu(
 							e.preventDefault()
 							e.stopPropagation()
 							runInAction(() => {
-								userState.tokens.accessToken = ''
-								userState.tokens.refreshToken = ''
+								userState.tokens = {
+									accessToken: null,
+									refreshToken: null
+								}
 							})
-							userState.save()
 							window.location.assign('/')
 						}}
 					>

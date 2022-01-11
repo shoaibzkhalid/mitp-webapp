@@ -11,6 +11,7 @@ export interface ApiUser extends ModelBase {
 	avatarUri: string
 	admin: boolean
 	readyUpAt: Date | string | null
+	connections: ApiUserConnection[]
 }
 
 export interface ApiPot extends ModelBase {

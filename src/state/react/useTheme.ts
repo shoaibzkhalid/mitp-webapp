@@ -4,7 +4,7 @@ type ThemeMode = 'dark' | 'light'
 export const themeState = observable({
 	theme: 'light' as ThemeMode,
 
-	async changeMode(mode: ThemeMode) {
+	changeMode(mode: ThemeMode) {
 		runInAction(() => {
 			themeState.theme = mode
 		})

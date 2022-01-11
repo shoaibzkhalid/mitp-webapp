@@ -1,8 +1,9 @@
+import { observer } from 'mobx-react-lite'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { userState } from '../state/user'
 
-export function MatomoTracking() {
+export const MatomoTracking = observer(function MatomoTracking() {
 	useEffect(() => {
 		const w = window as any as { _paq: string[][] }
 		const _paq = (w._paq = w._paq || [])
@@ -24,10 +25,11 @@ export function MatomoTracking() {
 
 	useEffect(() => {
 		const w = window as any as { _paq: string[][] }
-		w._paq.push(['setUserId', userState.user?.email || ''])
+		const userId = userState.user?.id || ''
+		w._paq.push(['setUserId', userId])
 		w._paq.push(['setDocumentTitle', document.title])
 		w._paq.push(['trackPageView'])
-	}, [router.asPath])
+	}, [router.asPath, userState.user?.id])
 
 	return null
-}
+})

@@ -145,19 +145,20 @@ export default observer(function PotNew() {
 							className={classes.onboarding__image}
 						/>
 					</div>
+					<div className="w-full justify-end mt-4 bottom-20 hidden sm:flex sm:mt-24 lg:mt-0 sm:absolute text-white">
+						<button
+							className="flex items-center text-xl xl:text-2xl 2xl:text-3xl xl:pr-34 lg:pr-24 md:pr-16"
+							onClick={createLaterSession}
+						>
+							Setup with defaults
+							<svg className="ml-2 w-3 h-3 fill-current sm:w-5 h-5">
+								<use xlinkHref="/img/sprite.svg#icon-arrow-right"></use>
+							</svg>
+						</button>
+					</div>
 				</div>
 			</div>
-			<div className="w-full justify-end mt-4 bottom-20 hidden sm:flex sm:mt-24 lg:mt-0 sm:absolute text-white">
-				<button
-					className="flex items-center text-xl xl:text-2xl 2xl:text-3xl xl:pr-34 lg:pr-24 md:pr-16"
-					onClick={createLaterSession}
-				>
-					Setup with defaults
-					<svg className="ml-2 w-3 h-3 fill-current sm:w-5 h-5">
-						<use xlinkHref="/img/sprite.svg#icon-arrow-right"></use>
-					</svg>
-				</button>
-			</div>
+			
 		</div>
 	)
 })

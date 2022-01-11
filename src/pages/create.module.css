@@ -34,25 +34,25 @@
 
 @media (min-width: 768px) {
 	.onboarding__image {
-		width: 350px;
+		width: 250px;
 	}
 }
 
 @media (min-width: 1024px) {
 	.onboarding__image {
-		width: 400px;
+		width: 300px;
 	}
 }
 
 @media (min-width: 1280px) {
 	.onboarding__image {
-		width: 450px;
+		width: 300px;
 	}
 }
 
 @media (min-width: 1536px) {
 	.onboarding__image {
-		width: 550px;
+		width: 300px;
 	}
 }
 

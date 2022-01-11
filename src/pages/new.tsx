@@ -1,36 +1,21 @@
-import { useState } from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { wrapDashboardLayout } from '../components/unique/DashboardLayout'
-import { userState } from '../state/user'
 import { useSelectedPot } from '../state/react/useSelectedPot'
-import dynamic from 'next/dynamic'
-import Notification from '../components/notification'
 import { Header } from '../components/unique/Header'
 
-const PotChart = dynamic(() => import('../components/home/PotChart'), {
-	ssr: false
-})
-
-const CheckinUpdateChart = dynamic(
-	() => import('../components/home/CheckinUpdateChart'),
-	{ ssr: false }
-)
-
 export default wrapDashboardLayout(function NewPage() {
-	const [notificationMessage, setNotificationMessage] = useState<string>('')
-
 	const router = useRouter()
-	const { isLoading, data } = useSelectedPot()
+	const selectedPot = useSelectedPot()
 
-	if (data) {
-		router.push('/home')
+	if (selectedPot.data) {
+		return router.push('/home')
 	}
 
 	return (
 		<>
 			<Head>
-				<title>{`New`}</title>
+				<title>New</title>
 			</Head>
 
 			<div style={{ maxWidth: '1100px', margin: '0 auto' }}>
@@ -73,9 +58,6 @@ export default wrapDashboardLayout(function NewPage() {
 					</div>
 				</div>
 			</div>
-			{notificationMessage !== '' && (
-				<Notification message={notificationMessage} info="copied" />
-			)}
 		</>
 	)
 })

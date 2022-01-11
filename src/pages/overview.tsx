@@ -10,57 +10,48 @@ import { useNextAppElement } from '../state/react/useNextAppElement'
 import { userState } from '../state/user'
 import { useSelectedPot } from '../state/react/useSelectedPot'
 import { formatDuration } from '../utils/formatDuration'
-import { NotifyMeModalInner } from '../components/modals/NotifyMeModalInner'
 import { Header } from '../components/unique/Header'
 import CopyInviteLink from '../components/notification/CopyInviteLink'
 import Notification from '../components/notification'
 import { useMediaQuery } from '../state/react/useMediaQuery'
 import clsx from 'clsx'
 import { toggleSideBar } from '../utils/common'
+import { useTimer } from '../state/react/useTimer'
 
 export default wrapDashboardLayout(function RealIndexPage() {
 	const router = useRouter()
-	const { isLoading, data } = useSelectedPot()
 	const [duration, setDuration] = useState<string>('')
 	const [notificationMessage, setNotificationMessage] = useState<string>('')
 
 	const isMobile = useMediaQuery('(max-width: 768px)')
-	const selectedPot = useSelectedPot()
+	const pot = useSelectedPot()
+	const potUser = pot.data?.users.find(u => u.id === userState.user?.id)
 
-	if (!selectedPot.isLoading && selectedPot.data === null) {
+	if (!pot.isLoading && pot.data === null) {
 		router.push('/new')
 		return null
 	}
 
 	useEffect(() => {
 		toggleSideBar(false)
-		let timer = setInterval(function () {
-			const timeUntilWeekEnd = formatDuration(
-				Math.floor(dayjs().endOf('week').diff() / 1000)
-			)
-			setDuration(timeUntilWeekEnd)
-		}, 1000)
-
-		return () => {
-			clearInterval(timer)
-		}
 	}, [])
 
-	const month = dayjs().startOf('month')
-	const currWeek = dayjs().diff(month, 'week') + 1
-	const weekStartDay = dayjs().startOf('week')
-	const weekEndDay = dayjs().endOf('week')
+	useTimer(() => {
+		const timeUntilWeekEnd = formatDuration(
+			Math.floor(dayjs().endOf('week').diff() / 1000)
+		)
+		setDuration(timeUntilWeekEnd)
+	}, 1000)
+
 	const day = dayjs().get('day')
 
 	const appElement = useNextAppElement()
 	const [viewingLogsOfUserId, setViewingLogsOfUserId] = useState(
 		null as string | null
 	)
-	const [notifyModalIsOpen, setNotifyModalIsOpen] = useState(false)
-	const pot = useSelectedPot()
 
 	const users =
-		selectedPot.data?.users.sort((u1, u2) => {
+		pot.data?.users.sort((u1, u2) => {
 			if (u1.lastCheckinAt === null && u2.lastCheckinAt === null) return 0
 			if (u1.lastCheckinAt === null) return 1
 			if (u2.lastCheckinAt === null) return -1
@@ -70,7 +61,7 @@ export default wrapDashboardLayout(function RealIndexPage() {
 	return (
 		<>
 			<Head>
-				<title>{`Your Group - ${data?.pot.title}`}</title>
+				<title>{`Your Group - ${pot.data?.pot.title || 'Loading...'}`}</title>
 			</Head>
 
 			<div style={{ margin: '0 auto', maxWidth: '1100px' }}>
@@ -79,31 +70,19 @@ export default wrapDashboardLayout(function RealIndexPage() {
 					onRequestClose={() => setViewingLogsOfUserId(null)}
 					appElement={appElement}
 				>
-					{viewingLogsOfUserId && data && (
+					{viewingLogsOfUserId && pot.data && (
 						<UserViewLogsModalInner
 							closeModal={() => setViewingLogsOfUserId(null)}
 							userId={viewingLogsOfUserId}
-							potId={data.pot.id}
+							potId={pot.data.pot.id}
 							openSuccessModal={() => console.log()}
 						></UserViewLogsModalInner>
 					)}
 				</ReactModal>
 
-				<ReactModal
-					isOpen={notifyModalIsOpen}
-					onRequestClose={() => setNotifyModalIsOpen(false)}
-					appElement={appElement}
-				>
-					<NotifyMeModalInner
-						closeModal={() => {
-							setNotifyModalIsOpen(false)
-						}}
-					/>
-				</ReactModal>
-
-				<div className="w-full flex flex-col flex-col-reverse xl:flex-row">
+				<div className="w-full flex flex-col xl:flex-row">
 					<div className="font-poppins pt-4 pb-1 xl:w-8/12 md:pt-12 px-6">
-						<div className="text-2xl mb-3">{data?.pot.title}</div>
+						<div className="text-2xl mb-3">{pot.data?.pot.title}</div>
 						<div className="text-5xl font-semibold">
 							{pot.data?.users.length} member
 							{pot.data?.users.length !== 1 && 's'}
@@ -115,7 +94,9 @@ export default wrapDashboardLayout(function RealIndexPage() {
 							<div className="text-center text-lg">
 								<div
 									className="cursor-pointer text-sm py-3 px-6 rounded-2xl bg-gray-900 text-white md:mt-2 md:text-xl md:text-blue-600 md:p-0 md:bg-white dark:bg-gray-900"
-									onClick={() => CopyInviteLink(data, setNotificationMessage)}
+									onClick={() =>
+										CopyInviteLink(pot.data, setNotificationMessage)
+									}
 								>
 									&mdash; copy invite link &mdash;
 								</div>
@@ -126,26 +107,15 @@ export default wrapDashboardLayout(function RealIndexPage() {
 
 				<div className="w-full mt-10 px-6">
 					<div className="overview-containers bg-primary rounded-3xl px-14 pt-8 pb-6 text-white flex flex-col md:flex-row justify-between">
-						<div className="text-center md:text-left mb-8 md:mb-0">
+						<div className="text-center md:text-left mb-8 md:mb-0 flex flex-col">
 							<div className="text-3xl md:text-4xl lg:text-2xl xl:text-4xl font-bold">
 								Check ins due in...
 							</div>
 							<div className="mt-3 sm:mt-1 text-sm md:text-lg font-poppins">
 								{duration}
 							</div>
-							<button
-								className="flex items-center overview-page-checkin-btn m-auto mt-5 sm:m-0 sm:mt-5 px-20 py-4 max-w-xs text-gray-900 rounded-2xl text-lg bg-white dark:bg-dark dark:text-white"
-								onClick={() => {
-									setNotifyModalIsOpen(true)
-								}}
-							>
-								<span className="mr-3">
-									<img src="/img/bell-icon.svg" />
-								</span>
-								Notify Me
-							</button>
-							<div className="pt-10 text-xs font-poppins font-thin tracking-widest">
-								Those who don’t check in by Sunday pay group pot $5 or swear jar
+							<div className="mt-auto pt-10 text-xs font-poppins font-thin tracking-widest">
+								Those who don't check in by Sunday pay group pot $5 or swear jar
 								fee.
 							</div>
 						</div>
@@ -153,90 +123,40 @@ export default wrapDashboardLayout(function RealIndexPage() {
 						<div className="flex flex-col items-center justify-between">
 							<div className="border-2 border-dashed border-gray-400 rounded-lg p-2 xl:p-4">
 								<div className="flex days-holder">
-									<div
-										className={clsx(
-											'mx-4 lg:mx-1 xl:mx-4 p-1',
-											day === 1
-												? 'border-2 border-red-400 rounded-full'
-												: undefined
-										)}
-									>
-										Mo
-									</div>
-									<div
-										className={clsx(
-											'mx-4 lg:mx-1 xl:mx-4  p-1',
-											day === 2
-												? 'border-2 border-red-400 rounded-full'
-												: undefined
-										)}
-									>
-										Tu
-									</div>
-									<div
-										className={clsx(
-											'mx-4 lg:mx-1 xl:mx-4  p-1',
-											day === 3
-												? 'border-2 border-red-400 rounded-full'
-												: undefined
-										)}
-									>
-										We
-									</div>
-									<div
-										className={clsx(
-											'mx-4 lg:mx-1 xl:mx-4  p-1',
-											day === 4
-												? 'border-2 border-red-400 rounded-full'
-												: undefined
-										)}
-									>
-										Th
-									</div>
-									<div
-										className={clsx(
-											'mx-4 lg:mx-1 xl:mx-4  p-1',
-											day === 5
-												? 'border-2 border-red-400 rounded-full'
-												: undefined
-										)}
-									>
-										Fr
-									</div>
-									<div
-										className={clsx(
-											'mx-4 lg:mx-1 xl:mx-4  p-1',
-											day === 6
-												? 'border-2 border-red-400 rounded-full'
-												: undefined
-										)}
-									>
-										Sa
-									</div>
-									<div
-										className={clsx(
-											'mx-4 lg:mx-1 xl:mx-4  p-1',
-											day === 0
-												? 'border-2 border-red-400 rounded-full'
-												: undefined
-										)}
-									>
-										Su
-									</div>
+									{[
+										[1, 'Mo'],
+										[2, 'Tu'],
+										[3, 'We'],
+										[4, 'Th'],
+										[5, 'Fr'],
+										[6, 'Sa'],
+										[7, 'Su']
+									].map(e => (
+										<div
+											className={clsx(
+												'mx-2 lg:mx-1 xl:mx-2 flex items-center justify-center h-10 w-10',
+												e[0] === day
+													? 'border-2 border-red-400 rounded-full'
+													: undefined
+											)}
+										>
+											{e[1]}
+										</div>
+									))}
 								</div>
-								<div className="mt-6 text-sm text-gray-400 text-center">
-									Check in by Sunday 0/1
+								<div className="mt-6 text-sm text-gray-200 text-center">
+									Check in by Sunday {potUser?.checkinsThisWeek}/1
 								</div>
 							</div>
 							<div className="font-bold w-full mt-10 md:mt:0 text-center md:text-right flex items-center justify-end">
 								<img src="/img/member-icon.svg" className="mr-1" />
-								{data?.users.length} Members
+								{pot.data?.users.length} Members
 							</div>
 						</div>
 					</div>
 
 					<div className="-card --shadow mt-6 p-4">
-						{!data ? (
+						{!pot.data ? (
 							<div className="flex items-center justify-center"></div>
 						) : isMobile ? (
 							<div className="relative">
@@ -304,7 +224,7 @@ export default wrapDashboardLayout(function RealIndexPage() {
 
 								{/* Users */}
 								<div className="my-4"></div>
-								{data.users.map(u => {
+								{users.map(u => {
 									return (
 										<>
 											<div className="mb-4">
@@ -331,7 +251,7 @@ export default wrapDashboardLayout(function RealIndexPage() {
 													<div className="text-gray-400 font-poppins font-thin">
 														Thursday, 7:22 PM
 													</div>
-													{u.checkinsThisWeek >= data.pot.checkinCount ? (
+													{u.checkinsThisWeek >= pot.data.pot.checkinCount ? (
 														<div className="flex flex-row items-center text-green-500">
 															<Square
 																className="bg-green-500 mr-2"
@@ -378,7 +298,7 @@ export default wrapDashboardLayout(function RealIndexPage() {
 										</tr>
 									</thead>
 									<tbody>
-										{data.users.map(u => {
+										{pot.data.users.map(u => {
 											return (
 												<>
 													<tr className="border-b-2">
@@ -411,7 +331,8 @@ export default wrapDashboardLayout(function RealIndexPage() {
 														</td>
 														<td>Thursday, 7:22 PM</td>
 														<td>
-															{u.checkinsThisWeek >= data.pot.checkinCount ? (
+															{u.checkinsThisWeek >=
+															pot.data.pot.checkinCount ? (
 																<div className="flex flex-row items-center text-green-500">
 																	<Square
 																		className="bg-green-500 mr-2"
@@ -454,7 +375,7 @@ export default wrapDashboardLayout(function RealIndexPage() {
 												</>
 											)
 										})}
-										{data.users.length < 2 ? (
+										{pot.data.users.length < 2 ? (
 											<>
 												{[0, 1].map(index => {
 													return (
@@ -508,7 +429,7 @@ export default wrapDashboardLayout(function RealIndexPage() {
 						)}
 					</div>
 
-					{data?.users.length < 2 ? (
+					{pot.data?.users.length < 2 ? (
 						<>
 							<div className="flex flex-col justify-center items-center py-10">
 								<img src="/img/weekly-overview-social-icon.svg" />
