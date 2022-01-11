@@ -158,7 +158,6 @@ export default observer(function PotNew() {
 					</div>
 				</div>
 			</div>
-			
 		</div>
 	)
 })
