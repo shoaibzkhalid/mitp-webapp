@@ -115,8 +115,8 @@ export default wrapDashboardLayout(function RealIndexPage() {
 								{duration}
 							</div>
 							<div className="mt-auto pt-10 text-xs font-poppins font-thin tracking-widest">
-								Those who don't check in by Sunday pay group pot $5 or swear jar
-								fee.
+								Those who don't check in by Sunday at midnight pay the group pot
+								their swear jar fee.
 							</div>
 						</div>
 

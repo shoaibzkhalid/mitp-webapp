@@ -109,11 +109,6 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 							</svg>
 						)}
 					</div>
-
-					{/* <p className="mt-2 text-gray-500 text-sm md:text-base">v1.0.1</p> */}
-					<div className="authentication-section mt-4 w-full">
-						{isGoogleConnected ? <Logout /> : <Login />}
-					</div>
 				</div>
 			</div>
 			<div className="overflow-y-auto w-full h-full px-5 pb-5 border-b border-gray-200 dark:border-gray-700 -sidebar-main md:px-6">
@@ -228,9 +223,10 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 			</div>
 
 			<div className="flex flex-col justify-center items-center relative">
-				{/* <div className="px-5 w-full relative"> */}
+				<div className="px-7 mt-4 w-full">
+					{isGoogleConnected ? <Logout /> : <Login />}
+				</div>
 				<ProfileMenu potUser={potUser} />
-				{/* </div> */}
 				<div className="mt-20">
 					<Switch />
 				</div>
