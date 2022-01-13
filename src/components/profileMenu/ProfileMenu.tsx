@@ -28,7 +28,7 @@ export const ProfileMenu = observer(function ProfileMenu(
 		<div
 			className={clsx(
 				'absolute w-full px-5',
-				potUser?.readyUpAt ? 'bottom-10' : 'bottom-20'
+				potUser?.readyUpAt ? 'top-12' : 'bottom-20 top-12'
 			)}
 		>
 			<div
@@ -102,14 +102,20 @@ export const ProfileMenu = observer(function ProfileMenu(
 						<div className={classes.sidebar__man}>
 							{userState?.user?.firstName}
 						</div>
-						<div className={clsx(classes.sidebar__status, classes.caption)}>
-							{/* Free account */}
+						<div
+							className={clsx(
+								classes.sidebar__status,
+								classes.caption,
+								'text-xs'
+							)}
+						>
+							{!props?.potUser?.readyUpAt && 'Set swear jar fee & ready up 0/1'}
 						</div>
 					</div>
 				</div>
 				<div
 					className={clsx(
-						'profile-menu__arrow absolute cursor-pointer',
+						'profile-menu__arrow absolute cursor-pointer top-10',
 						classes.sidebar__arrow
 					)}
 				>
