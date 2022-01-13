@@ -7,6 +7,7 @@ import { ModalProps } from './types'
 interface UserViewLogsModalInnerProps {
 	potId: string
 	userId: string
+	viewingLogsMode: string
 }
 export function UserViewLogsModalInner(
 	props: ModalProps & UserViewLogsModalInnerProps
@@ -14,6 +15,17 @@ export function UserViewLogsModalInner(
 	const userLogs = useQuery(['user-logs', props.potId, props.userId], () =>
 		Api.logsList(props.potId, props.userId)
 	)
+
+	if (props.viewingLogsMode === 'week') {
+		userLogs.data.logs = userLogs.data.logs.filter(log => {
+			if (
+				new Date(log.createdAt) > dayjs().startOf('week').toDate() &&
+				new Date(log.createdAt) < dayjs().endOf('week').toDate()
+			) {
+				return log
+			}
+		})
+	}
 
 	return (
 		<>

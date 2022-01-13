@@ -49,6 +49,7 @@ export default wrapDashboardLayout(function RealIndexPage() {
 	const [viewingLogsOfUserId, setViewingLogsOfUserId] = useState(
 		null as string | null
 	)
+	const [viewingLogsMode, setViewingLogsMode] = useState('')
 
 	const users =
 		pot.data?.users.sort((u1, u2) => {
@@ -75,6 +76,7 @@ export default wrapDashboardLayout(function RealIndexPage() {
 							closeModal={() => setViewingLogsOfUserId(null)}
 							userId={viewingLogsOfUserId}
 							potId={pot.data.pot.id}
+							viewingLogsMode={viewingLogsMode}
 							openSuccessModal={() => console.log()}
 						></UserViewLogsModalInner>
 					)}
@@ -249,7 +251,7 @@ export default wrapDashboardLayout(function RealIndexPage() {
 												</div>
 												<div className="text-xs sm:text-sm flex justify-evenly border rounded-lg border-gray-200 dark:border-gray-700 p-2">
 													<div className="text-gray-400 font-poppins font-thin">
-														Thursday, 7:22 PM
+														{u.checkinsThisWeek ? 'Thursday, 7:22 PM' : ''}
 													</div>
 													{u.checkinsThisWeek >= pot.data.pot.checkinCount ? (
 														<div className="flex flex-row items-center text-green-500">
@@ -293,7 +295,7 @@ export default wrapDashboardLayout(function RealIndexPage() {
 											<th></th>
 											<th className="font-thin">Done</th>
 											<th className="font-thin">Check - In</th>
-											<th className="font-thin">Tribute amount</th>
+											<th className="font-thin">Swear jar fee</th>
 											<th className="font-thin">Photo Proofs</th>
 										</tr>
 									</thead>
@@ -329,7 +331,9 @@ export default wrapDashboardLayout(function RealIndexPage() {
 																</span>
 															</div>
 														</td>
-														<td>Thursday, 7:22 PM</td>
+														<td>
+															{u.checkinsThisWeek ? 'Thursday, 7:22 PM' : ''}
+														</td>
 														<td>
 															{u.checkinsThisWeek >=
 															pot.data.pot.checkinCount ? (
@@ -358,18 +362,38 @@ export default wrapDashboardLayout(function RealIndexPage() {
 															)}
 														</td>
 														<td>
-															<button
-																style={{
-																	padding: '10px 30px',
-																	fontWeight: 100,
-																	background:
-																		'linear-gradient(166.98deg, #8679E2 -3.04%, #6C5DD3 90.61%)'
-																}}
-																className="-button -primary -sm"
-																onClick={() => setViewingLogsOfUserId(u.id)}
-															>
-																View
-															</button>
+															<div className="flex">
+																<button
+																	style={{
+																		padding: '8px 25px',
+																		fontWeight: 100,
+																		background:
+																			'linear-gradient(166.98deg, #8679E2 -3.04%, #6C5DD3 90.61%)'
+																	}}
+																	className="-button -primary -sm"
+																	onClick={() => {
+																		setViewingLogsOfUserId(u.id)
+																		setViewingLogsMode('week')
+																	}}
+																>
+																	View
+																</button>
+																<button
+																	style={{
+																		padding: '8px 25px',
+																		fontWeight: 100,
+																		background:
+																			'linear-gradient(166.98deg, #8679E2 -3.04%, #6C5DD3 90.61%)'
+																	}}
+																	className="-button -primary -sm ml-1"
+																	onClick={() => {
+																		setViewingLogsOfUserId(u.id)
+																		setViewingLogsMode('all')
+																	}}
+																>
+																	View All
+																</button>
+															</div>
 														</td>
 													</tr>
 												</>
@@ -444,6 +468,9 @@ export default wrapDashboardLayout(function RealIndexPage() {
 											'linear-gradient(166.98deg, #8679E2 -3.04%, #6C5DD3 90.61%)'
 									}}
 									className="-button -primary -sm mt-5"
+									onClick={() => {
+										CopyInviteLink(pot.data, setNotificationMessage)
+									}}
 								>
 									Copy Invite Link
 								</button>

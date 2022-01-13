@@ -136,7 +136,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 						id="walkthrough_potname"
 						className="px-6 pt-4 pb-1 xl:w-10/12 md:pt-12"
 					>
-						<div className="text-2xl">The Group Pot Of</div>
+						<div className="text-2xl">Your Accountability Group</div>
 						<div className="text-5xl font-semibold" style={{ lineHeight: 1.5 }}>
 							{data?.pot.title}
 							{potUser?.admin && (
@@ -175,7 +175,10 @@ export default wrapDashboardLayout(function OverviewPage() {
 					</div>
 
 					<div className="px-6 py-7 border-b border-gray-200 dark:border-gray-700 sm:px-0 md:py-1 xl:pt-12 xl:w-2/12 xl:border-b-0">
-						<div className="font-poppins flex flex-col justify-between items-center xl:justify-center lg:justify-end">
+						<div
+							className="font-poppins flex flex-col justify-between items-center xl:justify-center lg:justify-end"
+							id="header_invite_holder_div"
+						>
 							<Header />
 							<div className="text-center text-sm">
 								<div className="text-gray-500 text-sm hidden md:block">
@@ -275,6 +278,17 @@ export default wrapDashboardLayout(function OverviewPage() {
 								disabled={checkinCountUser >= data?.pot.checkinCount}
 							></CheckInButton>
 							<div className="mt-3 text-gray-400 text-sm">{`Take photo proof of ${data?.pot.title}, ${data?.pot.description}.`}</div>
+						</div>
+
+						<div className="flex justify-end py-2">
+							<div id="how_it_works_div">
+								<button
+									className="bg-white p-3 border rounded-md font-bold"
+									onClick={() => userState.setHowItWorks(true)}
+								>
+									(i) How it works
+								</button>
+							</div>
 						</div>
 
 						<div id="walkthrough_pot" className="-card --shadow px-8 pb-8 pt-5">

@@ -11,6 +11,7 @@ import MembersList from '../membersList/MembersList'
 import { useSelectedPot } from '../../state/react/useSelectedPot'
 import { queryClient } from '../../state/queryClient'
 import clsx from 'clsx'
+import classes from './../../pages/create.module.css'
 
 export function GroupSettingsModal({ closeModal }: ModalProps) {
 	const { data } = useSelectedPot()
@@ -81,9 +82,34 @@ export function GroupSettingsModal({ closeModal }: ModalProps) {
 					<div className="text-xl font-poppins flex items-center">
 						<div className="group-detail-modal__headings mt-8">
 							<h2>Group Details</h2>
-							<h3 className="group-details-modal__title mt-8">
-								Title of the group
-							</h3>
+							<div className="flex items-center mt-6">
+								<h3 className="group-details-modal__title">
+									Title of the group
+								</h3>
+								<div className="flex items-center sm:text-lg lg:text-xl 2xl:text-2xl">
+									<div
+										className={clsx(
+											classes.tooltip,
+											'sm:text-2xl lg:text-xl 2xl:text-4xl'
+										)}
+									>
+										<img
+											src="/img/info-black.svg"
+											alt=""
+											className={clsx(classes.info_img, 'pl-1')}
+										/>
+										<span
+											className={clsx(
+												classes.tooltiptexthome,
+												'right-0 left-0 border rounded bg-white text-black dark:bg-dark dark:text-white'
+											)}
+										>
+											This is the activity members of your group must do once a
+											week.
+										</span>
+									</div>
+								</div>
+							</div>
 						</div>
 						<div className="ml-auto">
 							<button
@@ -150,6 +176,25 @@ export function GroupSettingsModal({ closeModal }: ModalProps) {
 								<h3 className="group-details-modal__title mb-2">
 									Title of the group
 								</h3>
+								{/* <div className="flex items-center mt-10 xl:mt-14 2xl:mt-28 sm:text-lg lg:text-xl 2xl:text-2xl">
+									Set the activity your group does together
+									<div
+										className={clsx(
+											classes.tooltip,
+											'sm:text-2xl lg:text-xl 2xl:text-4xl'
+										)}
+									>
+										<img
+											src="/img/info.png"
+											alt=""
+											className={clsx(classes.info_img, 'pl-1')}
+										/>
+										<span className={classes.tooltiptext}>
+											This is the activity your group does together. Type in
+											your own, or choose from the dropdown menu
+										</span>
+									</div>
+								</div> */}
 							</div>
 						)}
 						<div className="flex items-center">
@@ -173,6 +218,7 @@ export function GroupSettingsModal({ closeModal }: ModalProps) {
 							rows={4}
 							labelClassName="group-details-modal__input-label mb-2 text-white"
 							label="Description"
+							placeholder="Specific activities, duration, or location requirements for check ins"
 							value={groupDetails.description}
 							disabled={saveMutation.isLoading}
 							setValue={v =>
