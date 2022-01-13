@@ -146,6 +146,12 @@
 	fill: #9c9ea8;
 }
 
+.group_info_img {
+	width: 100%;
+	max-width: 25px;
+	margin-top: 2px;
+}
+
 .info_img {
 	width: 100%;
 	max-width: 30px;

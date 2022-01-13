@@ -96,7 +96,7 @@ export function GroupSettingsModal({ closeModal }: ModalProps) {
 										<img
 											src="/img/info-black.svg"
 											alt=""
-											className={clsx(classes.info_img, 'pl-1')}
+											className={clsx(classes.group_info_img, 'pl-1')}
 										/>
 										<span
 											className={clsx(
@@ -187,7 +187,7 @@ export function GroupSettingsModal({ closeModal }: ModalProps) {
 										<img
 											src="/img/info.png"
 											alt=""
-											className={clsx(classes.info_img, 'pl-1')}
+											className={clsx(classes.group_info_img, 'pl-1')}
 										/>
 										<span className={classes.tooltiptext}>
 											This is the activity your group does together. Type in
