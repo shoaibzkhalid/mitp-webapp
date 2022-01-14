@@ -59,9 +59,15 @@ export default wrapDashboardLayout(function OverviewPage() {
 	}
 
 	const totalPotValue = data?.users?.reduce(
-		(prev, curr) => prev + parseInt(curr.amount),
+		(prev, curr) => prev + parseInt(curr.amount) * 4,
 		0
 	)
+	let readyUpCount = 0
+	data.users.map(user =>
+		user.readyUpAt ? (readyUpCount += 1) : (readyUpCount += 0)
+	)
+
+	console.log(data)
 
 	useEffect(() => {
 		toggleSideBar(false)
@@ -312,6 +318,9 @@ export default wrapDashboardLayout(function OverviewPage() {
 									/>
 									{`${dayjs().format('MMMM')}`}
 								</div>
+								<div className="ml-auto mr-4 text-md font-thin">
+									{readyUpCount} / {data?.users?.length}
+								</div>
 								<select
 									className="px-5 py-4 w-full rounded-2xl text-base text-gray-500 outline-none border-gray-200 dark:bg-gray-900 dark:border-gray-900 md:w-44"
 									style={{ borderWidth: '1px' }}
@@ -331,7 +340,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 										<div>
 											<div className="py-5 pl-5">
 												{potView === 'Total Pot' ? (
-													<>${totalPotValue}</>
+													<>${readyUpCount > 1 ? totalPotValue : '--.--'}</>
 												) : (
 													<>${data?.metrics.currentValue / 100}</>
 												)}
@@ -439,6 +448,16 @@ export default wrapDashboardLayout(function OverviewPage() {
 											></img>
 										</div>
 										<span>Check Ins</span>
+										<div className="has-tooltip ml-auto">
+											<span className="tooltip rounded shadow-lg p-1 bg-gray-100 max-w-xs mt-6">
+												This is the amount of times your group has checked in
+												with photo evidence they've completed the weekly
+												activity this month.
+											</span>
+											<span className="cursor-pointer">
+												<img src="/img/question-mark.svg" width="10" />
+											</span>
+										</div>
 									</div>
 									<div className="text-3xl font-bold mt-3">
 										{data?.metrics.checkinsCount}
@@ -467,7 +486,17 @@ export default wrapDashboardLayout(function OverviewPage() {
 												src="./img/activity.svg"
 											></img>
 										</div>
-										<span>Weekly 🔥</span>
+										<span>Group Streak 🔥</span>
+										<div className="has-tooltip ml-auto">
+											<span className="tooltip rounded shadow-lg p-1 bg-gray-100 max-w-xs mt-6">
+												This is your groups streak. It increases every time all
+												members in your group complete their check ins by Sunday
+												at midnight.
+											</span>
+											<span className="cursor-pointer">
+												<img src="/img/question-mark.svg" width="10" />
+											</span>
+										</div>
 									</div>
 									<div className="text-3xl font-bold mt-3">
 										{data?.pot.streak}
@@ -494,6 +523,16 @@ export default wrapDashboardLayout(function OverviewPage() {
 											></img>
 										</div>
 										<span>Pay Ins</span>
+										<div className="has-tooltip ml-auto">
+											<span className="tooltip rounded shadow-lg p-1 bg-gray-100 max-w-xs mt-6">
+												This is the amount of times group members have paid in
+												their swear jar fee to the group pot by failing to check
+												in by Sunday at midnight.
+											</span>
+											<span className="cursor-pointer">
+												<img src="/img/question-mark.svg" width="10" />
+											</span>
+										</div>
 									</div>
 									<div className="text-3xl font-bold mt-3">
 										{data?.metrics.payinsCount}

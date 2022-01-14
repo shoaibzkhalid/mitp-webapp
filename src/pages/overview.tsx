@@ -26,6 +26,7 @@ export default wrapDashboardLayout(function RealIndexPage() {
 	const isMobile = useMediaQuery('(max-width: 768px)')
 	const pot = useSelectedPot()
 	const potUser = pot.data?.users.find(u => u.id === userState.user?.id)
+	console.log(potUser)
 
 	if (!pot.isLoading && pot.data === null) {
 		router.push('/new')
@@ -58,6 +59,11 @@ export default wrapDashboardLayout(function RealIndexPage() {
 			if (u2.lastCheckinAt === null) return -1
 			return +new Date(u2.lastCheckinAt) - +new Date(u1.lastCheckinAt)
 		}) ?? []
+
+	let readyUpCount = 0
+	pot.data.users.map(user =>
+		user.readyUpAt ? (readyUpCount += 1) : (readyUpCount += 0)
+	)
 
 	return (
 		<>
@@ -152,7 +158,10 @@ export default wrapDashboardLayout(function RealIndexPage() {
 							</div>
 							<div className="font-bold w-full mt-10 md:mt:0 text-center md:text-right flex items-center justify-end">
 								<img src="/img/member-icon.svg" className="mr-1" />
-								{pot.data?.users.length} Members
+								{/* {pot.data?.users.length} Members */}
+								<div className="mr-4 text-md font-thin">
+									{readyUpCount} / {pot.data?.users?.length}
+								</div>
 							</div>
 						</div>
 					</div>
@@ -234,12 +243,15 @@ export default wrapDashboardLayout(function RealIndexPage() {
 													<div className="flex items-center">
 														<div>
 															<img
-																src="/img/avatar.png"
+																src={
+																	u.avatarUri ? u.avatarUri : '/img/avatar.png'
+																}
 																style={{
 																	minHeight: 50,
 																	minWidth: 50,
 																	maxHeight: 70,
-																	maxWidth: 70
+																	maxWidth: 70,
+																	borderRadius: '10px'
 																}}
 															/>
 														</div>
@@ -327,7 +339,7 @@ export default wrapDashboardLayout(function RealIndexPage() {
 														>
 															<div className="flex flex-row items-center font-bold">
 																<span style={{ marginLeft: 20 }}>
-																	{u.firstName} {u.lastName}
+																	{u.firstName}
 																</span>
 															</div>
 														</td>
