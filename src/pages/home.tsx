@@ -44,6 +44,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 	const pot = useSelectedPot()
 	const [openGroupDetailModal, setOpenGroupDetailModal] = useState(false)
 	const [viewRuleDropDown, setViewRuleDropDown] = useState(false)
+	const [youGetPaidDropDown, setYouGetPaidDropDown] = useState(false)
 	const [openReadyUpModal, setOpenReadyUpModal] = useState(false)
 	const [potView, setPotView] = useState('Total Pot')
 
@@ -277,7 +278,12 @@ export default wrapDashboardLayout(function OverviewPage() {
 							<CheckInButton
 								disabled={checkinCountUser >= data?.pot.checkinCount}
 							></CheckInButton>
-							<div className="mt-3 text-gray-400 text-sm">{`Take photo proof of ${data?.pot.title}, ${data?.pot.description}.`}</div>
+							<div className="mt-3 text-gray-400 text-sm">
+								{`Take photo proof of ${data?.pot.title}, ${data?.pot.description}`}
+								<br></br>
+								by Sunday Midnight or pay your swear jar fee of ($
+								{potUser?.amount})
+							</div>
 						</div>
 
 						<div className="flex justify-end py-2">
@@ -321,9 +327,9 @@ export default wrapDashboardLayout(function OverviewPage() {
 
 							<div className="md:grid grid-cols-3">
 								<div>
-									<div className="text-5xl font-bold text-center my-1 md:text-7xl w-full">
+									<div className="text-5xl font-bold my-1 md:text-7xl w-full">
 										<div>
-											<div className="mt-5">
+											<div className="py-5 pl-5">
 												{potView === 'Total Pot' ? (
 													<>${totalPotValue}</>
 												) : (
@@ -359,28 +365,42 @@ export default wrapDashboardLayout(function OverviewPage() {
 											</div>
 										</div>
 									</div>
-									<div className="px-5">
-										<div className="mt-4 font-bold text-xs">
+									<div className="py-2">
+										<div
+											className="flex items-center justify-start cursor-pointer text-xs font-bold"
+											onClick={() => {
+												setYouGetPaidDropDown(!youGetPaidDropDown)
+											}}
+										>
 											You get paid for being part of this group.
+											<span className="inline-block pl-1">
+												<svg
+													style={{ width: '16px', height: '16px' }}
+													className="fill-current"
+												>
+													<use href="/img/sprite.svg#icon-arrow-down-fat"></use>
+												</svg>
+											</span>
 										</div>
-										<div className="text-xs font-bold">
-											<p className="mt-0">
+										<div
+											className={clsx(
+												'mt-2 text-left',
+												youGetPaidDropDown ? 'block' : 'hidden'
+											)}
+											style={{ wordWrap: 'break-word' }}
+										>
+											<p className="mb-2 text-gray-800 font-bold cursor-pointer text-xs font-bold">
 												When a member fails to complete their weekly check in by
 												Sunday at midnight, they pay in to the group pot
 											</p>
-											<p className="mt-4">
+											<p className="mb-2 text-gray-800 font-bold cursor-pointer text-xs font-bold">
 												This is paid to you at the end of the month. You get
 												paid for improving yourself as long as you’re part of
 												this group!
 											</p>
 										</div>
 									</div>
-									<div className="flex items-center my-6 text-primary text-sm">
-										<img className="m-5" src="./img/checkin_icon.png"></img>
-										<Link href="/overview">Group Check Ins</Link>
-									</div>
-									<hr />
-									<div className="flex flex-row mt-3 items-center md:flex">
+									<div className="flex flex-row items-center md:flex">
 										<div className="h-10 pr-3">
 											<CheckinUpdateChart />
 										</div>

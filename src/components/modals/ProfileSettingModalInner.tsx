@@ -29,6 +29,7 @@ export function ProfileSettingModalInner({ closeModal }: ModalProps) {
 		() => data?.users.find(u => u.id === userState.user?.id),
 		[data]
 	)
+	const [swearFee, setSwearFee] = useState(potUser?.amount)
 
 	const handleChange = event => {
 		if (event.target.files.length > 0) {
@@ -175,17 +176,33 @@ export function ProfileSettingModalInner({ closeModal }: ModalProps) {
 						Group members pay this to the pot when failing to check in by end of
 						week.
 					</div>
-					<div className="pt-3">
-						<SelectInput
-							height="undefined"
-							selectClassName="bg-alabaster p-4 focus:outline-none"
-							options={[5, 10, 15, 20, 30, 40, 50].map(i => ({
-								label: i === 5 ? `Group Minimum: $${i}` : i + '$',
-								value: i + ''
-							}))}
-							value={potUser?.amount}
-							setValue={v => updatePortGroup(v as string)}
-						/>
+					<div className="pt-3 flex">
+						<div className="w-9/12">
+							<SelectInput
+								height="undefined"
+								selectClassName="bg-alabaster p-4 focus:outline-none"
+								options={[5, 10, 15, 20, 30, 40, 50].map(i => ({
+									label: i === 5 ? `Group Minimum: $${i}` : i + '$',
+									value: i + ''
+								}))}
+								value={potUser?.amount}
+								setValue={v => {
+									setSwearFee(v as string)
+									updatePortGroup(v as string)
+								}}
+							/>
+						</div>
+						<div className="w-3/12 flex">
+							<button
+								className="bg-primary px-10 py-2 text-white rounded-lg"
+								onClick={() => {
+									updatePortGroup(swearFee)
+									closeModal()
+								}}
+							>
+								Save
+							</button>
+						</div>
 					</div>
 					<div className="text-gray-400 text-md pt-3">
 						Change anytime: Can be seen by others in your group

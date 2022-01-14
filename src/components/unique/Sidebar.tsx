@@ -6,6 +6,7 @@ import ReactModal from 'react-modal'
 import { CheckInRulesModalInner } from '../modals/CheckInRulesModalInner'
 import { PayInRulesModalInner } from '../modals/PayInRulesModalInner'
 import { PayoutScheduleModalInner } from '../modals/PayoutScheduleModalInner'
+import { ProfileSettingModalInner } from '../modals/ProfileSettingModalInner'
 import { GroupSettingsModal } from '../modals/GroupSettingsModal'
 import { SidebarPotsSelector } from './SidebarPotsSelector'
 import { useNextAppElement } from '../../state/react/useNextAppElement'
@@ -37,7 +38,9 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 	const [openButtonModal, setOpenButtonModal] = useState(null as any)
 	const appElement = useNextAppElement()
 	const selectedPot = useSelectedPot()
+	console.log(selectedPot)
 	const isMobile = useMediaQuery('(max-width: 1024px)')
+	const [openProfileModal, setOpenProfileModal] = useState<boolean>(false)
 
 	const potUser = useMemo(
 		() => selectedPot.data?.users.find(u => u.id === userState.user?.id),
@@ -55,6 +58,21 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 			}}
 			className="w-56 h-screen fixed top-0 left-0 border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 md:w-80"
 		>
+			<ReactModal
+				isOpen={openProfileModal}
+				onRequestClose={() => setOpenProfileModal(false)}
+				appElement={appElement}
+				style={{
+					content: {
+						minWidth: 320,
+						maxWidth: 600
+					}
+				}}
+			>
+				<ProfileSettingModalInner
+					closeModal={() => setOpenProfileModal(false)}
+				/>
+			</ReactModal>
 			<div style={{ height: 140 }} className="absolute top-0 left-0 right-0">
 				<div className="relative flex flex-col items-center justify-center px-8 py-6 border-b border-gray-200 md:border-0 md:py-12">
 					{props.isMobile && (
@@ -109,6 +127,9 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 							</svg>
 						)}
 					</div>
+					<div className="mt-3">
+						<Switch />
+					</div>
 				</div>
 			</div>
 			<div className="overflow-y-auto w-full h-full px-5 pb-5 border-b border-gray-200 dark:border-gray-700 -sidebar-main md:px-6">
@@ -148,23 +169,35 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 							</>
 						) : (
 							<>
-								{link[0] === '/howitworks' ? (
+								{link[0] === '/howitworks' || link[0] === '/setswearjarfee' ? (
 									<>
 										<a
 											onClick={e => {
 												e.preventDefault()
-												userState.setHowItWorks(true)
-												Router.push('/home')
+												if (link[0] === '/howitworks') {
+													userState.setHowItWorks(true)
+													Router.push('/home')
+												} else {
+													setOpenProfileModal(true)
+												}
 											}}
 											className={clsx(
-												`cursor-pointer px-5 py-4 flex flex-row items-center rounded-xl text-sm font-bold transition-colors`,
+												`cursor-pointer px-5 flex flex-row items-start rounded-xl text-sm font-bold transition-colors`,
+												link[0] === '/setswearjarfee' ? 'py-2' : 'py-4',
 												activeLink === link
 													? `bg-primary text-white`
 													: 'text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-white'
 											)}
 										>
 											{link[3]}
-											<div className="ml-4">{link[2]}</div>
+											<div className="ml-4">
+												<div>{link[2]}</div>
+												{link[0] === '/setswearjarfee' && (
+													<div className="text-gray-400 font-light text-xs">
+														Group minimum: ${selectedPot?.data?.pot?.minAmount}
+													</div>
+												)}
+											</div>
 										</a>
 										{}
 									</>
@@ -227,13 +260,10 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 					{isGoogleConnected ? <Logout /> : <Login />}
 				</div>
 				<ProfileMenu potUser={potUser} />
-				<div className="mt-20">
-					<Switch />
-				</div>
 				{potUser?.readyUpAt ? (
 					<></>
 				) : (
-					<div className="text-xs text-center px-4 pt-2 italic font-thin">
+					<div className="text-xs text-center px-4 pt-2 italic font-thin text-black mt-20 dark:text-white">
 						Hint: Tap on your avatar to view settings &amp; ready up.
 					</div>
 				)}
@@ -271,6 +301,14 @@ const links: any[][] = [
 		'/howitworks',
 		[],
 		'How It Works',
+		<svg className="-icon">
+			<use xlinkHref="/img/sprite.svg#icon-settings"></use>
+		</svg>
+	],
+	[
+		'/setswearjarfee',
+		[],
+		'Set Swear Jar Fee',
 		<svg className="-icon">
 			<use xlinkHref="/img/sprite.svg#icon-settings"></use>
 		</svg>
