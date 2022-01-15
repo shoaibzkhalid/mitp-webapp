@@ -7,6 +7,7 @@ import { Api } from '../../api'
 import { Input } from '../../components/Input'
 import { SpinnerBig } from '../../components/SpinnerBig'
 import { userState } from '../../state/user'
+import { Login } from '../../components/Authentication/Login'
 
 export default observer(function PotNew() {
 	const router = useRouter()
@@ -78,34 +79,10 @@ export default observer(function PotNew() {
 			</div>
 
 			<div className="text-center font-bold text-xl mt-7">
-				Join your friends' {pot.data?.pot.title} challenge by creating an
-				account
+				Join your friends challenge by connecting with google
 			</div>
-
-			<Input
-				label="Email"
-				type="email"
-				value={email}
-				className="mt-7"
-				setValue={v => setEmail(v)}
-			></Input>
-
-			<Input
-				label="First name"
-				type="text"
-				value={firstName}
-				className="mt-7"
-				setValue={v => setFirstName(v)}
-			></Input>
-
-			<div className="flex flex-col items-center justify-center mt-7">
-				<button
-					className="-button -dark"
-					disabled={createAccountMutation.isLoading}
-					onClick={() => createAccountMutation.mutate()}
-				>
-					Join {pot.data?.pot.title}
-				</button>
+			<div className="py-16" style={{ margin: 'auto', width: '190px' }}>
+				<Login title={'Continue With Google'} />
 			</div>
 		</div>
 	)

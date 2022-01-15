@@ -262,9 +262,11 @@ input:checked ~ .checkbox-bg {
 }
 
 /* Google signin button css */
-.google-o-auth-button-login , .google-o-auth-button-logout {
+.google-o-auth-button-login,
+.google-o-auth-button-logout {
 	margin-left: -8px;
 	width: calc(100% + 15px);
-	color: #000 !important;
+	color: #fff !important;
 	font-weight: 700 !important;
+	background-color: #4285f4 !important;
 }

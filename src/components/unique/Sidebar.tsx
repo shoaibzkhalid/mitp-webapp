@@ -38,7 +38,6 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 	const [openButtonModal, setOpenButtonModal] = useState(null as any)
 	const appElement = useNextAppElement()
 	const selectedPot = useSelectedPot()
-	console.log(selectedPot)
 	const isMobile = useMediaQuery('(max-width: 1024px)')
 	const [openProfileModal, setOpenProfileModal] = useState<boolean>(false)
 
