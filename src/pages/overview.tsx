@@ -61,7 +61,7 @@ export default wrapDashboardLayout(function RealIndexPage() {
 		}) ?? []
 
 	let readyUpCount = 0
-	pot.data.users.map(user =>
+	pot.data?.users.map(user =>
 		user.readyUpAt ? (readyUpCount += 1) : (readyUpCount += 0)
 	)
 

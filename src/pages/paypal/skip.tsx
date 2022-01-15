@@ -79,11 +79,10 @@ export default observer(function PotNew() {
 			</div>
 
 			<div className="text-center font-bold text-xl mt-7">
-				Join your friends' {pot.data?.pot.title} challenge by creating an
-				account
+				Join your friends challenge by connecting with google
 			</div>
-			<div className="mt-2">
-				<Login />
+			<div className="py-16" style={{ margin: 'auto', width: '190px' }}>
+				<Login title={'Continue With Google'} />
 			</div>
 		</div>
 	)

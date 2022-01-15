@@ -6,7 +6,7 @@ import { Api } from '../../api'
 import { runInAction } from 'mobx'
 import { AppEnv } from '../../env'
 
-export function Login() {
+export function Login({ title }) {
 	const router = useRouter()
 	let isInvite = router.pathname === '/paypal/skip'
 
@@ -33,7 +33,7 @@ export function Login() {
 		<div>
 			<GoogleLogin
 				clientId={AppEnv.googleClientId}
-				buttonText="Sign In With Google"
+				buttonText={title}
 				onSuccess={(r: any) => saveConnection.mutate(r)}
 				onFailure={e => {
 					console.log(e)
