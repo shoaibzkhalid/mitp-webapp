@@ -182,6 +182,10 @@ function PaymentMethod() {
 		document.location = order.approveUrl
 	})
 
+	const isGoogleConnected = !!userState.user?.connections.find(
+		c => c.service === 'google'
+	)
+
 	return (
 		<>
 			<img
@@ -208,6 +212,7 @@ function PaymentMethod() {
 						)
 						router.push('/paypal/login-initiate')
 					}}
+					disabled={!isGoogleConnected}
 				>
 					Link PayPal
 				</button>
