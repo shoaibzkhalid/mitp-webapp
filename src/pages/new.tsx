@@ -3,14 +3,13 @@ import { useRouter } from 'next/router'
 import { wrapDashboardLayout } from '../components/unique/DashboardLayout'
 import { useSelectedPot } from '../state/react/useSelectedPot'
 import { Header } from '../components/unique/Header'
+import { Login } from '../components/Authentication/Login'
+import { userState } from '../state/user'
+import clsx from 'clsx'
+import { runInAction } from 'mobx'
 
 export default wrapDashboardLayout(function NewPage() {
 	const router = useRouter()
-	const selectedPot = useSelectedPot()
-
-	if (selectedPot.data) {
-		return router.push('/home')
-	}
 
 	return (
 		<>
@@ -47,9 +46,18 @@ export default wrapDashboardLayout(function NewPage() {
 						</div>
 						<div className="py-2 flex justify-center">
 							<button
-								className="px-16 py-3 rounded-lg bg-primary text-white text-xl"
+								className={clsx(
+									'px-16 py-3 rounded-lg bg-primary text-white text-xl',
+									userState.tokens.accessToken === null ? 'disable-event' : ''
+								)}
 								onClick={() => {
 									router.push('/create')
+									// runInAction(() => {
+									// 	userState.tokens = {
+									// 		accessToken: null,
+									// 		refreshToken: null
+									// 	}
+									// })
 								}}
 							>
 								Create Pot
@@ -57,6 +65,11 @@ export default wrapDashboardLayout(function NewPage() {
 						</div>
 					</div>
 				</div>
+				{userState.tokens.accessToken === null && (
+					<div className="hidden">
+						<Login title={''} autoLoad={true}></Login>
+					</div>
+				)}
 			</div>
 		</>
 	)

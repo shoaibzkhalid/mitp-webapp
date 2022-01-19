@@ -67,8 +67,6 @@ export default wrapDashboardLayout(function OverviewPage() {
 		user.readyUpAt ? (readyUpCount += 1) : (readyUpCount += 0)
 	)
 
-	console.log(data)
-
 	useEffect(() => {
 		toggleSideBar(false)
 	}, [])

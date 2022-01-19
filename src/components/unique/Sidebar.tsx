@@ -183,7 +183,9 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 											className={clsx(
 												`cursor-pointer px-5 flex flex-row items-start rounded-xl text-sm font-bold transition-colors`,
 												link[0] === '/setswearjarfee' ? 'py-2' : 'py-4',
-												link[0] === '/setswearjarfee' && !isGoogleConnected && 'hidden',
+												link[0] === '/setswearjarfee' &&
+													!isGoogleConnected &&
+													'hidden',
 												activeLink === link
 													? `bg-primary text-white`
 													: 'text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-white'
@@ -257,12 +259,14 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 
 			<div className="flex flex-col justify-center items-center relative">
 				<div className="px-7 mt-4 w-full">
-					{isGoogleConnected ? <Logout /> : <Login title={'Sign in with Google'} />}
+					{isGoogleConnected ? (
+						<Logout />
+					) : (
+						<Login title={'Sign in with Google'} autoLoad={false} />
+					)}
 				</div>
-				<ProfileMenu potUser={potUser} isGoogleConnected={isGoogleConnected}/>
-				{potUser?.readyUpAt && isGoogleConnected && (
-					<></>
-				)}
+				<ProfileMenu potUser={potUser} isGoogleConnected={isGoogleConnected} />
+				{potUser?.readyUpAt && isGoogleConnected && <></>}
 
 				{!potUser?.readyUpAt && isGoogleConnected && (
 					<div className="text-xs text-center px-4 pt-2 italic font-thin text-black mt-20 dark:text-white">
@@ -272,7 +276,8 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 
 				{!isGoogleConnected && (
 					<div className="text-xs text-center px-4 pt-2 italic font-thin text-black mt-20 dark:text-white">
-						Hint: Sign in with google to be able to invite friends & save progress..
+						Hint: Sign in with google to be able to invite friends & save
+						progress..
 					</div>
 				)}
 			</div>

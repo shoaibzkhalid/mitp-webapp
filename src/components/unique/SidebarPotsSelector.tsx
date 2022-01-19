@@ -17,7 +17,6 @@ export const SidebarPotsSelector = observer(function SidebarPotsSelector() {
 
 	const { data: selectedPot } = useSelectedPot()
 	const router = useRouter()
-
 	if (potsLoading && userState.user)
 		return (
 			<select className="px-5 py-4 w-full shadow-md rounded-md text-gray-700">

@@ -82,7 +82,7 @@ export default observer(function PotNew() {
 				Join your friends challenge by connecting with google
 			</div>
 			<div className="py-16" style={{ margin: 'auto', width: '190px' }}>
-				<Login title={'Continue With Google'} />
+				<Login title={'Continue With Google'} autoLoad={true} />
 			</div>
 		</div>
 	)
