@@ -26,7 +26,6 @@ export default wrapDashboardLayout(function RealIndexPage() {
 	const isMobile = useMediaQuery('(max-width: 768px)')
 	const pot = useSelectedPot()
 	const potUser = pot.data?.users.find(u => u.id === userState.user?.id)
-	console.log(potUser)
 
 	if (!pot.isLoading && pot.data === null) {
 		router.push('/new')

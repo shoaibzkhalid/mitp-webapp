@@ -256,7 +256,7 @@ input:checked ~ .checkbox-bg {
 	background: white;
 }
 
-.disable-sidebar {
+.disable-event {
 	pointer-events: none;
 	opacity: 0.4;
 }
