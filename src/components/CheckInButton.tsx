@@ -31,12 +31,6 @@ export const CheckInButton = observer(function CheckInButton(
 				isOpen={openModal === 'photo'}
 				onRequestClose={() => setOpenModal(null)}
 				appElement={appElement}
-				style={{
-					content: {
-						height: '60%',
-						top: '15%'
-					}
-				}}
 			>
 				<CheckInPhotoModalInner
 					closeModal={() => setOpenModal(null)}
