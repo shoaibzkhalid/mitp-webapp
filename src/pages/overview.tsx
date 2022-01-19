@@ -17,6 +17,7 @@ import { useMediaQuery } from '../state/react/useMediaQuery'
 import clsx from 'clsx'
 import { toggleSideBar } from '../utils/common'
 import { useTimer } from '../state/react/useTimer'
+import { SpinnerBig } from '../components/SpinnerBig'
 
 export default wrapDashboardLayout(function RealIndexPage() {
 	const router = useRouter()
@@ -31,6 +32,10 @@ export default wrapDashboardLayout(function RealIndexPage() {
 	if (!pot.isLoading && pot.data === null) {
 		router.push('/new')
 		return null
+	}
+
+	if (!pot.data) {
+		return <SpinnerBig />
 	}
 
 	useEffect(() => {

@@ -14,6 +14,7 @@ import { toggleSideBar } from '../utils/common'
 import ReactModal from 'react-modal'
 import { WithdrawModalInner } from '../components/modals/WithdrawModalInner'
 import { useNextAppElement } from '../state/react/useNextAppElement'
+import { SpinnerBig } from '../components/SpinnerBig'
 
 export default wrapDashboardLayout(function PayoutsPage() {
 	const router = useRouter()
@@ -30,6 +31,9 @@ export default wrapDashboardLayout(function PayoutsPage() {
 
 	if (!isLoading && data === null) {
 		router.push('/new')
+	}
+	if (!data) {
+		return <SpinnerBig />
 	}
 
 	const { data: transactionsData } = useQuery(
