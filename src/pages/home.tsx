@@ -293,7 +293,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 						<div className="flex justify-end py-2">
 							<div id="how_it_works_div">
 								<button
-									className="bg-white p-3 border rounded-md font-bold"
+									className="bg-white p-3 border rounded-md font-bold dark:bg-dark"
 									onClick={() => userState.setHowItWorks(true)}
 								>
 									(i) How it works

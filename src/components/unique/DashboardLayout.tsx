@@ -52,7 +52,7 @@ const DashboardLayout = observer(function DashboardLayout(props: {
 					<div
 						className={clsx(
 							'w-full max-w-xs p-6 border-r border-gray-200 dark:border-gray-700',
-							!pot.data ? 'disable-event' : ''
+							!pot.data ? 'hidden' : ''
 						)}
 					>
 						<Sidebar isMobile={isMobile}></Sidebar>
