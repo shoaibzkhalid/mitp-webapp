@@ -311,14 +311,6 @@ const links: any[][] = [
 		</svg>
 	],
 	[
-		'/howitworks',
-		[],
-		'How It Works',
-		<svg className="-icon">
-			<use xlinkHref="/img/sprite.svg#icon-settings"></use>
-		</svg>
-	],
-	[
 		'/setswearjarfee',
 		[],
 		'Set Swear Jar Fee',
