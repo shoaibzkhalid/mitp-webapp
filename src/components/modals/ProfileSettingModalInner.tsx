@@ -29,6 +29,7 @@ export function ProfileSettingModalInner({ closeModal }: ModalProps) {
 		() => data?.users.find(u => u.id === userState.user?.id),
 		[data]
 	)
+
 	const [swearFee, setSwearFee] = useState(potUser?.amount)
 
 	const handleChange = event => {
@@ -181,8 +182,8 @@ export function ProfileSettingModalInner({ closeModal }: ModalProps) {
 							<SelectInput
 								height="undefined"
 								selectClassName="bg-alabaster p-4 focus:outline-none"
-								options={[5, 10, 15, 20, 30, 40, 50].map(i => ({
-									label: i === 5 ? `Group Minimum: $${i}` : i + '$',
+								options={[0, 5, 10, 15, 20, 30, 40, 50].map(i => ({
+									label: i === 0 ? `Group Minimum: $${i}` : i + '$',
 									value: i + ''
 								}))}
 								value={potUser?.amount}

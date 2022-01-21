@@ -170,12 +170,65 @@ export default wrapDashboardLayout(function OverviewPage() {
 								closeModal={() => setOpenGroupDetailModal(false)}
 							/>
 						</ReactModal>
-						<div className="text-gray-400 text-xl">
+						<div className="text-gray-400 text-xl flex absolute">
 							{potAdminUser?.firstName ? (
 								<>{`Group Admin:  ${potAdminUser?.firstName}`}</>
 							) : (
 								<></>
 							)}
+							<div
+								className="ml-4 text-gray-400 w-full"
+								style={{ width: '150px' }}
+							>
+								<div
+									className="flex items-center justify-center cursor-pointer"
+									onClick={() => {
+										setViewRuleDropDown(!viewRuleDropDown)
+									}}
+								>
+									View Rules
+									<span className="inline-block pl-1">
+										<svg
+											style={{ width: '16px', height: '16px' }}
+											className="fill-current"
+										>
+											<use href="/img/sprite.svg#icon-arrow-down-fat"></use>
+										</svg>
+									</span>
+								</div>
+								<div
+									className={clsx(
+										'border border-gray-400 p-1 mt-2 text-left bg-white dark:bg-dark',
+										viewRuleDropDown ? 'block' : 'hidden'
+									)}
+									style={{ wordWrap: 'break-word' }}
+								>
+									<p
+										className="mb-2 text-gray-800 font-bold cursor-pointer dark:text-white"
+										onClick={() => setOpenReadyUpModal(true)}
+									>
+										Swear jar rules
+									</p>
+									{`Check in with photo proof (screenshot or take photo) you've
+										completed "${data?.pot.title}" by Sunday at
+										midnight or pay in swear jar fee of $${pot.data?.pot.minAmount} or more.`}
+									<ReactModal
+										isOpen={openReadyUpModal}
+										onRequestClose={() => setOpenReadyUpModal(false)}
+										appElement={appElement}
+										style={{
+											content: {
+												minWidth: 320,
+												maxWidth: 600
+											}
+										}}
+									>
+										<ProfileSettingModalInner
+											closeModal={() => setOpenReadyUpModal(false)}
+										/>
+									</ReactModal>
+								</div>
+							</div>
 						</div>
 					</div>
 
@@ -209,7 +262,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 								>
 									Print QR Code
 								</a>
-								<div
+								{/* <div
 									className="mt-4 text-gray-400 w-full absolute"
 									style={{ width: '150px' }}
 								>
@@ -261,7 +314,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 											/>
 										</ReactModal>
 									</div>
-								</div>
+								</div> */}
 							</div>
 						</div>
 					</div>
@@ -293,7 +346,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 						<div className="flex justify-end py-2">
 							<div id="how_it_works_div">
 								<button
-									className="bg-white p-3 border rounded-md font-bold"
+									className="bg-white p-3 border rounded-md font-bold dark:bg-dark"
 									onClick={() => userState.setHowItWorks(true)}
 								>
 									(i) How it works
@@ -317,19 +370,8 @@ export default wrapDashboardLayout(function OverviewPage() {
 									{`${dayjs().format('MMMM')}`}
 								</div>
 								<div className="ml-auto mr-4 text-md font-thin">
-									{readyUpCount} / {data?.users?.length}
+									{`${readyUpCount} / ${data?.users?.length} Ready`}
 								</div>
-								<select
-									className="px-5 py-4 w-full rounded-2xl text-base text-gray-500 outline-none border-gray-200 dark:bg-gray-900 dark:border-gray-900 md:w-44"
-									style={{ borderWidth: '1px' }}
-									value={potView}
-									onChange={e => {
-										setPotView(e.target.value)
-									}}
-								>
-									<option value={'Total Pot'}>Total Pot</option>
-									<option value={'Real Time'}>Real Time</option>
-								</select>
 							</div>
 
 							<div className="md:grid grid-cols-3">
