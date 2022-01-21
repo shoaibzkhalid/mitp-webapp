@@ -262,59 +262,6 @@ export default wrapDashboardLayout(function OverviewPage() {
 								>
 									Print QR Code
 								</a>
-								{/* <div
-									className="mt-4 text-gray-400 w-full absolute"
-									style={{ width: '150px' }}
-								>
-									<div
-										className="flex items-center justify-center cursor-pointer"
-										onClick={() => {
-											setViewRuleDropDown(!viewRuleDropDown)
-										}}
-									>
-										View Rules
-										<span className="inline-block pl-1">
-											<svg
-												style={{ width: '16px', height: '16px' }}
-												className="fill-current"
-											>
-												<use href="/img/sprite.svg#icon-arrow-down-fat"></use>
-											</svg>
-										</span>
-									</div>
-									<div
-										className={clsx(
-											'border border-gray-400 p-1 mt-2 text-left',
-											viewRuleDropDown ? 'block' : 'hidden'
-										)}
-										style={{ wordWrap: 'break-word' }}
-									>
-										<p
-											className="mb-2 text-gray-800 font-bold cursor-pointer"
-											onClick={() => setOpenReadyUpModal(true)}
-										>
-											Swear jar rules
-										</p>
-										{`Check in with photo proof (screenshot or take photo) you've
-										completed "${data?.pot.title}" by Sunday at
-										midnight or pay in swear jar fee of $${pot.data?.pot.minAmount} or more.`}
-										<ReactModal
-											isOpen={openReadyUpModal}
-											onRequestClose={() => setOpenReadyUpModal(false)}
-											appElement={appElement}
-											style={{
-												content: {
-													minWidth: 320,
-													maxWidth: 600
-												}
-											}}
-										>
-											<ProfileSettingModalInner
-												closeModal={() => setOpenReadyUpModal(false)}
-											/>
-										</ReactModal>
-									</div>
-								</div> */}
 							</div>
 						</div>
 					</div>
