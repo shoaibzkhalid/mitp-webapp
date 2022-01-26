@@ -312,7 +312,7 @@ export default wrapDashboardLayout(function RealIndexPage() {
 											<th className="font-thin">Done</th>
 											<th className="font-thin">Check - In</th>
 											<th className="font-thin">Swear jar fee</th>
-											<th className="font-thin">Photo Proofs</th>
+											<th className="font-thin">Check in photo</th>
 										</tr>
 									</thead>
 									<tbody>

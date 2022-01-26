@@ -5,10 +5,7 @@ import { useRouter } from 'next/router'
 import { Api } from '../../api'
 import { runInAction } from 'mobx'
 import { AppEnv } from '../../env'
-import {
-	useSelectedPot,
-	selectedPotState
-} from '../../state/react/useSelectedPot'
+import { selectedPotState } from '../../state/react/useSelectedPot'
 
 export function Login({ title, autoLoad }) {
 	const router = useRouter()

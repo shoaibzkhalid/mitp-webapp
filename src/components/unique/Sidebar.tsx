@@ -26,6 +26,7 @@ interface SidebarProps {
 
 export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 	const { asPath } = useRouter()
+	const router = useRouter()
 	const activeLink = useMemo(
 		() =>
 			links.find(
@@ -53,7 +54,7 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 	return (
 		<div
 			style={{
-				padding: potUser?.readyUpAt ? '140px 0 160px 0' : '140px 0 190px 0'
+				padding: potUser?.readyUpAt ? '140px 0 160px 0' : '100px 0 235px 0'
 			}}
 			className="w-56 h-screen fixed top-0 left-0 border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 md:w-80"
 		>
@@ -72,8 +73,8 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 					closeModal={() => setOpenProfileModal(false)}
 				/>
 			</ReactModal>
-			<div style={{ height: 140 }} className="absolute top-0 left-0 right-0">
-				<div className="relative flex flex-col items-center justify-center px-8 py-6 border-b border-gray-200 md:border-0 md:py-12">
+			<div className="absolute top-0 left-0 right-0">
+				<div className="relative flex flex-col items-center justify-center px-8 pt-6 border-b border-gray-200 md:border-0 md:pt-12">
 					{props.isMobile && (
 						<button
 							className="absolute mr-auto left-4"
@@ -126,14 +127,19 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 							</svg>
 						)}
 					</div>
-					<div className="mt-3">
-						<Switch />
-					</div>
 				</div>
 			</div>
-			<div className="overflow-y-auto w-full h-full px-5 pb-5 border-b border-gray-200 dark:border-gray-700 -sidebar-main md:px-6">
-				<div className="py-4">
+			<div className="overflow-y-auto w-full h-full px-5 pb-5 border-b border-gray-200 dark:border-gray-700 -sidebar-main md:px-8">
+				<div className="py-4 flex items-center relative">
 					<SidebarPotsSelector />
+					<span
+						className="absolute cursor-pointer add-pot-icon"
+						onClick={() => router.push('/new')}
+					>
+						<svg className="w-6 h-6 ml-3 fill-current">
+							<use xlinkHref="/img/sprite.svg#icon-plus-square"></use>
+						</svg>
+					</span>
 				</div>
 
 				{links.map(link => (
@@ -266,16 +272,19 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 					)}
 				</div>
 				<ProfileMenu potUser={potUser} isGoogleConnected={isGoogleConnected} />
+				<div className="mt-20">
+					<Switch />
+				</div>
 				{potUser?.readyUpAt && isGoogleConnected && <></>}
 
 				{!potUser?.readyUpAt && isGoogleConnected && (
-					<div className="text-xs text-center px-4 pt-2 italic font-thin text-black mt-20 dark:text-white">
+					<div className="text-xs text-center px-4 pt-2 italic font-thin text-black dark:text-white">
 						Hint: Tap on your avatar to view settings &amp; ready up.
 					</div>
 				)}
 
 				{!isGoogleConnected && (
-					<div className="text-xs text-center px-4 pt-2 italic font-thin text-black mt-20 dark:text-white">
+					<div className="text-xs text-center px-4 pt-2 italic font-thin text-black dark:text-white">
 						Hint: Sign in with google to be able to invite friends & save
 						progress..
 					</div>

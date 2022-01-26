@@ -3,7 +3,7 @@
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
-		"dev": "next dev -p 8081",
+		"dev": "next dev -p 8080",
 		"build": "next build",
 		"start": "next start",
 		"prettier": "prettier --write 'src/**/*.{js,json,jsx,ts,tsx,css}' *.js package.json"

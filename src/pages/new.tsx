@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { wrapDashboardLayout } from '../components/unique/DashboardLayout'
@@ -7,10 +8,18 @@ import { Login } from '../components/Authentication/Login'
 import { userState } from '../state/user'
 import clsx from 'clsx'
 import { runInAction } from 'mobx'
+import { useNextAppElement } from '../state/react/useNextAppElement'
+import ReactModal from 'react-modal'
 
 export default wrapDashboardLayout(function NewPage() {
+	const [openSiginModal, setOpenSiginModal] = useState<boolean>(true)
 	const router = useRouter()
+	const appElement = useNextAppElement()
 
+	const goToLandingPage = () => {
+		setOpenSiginModal(false)
+		router.push('https://moneyinthepot.com/')
+	}
 	return (
 		<>
 			<Head>
@@ -48,7 +57,7 @@ export default wrapDashboardLayout(function NewPage() {
 							<button
 								className={clsx(
 									'px-16 py-3 rounded-lg bg-primary text-white text-xl',
-									userState.tokens.accessToken === null ? 'disable-event' : ''
+									// userState.tokens.accessToken === null ? 'disable-event' : ''
 								)}
 								onClick={() => {
 									router.push('/create')
@@ -57,6 +66,7 @@ export default wrapDashboardLayout(function NewPage() {
 									// 		accessToken: null,
 									// 		refreshToken: null
 									// 	}
+									// 	userState.userSelectPot = false
 									// })
 								}}
 							>
@@ -67,9 +77,35 @@ export default wrapDashboardLayout(function NewPage() {
 				</div>
 				{userState.tokens.accessToken === null && (
 					<div className="hidden">
-						<Login title={''} autoLoad={true}></Login>
+						<Login title={''} autoLoad={false}></Login>
 					</div>
 				)}
+				<ReactModal
+					isOpen={openSiginModal && userState.tokens.accessToken === null}
+					onRequestClose={() => goToLandingPage()}
+					appElement={appElement}
+					className="sigin-modal"
+				>
+					<div className="relative">
+						<img className="block full-width" src="./img/sigin-bg.png"></img>
+						<button
+							className="-round shadow-lg text-sm sigin-close bg-white"
+							onClick={() => goToLandingPage()}
+						>
+							x
+						</button>
+						<div className="mt-3 px-10">
+							<Login title={'Continue With Google'} autoLoad={false}></Login>
+						</div>
+						<div
+							className="bg-gray-200 mx-8 my-6"
+							style={{ height: '2px' }}
+						></div>
+						<div className="text-sm text-center pb-6">
+							Continue as a Guest instead
+						</div>
+					</div>
+				</ReactModal>
 			</div>
 		</>
 	)

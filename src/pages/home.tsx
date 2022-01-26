@@ -119,7 +119,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 	const failedUsers = pot.data?.users.filter(
 		user => pot.data.pot.checkinCount - user.checkinsThisWeek > daysLeft
 	).length
-
+	console.log('pot.data?.users', pot.data?.users)
 	return (
 		<>
 			<Head>

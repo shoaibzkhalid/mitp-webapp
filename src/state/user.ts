@@ -13,6 +13,7 @@ export const userState = observable({
 	loaded: false,
 	ready: false,
 	howItWorks: false,
+	userSelectPot: false,
 
 	async load() {
 		if (!userState.tokens.refreshToken) {

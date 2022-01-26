@@ -5,6 +5,7 @@ import { useMutation } from 'react-query'
 import { Api } from '../../api'
 import { AppEnv } from '../../env'
 import { userState } from '../../state/user'
+import { selectedPotState } from '../../state/react/useSelectedPot'
 
 export const Logout = observer(function Logout() {
 	const connection = userState.user?.connections.find(
@@ -25,6 +26,7 @@ export const Logout = observer(function Logout() {
 				accessToken: null,
 				refreshToken: null
 			}
+			selectedPotState.moneyPotId = null
 		})
 		window.location.assign('/')
 	})

@@ -19,6 +19,12 @@ export function Intro(props: IntroProps) {
 					tooltipClass: clsx('bg-white text-black dark:bg-dark dark:text-white')
 				},
 				{
+					element: document.getElementById('walkthrough_potname'),
+					title: 'Welcome',
+					intro: `This is the default name for all new groups. Set your own group activity and rules by clicking on the pencil icon here, or clicking the plus icon at the top left.`,
+					tooltipClass: clsx('bg-white text-black dark:bg-dark dark:text-white')
+				},
+				{
 					element: document.getElementById('header_invite_holder_div'),
 					title: 'Invite',
 					intro: `Once you've finished setting up your group, invite two friends by sending them your invite link & have them ready up to receive $5 pot credits towards your group.`,
@@ -58,7 +64,7 @@ export function Intro(props: IntroProps) {
 	useEffect(() => {
 		if (
 			props.enabled &&
-			localStorage.getItem('intro_completed_' + props.label) !== 'true'
+			localStorage.getItem('intro_completed_' + props.label) === 'true'
 		)
 			intro()
 				.setOptions({

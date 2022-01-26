@@ -269,6 +269,7 @@ input:checked ~ .checkbox-bg {
 	color: #fff !important;
 	font-weight: 700 !important;
 	background-color: #4285f4 !important;
+	text-align: center;
 }
 
 .box {
@@ -288,4 +289,29 @@ input:checked ~ .checkbox-bg {
 	background-origin: border-box;
 	background-repeat: no-repeat;
 	border-radius: 5px;
+}
+
+.sigin-modal {
+	inset: 40px;
+	border: 1px solid rgb(204, 204, 204);
+	background: rgb(255, 255, 255);
+	overflow: auto;
+	border-radius: 4px;
+	outline: none;
+	padding: 0px !important;
+	min-width: 400px;
+	max-width: 450px;
+}
+
+.sigin-close {
+	position: absolute;
+	top: 20px;
+	right: 20px;
+	width: 30px;
+	height: 30px;
+	border-radius: 50%;
+}
+
+.add-pot-icon {
+	right: -30px;
 }

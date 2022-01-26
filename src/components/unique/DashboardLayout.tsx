@@ -11,20 +11,21 @@ import {
 import { useMediaQuery } from '../../state/react/useMediaQuery'
 import { userState } from '../../state/user'
 import { Sidebar } from './Sidebar'
-import { useSelectedPot } from '../../state/react/useSelectedPot'
-import { Api } from '../../api'
-import { useQuery } from 'react-query'
+import {
+	useSelectedPot,
+	selectedPotState
+} from '../../state/react/useSelectedPot'
 
 const DashboardLayout = observer(function DashboardLayout(props: {
 	contents: () => JSX.Element
 }) {
 	const router = useRouter()
 	const Component = props.contents
-
+	console.log('userState.userSelectPot', userState.userSelectPot)
 	useEffect(() => {
 		const pr = when(() => userState.loaded)
 		pr.then(() => {
-			if (!userState.user) router.push('/new')
+			if (!userState.user || !selectedPotState.moneyPotId) router.push('/new')
 		})
 		return () => pr.cancel()
 	}, [])
