@@ -28,5 +28,10 @@ export default {
 	payinConfirm: (token: string) =>
 		Api.post('payin-confirm', {
 			token
-		})
+		}),
+
+	saveStripeCard: (token: string) =>
+		Api.post('3rdparty/stripe/card', { token }),
+
+	seleteStripeCard: () => Api.delete('3rdparty/stripe/card')
 }

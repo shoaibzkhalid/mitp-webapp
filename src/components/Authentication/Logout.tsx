@@ -5,7 +5,6 @@ import { useMutation } from 'react-query'
 import { Api } from '../../api'
 import { AppEnv } from '../../env'
 import { userState } from '../../state/user'
-import { selectedPotState } from '../../state/react/useSelectedPot'
 
 export const Logout = observer(function Logout() {
 	const connection = userState.user?.connections.find(
@@ -15,6 +14,7 @@ export const Logout = observer(function Logout() {
 	if (!connection) return null
 
 	const deleteConnection = useMutation('delete-google-connection', async () => {
+		console.log('123123123')
 		// The code removes the user's connection to Google, which the button
 		// currently does not do
 		//
@@ -26,7 +26,6 @@ export const Logout = observer(function Logout() {
 				accessToken: null,
 				refreshToken: null
 			}
-			selectedPotState.moneyPotId = null
 		})
 		window.location.assign('/')
 	})
@@ -36,7 +35,7 @@ export const Logout = observer(function Logout() {
 			<GoogleLogout
 				clientId={AppEnv.googleClientId}
 				buttonText={`Logout ${connection.meta?.given_name || 'Google Account'}`}
-				onLogoutSuccess={() => deleteConnection.mutate()}
+				onLogoutSuccess={() => console.log('11111111')}
 				className="google-o-auth-button-logout"
 			></GoogleLogout>
 		</div>

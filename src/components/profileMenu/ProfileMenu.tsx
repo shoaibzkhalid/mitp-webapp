@@ -54,7 +54,7 @@ export const ProfileMenu = observer(function ProfileMenu(
 						closeModal={() => setOpenProfileModal(false)}
 					/>
 				</ReactModal>
-				<div
+				{/* <div
 					className={classes.sidebar__details}
 					style={{ display: profileMenuActive ? 'block' : 'none' }}
 				>
@@ -80,7 +80,7 @@ export const ProfileMenu = observer(function ProfileMenu(
 						</div>
 						<div className={classes.sidebar__text}>Log out</div>
 					</a>
-				</div>
+				</div> */}
 				<div
 					className={clsx(
 						classes.sidebar__user,
@@ -115,7 +115,7 @@ export const ProfileMenu = observer(function ProfileMenu(
 						</div>
 					</div>
 				</div>
-				<div
+				{/* <div
 					className={clsx(
 						'profile-menu__arrow absolute cursor-pointer top-10',
 						classes.sidebar__arrow
@@ -136,7 +136,7 @@ export const ProfileMenu = observer(function ProfileMenu(
 							fill="currentColor"
 						/>
 					</svg>
-				</div>
+				</div> */}
 			</div>
 		</div>
 	)

@@ -57,7 +57,6 @@ export default observer(function PotNew() {
 			onSuccess(d) {
 				runInAction(() => {
 					selectedPotState.moneyPotId = d.id
-					userState.userSelectPot = true
 				})
 
 				router.push('/home')

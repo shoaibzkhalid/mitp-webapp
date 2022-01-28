@@ -19,6 +19,7 @@ import { observer } from 'mobx-react-lite'
 import { userState } from '../../state/user'
 import { Login } from '../Authentication/Login'
 import { Logout } from '../Authentication/Logout'
+import { runInAction } from 'mobx';
 
 interface SidebarProps {
 	isMobile: boolean
@@ -134,7 +135,7 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 					<SidebarPotsSelector />
 					<span
 						className="absolute cursor-pointer add-pot-icon"
-						onClick={() => router.push('/new')}
+						onClick={() => router.push('/create')}
 					>
 						<svg className="w-6 h-6 ml-3 fill-current">
 							<use xlinkHref="/img/sprite.svg#icon-plus-square"></use>
@@ -265,11 +266,23 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 
 			<div className="flex flex-col justify-center items-center relative">
 				<div className="px-7 mt-4 w-full">
-					{isGoogleConnected ? (
+					{/* {isGoogleConnected ? (
 						<Logout />
 					) : (
 						<Login title={'Sign in with Google'} autoLoad={false} />
-					)}
+					)} */}
+					<button className="google-sigin" onClick={e=>{
+						runInAction(() => {
+							userState.tokens = {
+								accessToken: null,
+								refreshToken: null
+							}
+						})
+						window.location.assign('/')
+					}}>
+						<img className="google-login-logo" src="./img/google-logo.png"></img>
+						LogOut {userState?.user?.firstName}.
+					</button>
 				</div>
 				<ProfileMenu potUser={potUser} isGoogleConnected={isGoogleConnected} />
 				<div className="mt-20">

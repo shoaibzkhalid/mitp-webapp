@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import Head from 'next/head'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useMemo } from 'react'
 import { CheckInButton } from '../components/CheckInButton'
@@ -36,9 +35,6 @@ const CheckinUpdateChart = dynamic(
 export default wrapDashboardLayout(function OverviewPage() {
 	const [notificationMessage, setNotificationMessage] = useState<string>('')
 
-	const [checkinUserChartValue, setCheckinUserChartValue] = useState<number[]>([
-		0, 0, 0
-	])
 	const router = useRouter()
 	const { isLoading, data } = useSelectedPot()
 	const pot = useSelectedPot()
@@ -54,44 +50,15 @@ export default wrapDashboardLayout(function OverviewPage() {
 		router.push('/new')
 	}
 
-	if (!data) {
-		return <SpinnerBig />
-	}
-
 	const totalPotValue = data?.users?.reduce(
 		(prev, curr) => prev + parseInt(curr.amount) * 4,
 		0
 	)
-	let readyUpCount = 0
-	data.users.map(user =>
-		user.readyUpAt ? (readyUpCount += 1) : (readyUpCount += 0)
-	)
+	const readyUpCount = data?.users.filter(u => u.readyUpAt).length
 
 	useEffect(() => {
 		toggleSideBar(false)
 	}, [])
-
-	useEffect(() => {
-		const users = data?.users.length
-		const completedUsers = data?.users.filter(
-			u =>
-				u.checkinsThisWeek === data?.metrics.checkinsCount &&
-				u.checkinsThisWeek !== 0
-		).length
-		const payinUsers = data?.users.filter(
-			u =>
-				u.checkinsThisWeek < data?.metrics.checkinsCount &&
-				u.checkinsThisWeek !== 0
-		).length
-		const unCompletedUsers = data?.users.filter(
-			u => u.checkinsThisWeek === 0
-		).length
-		setCheckinUserChartValue([
-			(completedUsers / users) * 100,
-			(payinUsers / users) * 100,
-			(unCompletedUsers / users) * 100
-		])
-	}, [data, setCheckinUserChartValue])
 
 	const checkinCountUser = useMemo(
 		() =>
@@ -107,9 +74,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 	)
 
 	const date1 = dayjs(data?.pot.createdAt).format('YYYY-MM-DD')
-	const date2 = dayjs()
-	const diff = date2.diff(date1)
-	const createdDuration = dayjs.duration(diff)
+	const createdDuration = dayjs.duration(dayjs().diff(date1))
 
 	const daysLeft = dayjs()
 		.endOf('week')
@@ -119,7 +84,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 	const failedUsers = pot.data?.users.filter(
 		user => pot.data.pot.checkinCount - user.checkinsThisWeek > daysLeft
 	).length
-	console.log('pot.data?.users', pot.data?.users)
+
 	return (
 		<>
 			<Head>
@@ -256,7 +221,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 										AppEnv.apiBaseUrl +
 										'/pdf/flyer1?link=' +
 										encodeURIComponent(
-											`${AppEnv.webBaseUrl}/pot/${data.pot.slug}`
+											`${AppEnv.webBaseUrl}/pot/${data?.pot.slug}`
 										)
 									}
 								>
@@ -385,13 +350,13 @@ export default wrapDashboardLayout(function OverviewPage() {
 											)}
 											style={{ wordWrap: 'break-word' }}
 										>
-											<p className="mb-2 text-gray-800 font-bold cursor-pointer text-xs font-bold">
+											<p className="mb-2 text-gray-800 font-bold cursor-pointer text-xs">
 												When a member fails to complete their weekly check in by
 												Sunday at midnight, they pay in to the group pot
 											</p>
-											<p className="mb-2 text-gray-800 font-bold cursor-pointer text-xs font-bold">
+											<p className="mb-2 text-gray-800 font-bold cursor-pointer text-xs">
 												This is paid to you at the end of the month. You get
-												paid for improving yourself as long as you’re part of
+												paid for improving yourself as long as you're part of
 												this group!
 											</p>
 										</div>
