@@ -25,7 +25,7 @@ const DashboardLayout = observer(function DashboardLayout(props: {
 	useEffect(() => {
 		const pr = when(() => userState.loaded)
 		pr.then(() => {
-			if (!userState.user) router.push('/')
+			if (!userState.user) router.push('http://localhost:8081')
 		})
 		return () => pr.cancel()
 	}, [])

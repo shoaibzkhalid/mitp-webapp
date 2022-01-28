@@ -278,7 +278,7 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 								refreshToken: null
 							}
 						})
-						window.location.assign('/')
+						window.location.assign('http://localhost:8081')
 					}}>
 						<img className="google-login-logo" src="./img/google-logo.png"></img>
 						LogOut {userState?.user?.firstName}.
