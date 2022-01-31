@@ -36,18 +36,14 @@ function MyApp({ Component, pageProps }: AppProps) {
 				userState.save()
 			})
 		}
-		runInAction(() => {
-
-			const accessToken = getUrlParameter('accessToken', window.location.href);
-			const refreshToken = getUrlParameter('refreshToken', window.location.href);
-
-			if (accessToken && refreshToken) {
-				userState.tokens.accessToken = accessToken
-				userState.tokens.refreshToken = refreshToken
-				userState.save()
-				userState.load()
-			}
-		})
+		const accessToken = getUrlParameter('accessToken', window.location.href);
+		const refreshToken = getUrlParameter('refreshToken', window.location.href);
+		if(accessToken && refreshToken) {
+			userState.tokens.accessToken = accessToken
+			userState.tokens.refreshToken = refreshToken
+			userState.save()
+			userState.load()
+		}
 	}, [])
 
 	const getUrlParameter = (name, url) => {
