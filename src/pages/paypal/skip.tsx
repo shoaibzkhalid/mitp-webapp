@@ -29,7 +29,7 @@ export default observer(function PotNew() {
 			setLocalStorageItem({
 				potId: action.potId
 			})
-		} catch (e) {}
+		} catch (e) { }
 	}, [localStorageItem.potId])
 
 	const pot = useQuery(
@@ -82,7 +82,7 @@ export default observer(function PotNew() {
 				Join your friends challenge by connecting with google
 			</div>
 			<div className="py-16" style={{ margin: 'auto', width: '190px' }}>
-				<Login title={'Continue With Google'} autoLoad={true} />
+				<Login title={'Continue to Google'} autoLoad={true} />
 			</div>
 		</div>
 	)

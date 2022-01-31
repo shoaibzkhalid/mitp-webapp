@@ -19,7 +19,7 @@ dayjs.Ls.en.weekStart = 1
 
 function MyApp({ Component, pageProps }: AppProps) {
 	const router = useRouter()
-  		
+
 	useEffect(() => {
 		userState.load().finally(() =>
 			runInAction(() => {
@@ -27,9 +27,9 @@ function MyApp({ Component, pageProps }: AppProps) {
 			})
 		)
 	}, [])
-	
+
 	useEffect(() => {
-		;(window as any).useTokens = (a: string, b: string) => {
+		; (window as any).useTokens = (a: string, b: string) => {
 			runInAction(() => {
 				userState.tokens.accessToken = a
 				userState.tokens.refreshToken = b
@@ -46,12 +46,12 @@ function MyApp({ Component, pageProps }: AppProps) {
 		}
 	}, [])
 
-    const getUrlParameter = (name, url) => {
-        name = name.replace(/\[]/, '\\[').replace(/[\]]/, '\\]');
-        var regex = new RegExp('[\\?&]' + name + '=([^&]*)');
-        var results = regex.exec(url);
-        return results === null ? '' : results[1];
-    }
+	const getUrlParameter = (name, url) => {
+		name = name.replace(/\[]/, '\\[').replace(/[\]]/, '\\]');
+		var regex = new RegExp('[\\?&]' + name + '=([^&]*)');
+		var results = regex.exec(url);
+		return results === null ? '' : results[1];
+	}
 
 	return (
 		<QueryClientProvider client={queryClient}>
