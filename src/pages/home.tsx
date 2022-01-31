@@ -3,7 +3,6 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useMemo } from 'react'
 import { CheckInButton } from '../components/CheckInButton'
-import { SpinnerBig } from '../components/SpinnerBig'
 import { wrapDashboardLayout } from '../components/unique/DashboardLayout'
 import { userState } from '../state/user'
 import { useSelectedPot } from '../state/react/useSelectedPot'
@@ -33,6 +32,7 @@ const CheckinUpdateChart = dynamic(
 )
 
 export default wrapDashboardLayout(function OverviewPage() {
+	console.log('userState', userState.user)
 	const [notificationMessage, setNotificationMessage] = useState<string>('')
 
 	const router = useRouter()

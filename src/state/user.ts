@@ -3,6 +3,7 @@ import { Api } from '../api'
 import { ApiUser } from '../types'
 import dayjs from 'dayjs'
 import jwtDecode from 'jwt-decode'
+import { selectedPotState } from '../state/react/useSelectedPot'
 
 export const userState = observable({
 	user: null as null | ApiUser,
@@ -34,6 +35,26 @@ export const userState = observable({
 				})
 			return null
 		})
+
+		const potData = await Api.userPots.list()
+			if(potData.length===0) {
+				const state ={
+					step: 0,
+					title: 'Workout for at least 10 minutes',
+					description: '',
+					checkinCount: 1,
+					minAmount: 0
+				}
+				const pot = await Api.userPots.create(state)
+
+				runInAction(() => {
+					selectedPotState.moneyPotId = pot?.id as string
+				})
+			} else {
+				runInAction(() => {
+					selectedPotState.moneyPotId = potData[0]?.moneyPotId as string
+				})
+			}
 
 		runInAction(() => {
 			userState.user = user
