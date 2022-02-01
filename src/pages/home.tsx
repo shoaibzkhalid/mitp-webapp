@@ -32,7 +32,6 @@ const CheckinUpdateChart = dynamic(
 )
 
 export default wrapDashboardLayout(function OverviewPage() {
-	console.log('userState', userState.user)
 	const [notificationMessage, setNotificationMessage] = useState<string>('')
 
 	const router = useRouter()
@@ -281,8 +280,18 @@ export default wrapDashboardLayout(function OverviewPage() {
 									/>
 									{`${dayjs().format('MMMM')}`}
 								</div>
+
 								<div className="ml-auto mr-4 text-md font-thin">
-									{`${readyUpCount} / ${data?.users?.length} Ready`}
+									<div className="has-tooltip ml-auto">
+										<span className="tooltip rounded shadow-lg p-1 bg-gray-100 max-w-xs mt-6 text-sm">
+											{readyUpCount < 2
+												? 'At least 2 members need to ready up to begin this session.'
+												: `${readyUpCount}/${pot?.data?.users?.length} members have ready'd up. Session has started.`}
+										</span>
+										<span className="cursor-pointer">
+											{`${readyUpCount} / ${data?.users?.length} Ready`}
+										</span>
+									</div>
 								</div>
 							</div>
 
