@@ -14,7 +14,7 @@ import { toggleSideBar } from '../utils/common'
 import ReactModal from 'react-modal'
 import { WithdrawModalInner } from '../components/modals/WithdrawModalInner'
 import { useNextAppElement } from '../state/react/useNextAppElement'
-import { SpinnerBig } from '../components/SpinnerBig'
+// import { SpinnerBig } from '../components/SpinnerBig'
 
 export default wrapDashboardLayout(function PayoutsPage() {
 	const router = useRouter()
@@ -32,9 +32,9 @@ export default wrapDashboardLayout(function PayoutsPage() {
 	if (!isLoading && data === null) {
 		router.push('/new')
 	}
-	if (!data) {
-		return <SpinnerBig />
-	}
+	// if (!data) {
+	// 	return <SpinnerBig />
+	// }
 
 	const { data: transactionsData } = useQuery(
 		['payouts', userState.user?.id],
@@ -83,7 +83,7 @@ export default wrapDashboardLayout(function PayoutsPage() {
 						<div className="text-primary text-7xl my-10 font-bold">
 							{!transactionsData ? (
 								<div className="flex items-center justify-center">
-									<Spinner></Spinner>
+									{/* <Spinner></Spinner> */}
 								</div>
 							) : (
 								'$' +
@@ -201,7 +201,7 @@ function PaymentMethod() {
 
 			{!data ? (
 				<div className="flex items-center justify-center">
-					<Spinner></Spinner>
+					{/* <Spinner></Spinner> */}
 				</div>
 			) : !paypalConnection ? (
 				<button
