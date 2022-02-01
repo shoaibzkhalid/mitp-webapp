@@ -11,9 +11,14 @@ import { useMutation } from 'react-query'
 import { Api } from '../../api'
 import { queryClient } from '../../state/queryClient'
 import dayjs from 'dayjs'
+import { StripeConnectModalInner } from './StripeConnectModalInner'
+import ReactModal from 'react-modal'
+import { useNextAppElement } from '../../state/react/useNextAppElement'
 
 export function ProfileSettingModalInner({ closeModal }: ModalProps) {
 	const { data } = useSelectedPot()
+	const appElement = useNextAppElement()
+	const [stripeModalIsOpen, setStripeModalIsOpen] = useState<boolean>(false)
 
 	const [user, setUser] = useState({
 		firstName: userState.user!.firstName,
@@ -105,6 +110,22 @@ export function ProfileSettingModalInner({ closeModal }: ModalProps) {
 
 	return (
 		<>
+			<ReactModal
+				isOpen={stripeModalIsOpen}
+				onRequestClose={() => setStripeModalIsOpen(false)}
+				appElement={appElement}
+				style={{
+					content: {
+						width: 420,
+						height: 280,
+						top: '30%'
+					}
+				}}
+			>
+				<StripeConnectModalInner
+					closeModal={() => setStripeModalIsOpen(false)}
+				/>
+			</ReactModal>
 			<div className="px-0 sm:px-6">
 				<div className="text-lg font-poppins flex items-center justify-center pt-4">
 					<div className="">
@@ -223,7 +244,10 @@ export function ProfileSettingModalInner({ closeModal }: ModalProps) {
 									type="checkbox"
 									id="toggleB"
 									className="sr-only"
-									onChange={e => changeReady(e)}
+									onChange={e => {
+										setStripeModalIsOpen(true)
+										changeReady(e)
+									}}
 								/>
 								<div className="checkbox-bg block bg-gray-600 w-24 h-12 rounded-full"></div>
 								<div className="dot absolute left-1 top-1 bg-white w-10 h-10 rounded-full transition"></div>
