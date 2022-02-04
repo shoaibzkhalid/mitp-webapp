@@ -19,7 +19,7 @@ import { observer } from 'mobx-react-lite'
 import { userState } from '../../state/user'
 import { Login } from '../Authentication/Login'
 import { Logout } from '../Authentication/Logout'
-import { runInAction } from 'mobx';
+import { runInAction } from 'mobx'
 
 interface SidebarProps {
 	isMobile: boolean
@@ -271,16 +271,23 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 					) : (
 						<Login title={'Sign in with Google'} autoLoad={false} />
 					)} */}
-					<button className="google-sigin" onClick={e=>{
-						runInAction(() => {
-							userState.tokens = {
-								accessToken: null,
-								refreshToken: null
-							}
-						})
-						window.location.assign('http://localhost:8081')
-					}}>
-						<img className="google-login-logo" src="./img/google-logo.png"></img>
+					<button
+						className="google-sigin"
+						onClick={e => {
+							runInAction(() => {
+								userState.tokens = {
+									accessToken: null,
+									refreshToken: null
+								}
+								localStorage.setItem('mitp_tokens', '')
+							})
+							window.location.assign('http://localhost:8081')
+						}}
+					>
+						<img
+							className="google-login-logo"
+							src="./img/google-logo.png"
+						></img>
 						LogOut {userState?.user?.firstName}.
 					</button>
 				</div>

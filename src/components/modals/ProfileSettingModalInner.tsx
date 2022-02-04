@@ -130,7 +130,7 @@ export function ProfileSettingModalInner({ closeModal }: ModalProps) {
 				<div className="text-lg font-poppins flex items-center justify-center pt-4">
 					<div className="">
 						Manage ready up status & modify how you appear to others in your
-						group [{data?.pot.title}]
+						group {data?.pot.title}
 					</div>
 					<div className="absolute right-2 sm:right-8">
 						<button
