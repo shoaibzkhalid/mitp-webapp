@@ -29,16 +29,16 @@ function MyApp({ Component, pageProps }: AppProps) {
 	}, [])
 
 	useEffect(() => {
-		; (window as any).useTokens = (a: string, b: string) => {
+		;(window as any).useTokens = (a: string, b: string) => {
 			runInAction(() => {
 				userState.tokens.accessToken = a
 				userState.tokens.refreshToken = b
 				userState.save()
 			})
 		}
-		const accessToken = getUrlParameter('accessToken', window.location.href);
-		const refreshToken = getUrlParameter('refreshToken', window.location.href);
-		if(accessToken && refreshToken) {
+		const accessToken = getUrlParameter('accessToken', window.location.href)
+		const refreshToken = getUrlParameter('refreshToken', window.location.href)
+		if (accessToken && refreshToken) {
 			userState.tokens.accessToken = accessToken
 			userState.tokens.refreshToken = refreshToken
 			userState.save()
@@ -47,10 +47,10 @@ function MyApp({ Component, pageProps }: AppProps) {
 	}, [])
 
 	const getUrlParameter = (name, url) => {
-		name = name.replace(/\[]/, '\\[').replace(/[\]]/, '\\]');
-		var regex = new RegExp('[\\?&]' + name + '=([^&]*)');
-		var results = regex.exec(url);
-		return results === null ? '' : results[1];
+		name = name.replace(/\[]/, '\\[').replace(/[\]]/, '\\]')
+		var regex = new RegExp('[\\?&]' + name + '=([^&]*)')
+		var results = regex.exec(url)
+		return results === null ? '' : results[1]
 	}
 
 	return (

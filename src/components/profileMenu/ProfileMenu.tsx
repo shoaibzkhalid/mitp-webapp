@@ -110,7 +110,9 @@ export const ProfileMenu = observer(function ProfileMenu(
 								'text-xs'
 							)}
 						>
-							{!props?.potUser?.readyUpAt && isGoogleConnected && 'Set swear jar fee & ready up 0/1'}
+							{!props?.potUser?.readyUpAt &&
+								isGoogleConnected &&
+								'Set swear jar fee & ready up 0/1'}
 							{!isGoogleConnected && 'Enter Name'}
 						</div>
 					</div>

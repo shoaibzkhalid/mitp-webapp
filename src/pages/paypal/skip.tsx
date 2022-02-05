@@ -29,7 +29,7 @@ export default observer(function PotNew() {
 			setLocalStorageItem({
 				potId: action.potId
 			})
-		} catch (e) { }
+		} catch (e) {}
 	}, [localStorageItem.potId])
 
 	const pot = useQuery(

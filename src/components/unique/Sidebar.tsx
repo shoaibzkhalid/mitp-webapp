@@ -281,7 +281,7 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 								}
 								localStorage.setItem('mitp_tokens', '')
 							})
-							window.location.assign('http://localhost:8081')
+							window.location.assign('/')
 						}}
 					>
 						<img

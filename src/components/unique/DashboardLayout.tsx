@@ -12,9 +12,6 @@ import { useMediaQuery } from '../../state/react/useMediaQuery'
 import { userState } from '../../state/user'
 import { Sidebar } from './Sidebar'
 import { useSelectedPot } from '../../state/react/useSelectedPot'
-import { Api } from '../../api'
-import { useQuery } from 'react-query'
-import { runInAction } from 'mobx'
 
 const DashboardLayout = observer(function DashboardLayout(props: {
 	contents: () => JSX.Element
@@ -22,20 +19,13 @@ const DashboardLayout = observer(function DashboardLayout(props: {
 	const router = useRouter()
 	const Component = props.contents
 
-	useEffect(() => {
-		const pr = when(() => userState.loaded)
-		pr.then(() => {
-			if (!userState.user) router.push('http://localhost:8081')
-		})
-		return () => pr.cancel()
-	}, [])
-
-	const getUrlParameter = (name, url) => {
-        name = name.replace(/\[]/, '\\[').replace(/[\]]/, '\\]');
-        var regex = new RegExp('[\\?&]' + name + '=([^&]*)');
-        var results = regex.exec(url);
-        return results === null ? '' : results[1];
-    }
+	// useEffect(() => {
+	// 	const pr = when(() => userState.loaded)
+	// 	pr.then(() => {
+	// 		if (!userState.user) router.push('/onboard')
+	// 	})
+	// 	return () => pr.cancel()
+	// }, [])
 
 	const isMobile = useMediaQuery('(max-width: 1024px)')
 	const [sidebarState] = useContext(SidebarContext)
@@ -59,7 +49,7 @@ const DashboardLayout = observer(function DashboardLayout(props: {
 				) : (
 					<div
 						className={clsx(
-							'w-full max-w-xs p-6 border-r border-gray-200 dark:border-gray-700',
+							'w-full max-w-xs p-6 border-r border-gray-200 dark:border-gray-700'
 							// !pot.data ? 'hidden' : ''
 						)}
 					>

@@ -37,24 +37,24 @@ export const userState = observable({
 		})
 
 		const potData = await Api.userPots.list()
-			if(potData.length===0) {
-				const state ={
-					step: 0,
-					title: 'Workout for at least 10 minutes',
-					description: '',
-					checkinCount: 1,
-					minAmount: 0
-				}
-				const pot = await Api.userPots.create(state)
-
-				runInAction(() => {
-					selectedPotState.moneyPotId = pot?.id as string
-				})
-			} else {
-				runInAction(() => {
-					selectedPotState.moneyPotId = potData[0]?.moneyPotId as string
-				})
+		if (potData.length === 0) {
+			const state = {
+				step: 0,
+				title: 'Workout for at least 10 minutes',
+				description: '',
+				checkinCount: 1,
+				minAmount: 0
 			}
+			const pot = await Api.userPots.create(state)
+
+			runInAction(() => {
+				selectedPotState.moneyPotId = pot?.id as string
+			})
+		} else {
+			runInAction(() => {
+				selectedPotState.moneyPotId = potData[0]?.moneyPotId as string
+			})
+		}
 
 		runInAction(() => {
 			userState.user = user

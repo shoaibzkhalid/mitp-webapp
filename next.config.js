@@ -7,7 +7,7 @@ module.exports = withPreact({
 		return [
 			{
 				source: '/',
-				destination: '/',
+				destination: '/home',
 				permanent: false
 			}
 		]

@@ -294,23 +294,23 @@ input:checked ~ .checkbox-bg {
 }
 
 .google-sigin {
-    border: 1px solid #6C5DD3;
-    box-sizing: border-box;
-    width: 100%;
-    border-radius: 10px;
-    background: #fff;
-    color: #6C5DD3;
+	border: 1px solid #6c5dd3;
+	box-sizing: border-box;
+	width: 100%;
+	border-radius: 10px;
+	background: #fff;
+	color: #6c5dd3;
 	padding: 14px;
-    font-size: 14px;
-    font-family: Inter;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 20px;
+	font-size: 14px;
+	font-family: Inter;
+	font-style: normal;
+	font-weight: 600;
+	line-height: 20px;
 }
 
 .google-login-logo {
 	position: absolute;
 	width: 35px;
-    left: 38px;
-    top: 24px;
+	left: 38px;
+	top: 24px;
 }
