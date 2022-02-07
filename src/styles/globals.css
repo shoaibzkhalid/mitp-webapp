@@ -118,12 +118,34 @@ body {
 }
 
 .-sidebar-main::-webkit-scrollbar {
-	display: none;
+	/* display: none; */
 }
 
 .-sidebar-main {
-	-ms-overflow-style: none;
+	/* -ms-overflow-style: none; */
 	scrollbar-width: none;
+}
+
+/* width */
+::-webkit-scrollbar {
+	width: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+	border-radius: 5px;
+	background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+	border-radius: 5px;
+	background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+	background: #555;
 }
 
 .create-page-frequency-arrow.relative {

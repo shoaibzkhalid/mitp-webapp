@@ -55,7 +55,7 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 	return (
 		<div
 			style={{
-				padding: potUser?.readyUpAt ? '140px 0 160px 0' : '100px 0 235px 0'
+				padding: potUser?.readyUpAt ? '100px 0 195px 0' : '100px 0 235px 0'
 			}}
 			className="w-56 h-screen fixed top-0 left-0 border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 md:w-80"
 		>
@@ -203,7 +203,8 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 												<div>{link[2]}</div>
 												{link[0] === '/setswearjarfee' && (
 													<div className="text-gray-400 font-light text-xs">
-														Group minimum: ${selectedPot?.data?.pot?.minAmount}
+														{/* Group minimum: ${selectedPot?.data?.pot?.minAmount} */}
+														Group minimum: ${potUser?.amount}
 													</div>
 												)}
 											</div>
@@ -281,7 +282,11 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 								}
 								localStorage.setItem('mitp_tokens', '')
 							})
-							window.location.assign('/')
+							window.location.assign(
+								process.env.NODE_ENV === 'production'
+									? '/'
+									: process.env.NEXT_PUBLIC_LANDINGPAGE
+							)
 						}}
 					>
 						<img
