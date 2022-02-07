@@ -92,20 +92,13 @@ export default wrapDashboardLayout(function RealIndexPage() {
 					)}
 				</ReactModal>
 
-				<div className="w-full flex flex-col xl:flex-row">
-					<div className="font-poppins pt-4 pb-1 xl:w-8/12 md:pt-12 px-6">
-						<div className="text-2xl mb-3">{pot.data?.pot.title}</div>
-						<div className="text-5xl font-semibold">
-							{pot.data?.users.length} member
-							{pot.data?.users.length !== 1 && 's'}
-						</div>
-					</div>
-					<div className="xl:m-auto pl-8 pr-4 py-7 border-b border-gray-200 dark:border-gray-700 md:py-1 md:px-3 xl:px-12 xl:pt-12 xl:w-4/12 xl:border-b-0">
-						<div className="lg:p-3 font-poppins flex justify-between items-center xl:justify-center lg:justify-end">
+				<div className="flex flex-col w-full xl:flex-row-reverse">
+					<div className="py-6 pl-8 pr-4 border-b border-gray-200 xl:m-auto dark:border-gray-700 md:py-6 md:px-6 xl:px-12 xl:pt-12 xl:w-4/12 xl:border-b-0">
+						<div className="flex items-center justify-between lg:p-3 font-poppins xl:justify-center lg:justify-end">
 							<Header />
-							<div className="text-center text-lg">
+							<div className="text-lg text-center">
 								<div
-									className="cursor-pointer text-sm py-3 px-6 rounded-2xl bg-gray-900 text-white md:mt-2 md:text-xl md:text-blue-600 md:p-0 md:bg-white dark:bg-gray-900"
+									className="px-6 py-3 text-sm text-white bg-gray-900 cursor-pointer rounded-2xl md:mt-2 md:text-xl md:text-blue-600 md:p-0 md:bg-white dark:bg-gray-900"
 									onClick={() =>
 										CopyInviteLink(pot.data, setNotificationMessage)
 									}
@@ -115,25 +108,33 @@ export default wrapDashboardLayout(function RealIndexPage() {
 							</div>
 						</div>
 					</div>
+					<div className="px-6 pt-6 pb-1 font-poppins xl:w-8/12 md:pt-12">
+						<div className="mb-3 text-2xl">{pot.data?.pot.title}</div>
+						<div className="text-5xl font-semibold">
+							{pot.data?.users.length} member
+							{pot.data?.users.length !== 1 && 's'}
+						</div>
+					</div>
 				</div>
 
-				<div className="w-full mt-10 px-6">
-					<div className="overview-containers bg-primary rounded-3xl px-14 pt-8 pb-6 text-white flex flex-col md:flex-row justify-between">
-						<div className="text-center md:text-left mb-8 md:mb-0 flex flex-col">
-							<div className="text-3xl md:text-4xl lg:text-2xl xl:text-4xl font-bold">
+				<div className="w-full px-6 mt-10">
+					<div className="flex flex-col justify-between pt-8 pb-6 text-white overview-containers bg-primary rounded-3xl px-14 md:flex-row">
+						<div className="flex flex-col mb-8 text-center md:text-left md:mb-0">
+							<div className="text-3xl font-bold md:text-4xl lg:text-2xl xl:text-4xl">
 								Check ins due in...
 							</div>
-							<div className="mt-3 sm:mt-1 text-sm md:text-lg font-poppins">
+							<div className="mt-3 text-sm sm:mt-1 md:text-lg font-poppins">
 								{duration}
 							</div>
-							<div className="mt-auto pt-10 text-xs font-poppins font-thin tracking-widest">
+							<div className="pt-10 mt-auto text-xs font-thin tracking-widest font-poppins">
 								Those who don't check in by Sunday at midnight pay the group pot
 								their swear jar fee.
 							</div>
 						</div>
 
 						<div className="flex flex-col items-center justify-between">
-							<div className="border-2 border-dashed border-gray-400 rounded-lg p-2 xl:p-4">
+							<div className="p-2 border-2 border-gray-400 border-dashed rounded-lg xl:p-4">
+								{/* prob */}
 								<div className="flex days-holder">
 									{[
 										[1, 'Mo'],
@@ -146,7 +147,7 @@ export default wrapDashboardLayout(function RealIndexPage() {
 									].map(e => (
 										<div
 											className={clsx(
-												'mx-2 lg:mx-1 xl:mx-2 flex items-center justify-center h-10 w-10',
+												'mx-2 lg:mx-1 xl:mx-2 flex items-center justify-center h-10 w-8 md:w-10',
 												e[0] === day
 													? 'border-2 border-red-400 rounded-full'
 													: undefined
@@ -156,28 +157,29 @@ export default wrapDashboardLayout(function RealIndexPage() {
 										</div>
 									))}
 								</div>
-								<div className="mt-6 text-sm text-gray-200 text-center">
+								{/* prob */}
+								<div className="mt-6 text-sm text-center text-gray-200">
 									Check in by Sunday {potUser?.checkinsThisWeek}/1
 								</div>
 							</div>
-							<div className="font-bold w-full mt-10 md:mt:0 text-center md:text-right flex items-center justify-end">
+							<div className="flex items-center justify-end w-full mt-10 font-bold text-center md:mt:0 md:text-right">
 								<img src="/img/member-icon.svg" className="mr-1" />
 								{/* {pot.data?.users.length} Members */}
-								<div className="mr-4 text-md font-thin">
+								<div className="mr-4 font-thin text-md">
 									{readyUpCount} / {pot.data?.users?.length}
 								</div>
 							</div>
 						</div>
 					</div>
 
-					<div className="-card --shadow mt-6 p-4">
+					<div className="p-4 mt-6 -card --shadow">
 						{!pot.data ? (
 							<div className="flex items-center justify-center"></div>
 						) : isMobile ? (
 							<div className="relative">
 								{/* Header */}
 								<div className="flex justify-between my-4">
-									<div className="font-poppins font-thin text-gray-400 text-sm">
+									<div className="text-sm font-thin text-gray-400 font-poppins">
 										Check - In
 									</div>
 									<div className="flex">
@@ -234,8 +236,8 @@ export default wrapDashboardLayout(function RealIndexPage() {
 									</div>
 								</div>
 
-								<hr className="-left-4 absolute w-full border-gray-200 dark:border-gray-700" />
-								<hr className="-right-4 absolute w-full border-gray-200 dark:border-gray-700" />
+								<hr className="absolute w-full border-gray-200 -left-4 dark:border-gray-700" />
+								<hr className="absolute w-full border-gray-200 -right-4 dark:border-gray-700" />
 
 								{/* Users */}
 								<div className="my-4"></div>
@@ -243,7 +245,7 @@ export default wrapDashboardLayout(function RealIndexPage() {
 									return (
 										<>
 											<div className="mb-4">
-												<div className="flex justify-between items-center py-4">
+												<div className="flex items-center justify-between py-4">
 													<div className="flex items-center">
 														<div>
 															<img
@@ -265,14 +267,14 @@ export default wrapDashboardLayout(function RealIndexPage() {
 														<img src="/img/right-arrow.svg" />
 													</div>
 												</div>
-												<div className="text-xs sm:text-sm flex justify-evenly border rounded-lg border-gray-200 dark:border-gray-700 p-2">
-													<div className="text-gray-400 font-poppins font-thin">
+												<div className="flex p-2 text-xs border border-gray-200 rounded-lg sm:text-sm justify-evenly dark:border-gray-700">
+													<div className="font-thin text-gray-400 font-poppins">
 														{u.checkinsThisWeek ? 'Thursday, 7:22 PM' : ''}
 													</div>
 													{u.checkinsThisWeek >= pot.data.pot.checkinCount ? (
 														<div className="flex flex-row items-center text-green-500">
 															<Square
-																className="bg-green-500 mr-2"
+																className="mr-2 bg-green-500"
 																length="1.2rem"
 															></Square>
 															Completed
@@ -280,7 +282,7 @@ export default wrapDashboardLayout(function RealIndexPage() {
 													) : (
 														<div className="flex flex-row items-center text-red-500">
 															<Square
-																className="bg-red-500 mr-2"
+																className="mr-2 bg-red-500"
 																length="1.2rem"
 															></Square>
 															Not yet
@@ -296,8 +298,8 @@ export default wrapDashboardLayout(function RealIndexPage() {
 												</div>
 											</div>
 
-											<hr className="-left-4 absolute w-full border-gray-200 dark:border-gray-700" />
-											<hr className="-right-4 absolute w-full border-gray-200 dark:border-gray-700" />
+											<hr className="absolute w-full border-gray-200 -left-4 dark:border-gray-700" />
+											<hr className="absolute w-full border-gray-200 -right-4 dark:border-gray-700" />
 										</>
 									)
 								})}
@@ -355,7 +357,7 @@ export default wrapDashboardLayout(function RealIndexPage() {
 															pot.data.pot.checkinCount ? (
 																<div className="flex flex-row items-center text-green-500">
 																	<Square
-																		className="bg-green-500 mr-2"
+																		className="mr-2 bg-green-500"
 																		length="1.2rem"
 																	></Square>
 																	Completed
@@ -363,14 +365,14 @@ export default wrapDashboardLayout(function RealIndexPage() {
 															) : (
 																<div className="flex flex-row items-center text-red-500">
 																	<Square
-																		className="bg-red-500 mr-2"
+																		className="mr-2 bg-red-500"
 																		length="1.2rem"
 																	></Square>
 																	Not yet
 																</div>
 															)}
 														</td>
-														<td className="font-poppins font-thin text-primary">
+														<td className="font-thin font-poppins text-primary">
 															{u.readyUpAt !== null ? (
 																`$${parseInt(u.amount).toFixed(2)}`
 															) : (
@@ -401,7 +403,7 @@ export default wrapDashboardLayout(function RealIndexPage() {
 																		background:
 																			'linear-gradient(166.98deg, #8679E2 -3.04%, #6C5DD3 90.61%)'
 																	}}
-																	className="-button -primary -sm ml-1"
+																	className="ml-1 -button -primary -sm"
 																	onClick={() => {
 																		setViewingLogsOfUserId(u.id)
 																		setViewingLogsMode('all')
@@ -426,7 +428,7 @@ export default wrapDashboardLayout(function RealIndexPage() {
 														>
 															<td>
 																<div
-																	className="border-2 border-dashed border-primary rounded-lg p-5"
+																	className="p-5 border-2 border-dashed rounded-lg border-primary"
 																	style={{
 																		maxWidth: 110,
 																		maxHeight: 100
@@ -450,7 +452,7 @@ export default wrapDashboardLayout(function RealIndexPage() {
 																<div className="flex flex-row items-center font-bold">
 																	<span
 																		style={{ marginLeft: 20 }}
-																		className="text-primary font-thin font-poppins"
+																		className="font-thin text-primary font-poppins"
 																	>
 																		Add Friend
 																	</span>
@@ -471,9 +473,9 @@ export default wrapDashboardLayout(function RealIndexPage() {
 
 					{pot.data?.users.length < 2 ? (
 						<>
-							<div className="flex flex-col justify-center items-center py-10">
+							<div className="flex flex-col items-center justify-center py-10">
 								<img src="/img/weekly-overview-social-icon.svg" />
-								<span className="text-gray-400 mt-10">
+								<span className="mt-10 text-gray-400">
 									Friends you invite to this session will be shown here
 								</span>
 								<button
@@ -483,7 +485,7 @@ export default wrapDashboardLayout(function RealIndexPage() {
 										background:
 											'linear-gradient(166.98deg, #8679E2 -3.04%, #6C5DD3 90.61%)'
 									}}
-									className="-button -primary -sm mt-5"
+									className="mt-5 -button -primary -sm"
 									onClick={() => {
 										CopyInviteLink(pot.data, setNotificationMessage)
 									}}

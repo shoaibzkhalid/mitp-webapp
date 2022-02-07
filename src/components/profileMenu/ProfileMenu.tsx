@@ -28,8 +28,8 @@ export const ProfileMenu = observer(function ProfileMenu(
 	return (
 		<div
 			className={clsx(
-				'absolute w-full px-5',
-				potUser?.readyUpAt ? 'top-12' : 'bottom-20 top-12'
+				'absolute w-full md:px-7 px-2',
+				potUser?.readyUpAt ? 'top-14' : 'bottom-20 top-14'
 			)}
 		>
 			<div
@@ -84,7 +84,8 @@ export const ProfileMenu = observer(function ProfileMenu(
 				<div
 					className={clsx(
 						classes.sidebar__user,
-						profileMenuActive ? classes.active : ''
+						profileMenuActive ? classes.active : '',
+						'py-2 px-2'
 					)}
 					onClick={() => setOpenProfileModal(true)}
 				>
@@ -99,8 +100,8 @@ export const ProfileMenu = observer(function ProfileMenu(
 							alt=""
 						/>
 					</div>
-					<div className={classes.sidebar__desc}>
-						<div className={classes.sidebar__man}>
+					<div className={clsx(classes.sidebar__desc, 'pl-2')}>
+						<div className={clsx(classes.sidebar__man, 'text-xs md:text-sm')}>
 							{userState?.user?.firstName}
 						</div>
 						<div

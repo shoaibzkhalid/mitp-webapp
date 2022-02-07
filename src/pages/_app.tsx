@@ -12,6 +12,7 @@ import dayjsDuration from 'dayjs/plugin/duration'
 import dayjsRelativeTime from 'dayjs/plugin/relativeTime'
 import dayjsAdvancedFormat from 'dayjs/plugin/advancedFormat'
 import dayjs from 'dayjs'
+import Head from 'next/head'
 dayjs.extend(dayjsDuration)
 dayjs.extend(dayjsRelativeTime)
 dayjs.extend(dayjsAdvancedFormat)
@@ -54,12 +55,17 @@ function MyApp({ Component, pageProps }: AppProps) {
 	}
 
 	return (
-		<QueryClientProvider client={queryClient}>
-			<MatomoTracking />
-			<div>
-				<Component {...pageProps} />
-			</div>
-		</QueryClientProvider>
+		<>
+			<Head>
+				<meta name="viewport" content="width=device-width, initial-scale=1" />
+			</Head>
+			<QueryClientProvider client={queryClient}>
+				<MatomoTracking />
+				<div>
+					<Component {...pageProps} />
+				</div>
+			</QueryClientProvider>
+		</>
 	)
 }
 export default MyApp

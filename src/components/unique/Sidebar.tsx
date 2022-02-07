@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import clsx from 'clsx'
+import { useContext } from 'react'
 import Router, { useRouter } from 'next/router'
 import React, { useMemo, useState } from 'react'
 import ReactModal from 'react-modal'
@@ -20,12 +21,15 @@ import { userState } from '../../state/user'
 import { Login } from '../Authentication/Login'
 import { Logout } from '../Authentication/Logout'
 import { runInAction } from 'mobx'
+import { SidebarContext } from '../../state/contexts/sidebarContext'
 
 interface SidebarProps {
 	isMobile: boolean
 }
 
 export const Sidebar = observer(function Sidebar(props: SidebarProps) {
+	const [sidebarState, setSidebarState] = useContext(SidebarContext)
+
 	const { asPath } = useRouter()
 	const router = useRouter()
 	const activeLink = useMemo(
@@ -57,7 +61,7 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 			style={{
 				padding: potUser?.readyUpAt ? '100px 0 195px 0' : '100px 0 235px 0'
 			}}
-			className="w-56 h-screen fixed top-0 left-0 border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 md:w-80"
+			className="fixed top-0 left-0 h-screen bg-white border-r border-gray-200 w-65 dark:border-gray-700 dark:bg-gray-900 md:w-80"
 		>
 			<ReactModal
 				isOpen={openProfileModal}
@@ -75,11 +79,14 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 				/>
 			</ReactModal>
 			<div className="absolute top-0 left-0 right-0">
-				<div className="relative flex flex-col items-center justify-center px-8 pt-6 border-b border-gray-200 md:border-0 md:pt-12">
+				<div className="relative flex flex-col items-center justify-center px-8 pt-12 border-0">
 					{props.isMobile && (
 						<button
 							className="absolute mr-auto left-4"
-							onClick={() => toggleSideBar(false)}
+							onClick={() => {
+								toggleSideBar(!sidebarState.isOpen)
+								setSidebarState({ isOpen: !sidebarState.isOpen })
+							}}
 						>
 							<svg className="w-6 h-6 fill-current">
 								<use xlinkHref="/img/sprite.svg#icon-close"></use>
@@ -130,8 +137,8 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 					</div>
 				</div>
 			</div>
-			<div className="overflow-y-auto w-full h-full px-5 pb-5 border-b border-gray-200 dark:border-gray-700 -sidebar-main md:px-8">
-				<div className="py-4 flex items-center relative">
+			<div className="w-full h-full px-5 pb-5 overflow-x-hidden overflow-y-auto border-b border-gray-200 dark:border-gray-700 -sidebar-main md:px-8">
+				<div className="relative flex items-center py-4">
 					<SidebarPotsSelector />
 					<span
 						className="absolute cursor-pointer add-pot-icon"
@@ -202,7 +209,7 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 											<div className="ml-4">
 												<div>{link[2]}</div>
 												{link[0] === '/setswearjarfee' && (
-													<div className="text-gray-400 font-light text-xs">
+													<div className="text-xs font-light text-gray-400">
 														{/* Group minimum: ${selectedPot?.data?.pot?.minAmount} */}
 														Group minimum: ${potUser?.amount}
 													</div>
@@ -236,9 +243,9 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 					</div>
 				))}
 
-				<div className="border-t border-gray-300 dark:border-gray-700 mx-5 mt-7 mb-10"></div>
+				<div className="mx-5 my-6 border-t border-gray-300 dark:border-gray-700"></div>
 
-				<div className="text-gray-500 text-sm px-5 mb-4">Rules</div>
+				<div className="px-5 mb-4 text-sm text-gray-500">Rules</div>
 
 				{insightButtons.map(button => (
 					<div key={button[0]}>
@@ -265,15 +272,15 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 				))}
 			</div>
 
-			<div className="flex flex-col justify-center items-center relative">
-				<div className="px-7 mt-4 w-full">
+			<div className="relative flex flex-col items-center justify-center">
+				<div className="w-full px-2 mt-4 md:px-7">
 					{/* {isGoogleConnected ? (
 						<Logout />
 					) : (
 						<Login title={'Sign in with Google'} autoLoad={false} />
 					)} */}
 					<button
-						className="google-sigin"
+						className="py-4 text-xs px md:px-3 md:text-sm google-sigin"
 						onClick={e => {
 							runInAction(() => {
 								userState.tokens = {
@@ -290,10 +297,12 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 						}}
 					>
 						<img
-							className="google-login-logo"
+							className="w-8 google-login-logo"
 							src="./img/google-logo.png"
 						></img>
-						LogOut {userState?.user?.firstName}.
+						<span className="ml-10 md:ml-2">
+							Logout {userState?.user?.firstName}
+						</span>
 					</button>
 				</div>
 				<ProfileMenu potUser={potUser} isGoogleConnected={isGoogleConnected} />
@@ -303,13 +312,13 @@ export const Sidebar = observer(function Sidebar(props: SidebarProps) {
 				{potUser?.readyUpAt && isGoogleConnected && <></>}
 
 				{!potUser?.readyUpAt && isGoogleConnected && (
-					<div className="text-xs text-center px-4 pt-2 italic font-thin text-black dark:text-white">
+					<div className="px-4 pt-2 text-xs italic font-thin text-center text-black dark:text-white">
 						Hint: Tap on your avatar to view settings &amp; ready up.
 					</div>
 				)}
 
 				{!isGoogleConnected && (
-					<div className="text-xs text-center px-4 pt-2 italic font-thin text-black dark:text-white">
+					<div className="px-4 pt-2 text-xs italic font-thin text-center text-black dark:text-white">
 						Hint: Sign in with google to be able to invite friends & save
 						progress..
 					</div>

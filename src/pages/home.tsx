@@ -100,17 +100,22 @@ export default wrapDashboardLayout(function OverviewPage() {
 			</>
 
 			<div style={{ maxWidth: '1100px', margin: '0 auto' }}>
-				<div className="w-full flex flex-col-reverse xl:flex-row">
+				<div className="flex flex-col-reverse w-full xl:flex-row">
 					<div
 						id="walkthrough_potname"
 						className="px-6 pt-4 pb-1 xl:w-10/12 md:pt-12"
 					>
-						<div className="text-2xl">Your Accountability Group</div>
-						<div className="text-5xl font-semibold" style={{ lineHeight: 1.5 }}>
+						<div className="text:lg sm:text-xl md:text-2xl">
+							Your Accountability Group
+						</div>
+						<div
+							className="text-xl font-semibold sm:text-3xl md:text-5xl"
+							style={{ lineHeight: 1.5 }}
+						>
 							{data?.pot.title}
 							{potUser?.admin && (
 								<span
-									className="ml-2 cursor-pointer inline-block"
+									className="inline-block ml-2 cursor-pointer"
 									onClick={() => setOpenGroupDetailModal(true)}
 								>
 									<svg className="w-6 h-6 fill-current">
@@ -134,18 +139,18 @@ export default wrapDashboardLayout(function OverviewPage() {
 								closeModal={() => setOpenGroupDetailModal(false)}
 							/>
 						</ReactModal>
-						<div className="text-gray-400 text-xl flex absolute">
+						<div className="absolute flex text-gray-400 text-md sm:text-xl">
 							{potAdminUser?.firstName ? (
 								<>{`Group Admin:  ${potAdminUser?.firstName}`}</>
 							) : (
 								<></>
 							)}
 							<div
-								className="ml-4 text-gray-400 w-full"
+								className="w-full ml-4 text-gray-400"
 								style={{ width: '150px' }}
 							>
 								<div
-									className="flex items-center justify-center cursor-pointer"
+									className="flex items-center justify-center cursor-pointer text-md sm:text-lg md:text-xl"
 									onClick={() => {
 										setViewRuleDropDown(!viewRuleDropDown)
 									}}
@@ -168,7 +173,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 									style={{ wordWrap: 'break-word' }}
 								>
 									<p
-										className="mb-2 text-gray-800 font-bold cursor-pointer dark:text-white"
+										className="mb-2 font-bold text-gray-800 cursor-pointer dark:text-white"
 										onClick={() => setOpenReadyUpModal(true)}
 									>
 										Swear jar rules
@@ -196,19 +201,19 @@ export default wrapDashboardLayout(function OverviewPage() {
 						</div>
 					</div>
 
-					<div className="px-6 py-7 border-b border-gray-200 dark:border-gray-700 sm:px-0 md:py-1 xl:pt-12 xl:w-2/12 xl:border-b-0">
+					<div className="px-6 py-2 border-b border-gray-200 md:py-4 dark:border-gray-700 sm:px-0 xl:pt-12 xl:w-2/12 xl:border-b-0">
 						<div
-							className="font-poppins flex flex-col justify-between items-center xl:justify-center lg:justify-end"
+							className="flex items-center justify-between px-6 font-poppins xl:justify-center lg:justify-end"
 							id="header_invite_holder_div"
 						>
 							<Header />
-							<div className="text-center text-sm">
-								<div className="text-gray-500 text-sm hidden md:block">
+							<div className="text-sm text-center">
+								<div className="hidden text-sm text-gray-500 md:block">
 									{pot.data?.users.length} member
 									{pot.data?.users.length !== 1 && 's'}
 								</div>
 								<div
-									className="cursor-pointer text-sm py-3 px-6 rounded-2xl bg-gray-900 text-white md:mt-2 md:text-sm md:text-blue-600 md:p-0 md:bg-white dark:bg-gray-900"
+									className="px-6 py-3 text-sm text-white bg-gray-900 cursor-pointer rounded-2xl md:mt-2 md:text-sm md:text-blue-600 md:p-0 md:bg-white dark:bg-gray-900"
 									onClick={() => CopyInviteLink(data, setNotificationMessage)}
 								>
 									&mdash; copy invite link &mdash;
@@ -231,22 +236,22 @@ export default wrapDashboardLayout(function OverviewPage() {
 					</div>
 				</div>
 
-				<div className="w-full flex flex-col xl:flex-row px-6">
+				<div className="flex flex-col w-full px-6 xl:flex-row">
 					<div className="w-full">
 						<div
-							className="pb-24 pt-24 flex flex-col items-center md:px-10"
+							className="flex flex-col items-center pt-24 pb-24 md:px-10"
 							id="checkin_div"
 						>
 							<div
 								id="walkthrough_checkins"
-								className="text-center text-xl text-gray-600"
+								className="text-xl text-center text-gray-600"
 							>
 								{checkinCountUser}/{data?.pot.checkinCount} check ins this week
 							</div>
 							<CheckInButton
 								disabled={checkinCountUser >= data?.pot.checkinCount}
 							></CheckInButton>
-							<div className="mt-3 text-gray-400 text-sm">
+							<div className="mt-3 text-sm text-gray-400">
 								{`Take photo proof of ${data?.pot.title}, ${data?.pot.description}`}
 								<br></br>
 								by Sunday Midnight or pay your swear jar fee of ($
@@ -257,7 +262,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 						<div className="flex justify-end py-2">
 							<div id="how_it_works_div">
 								<button
-									className="bg-white p-3 border rounded-md font-bold dark:bg-dark"
+									className="p-3 font-bold bg-white border rounded-md dark:bg-dark"
 									onClick={() => userState.setHowItWorks(true)}
 								>
 									(i) How it works
@@ -265,9 +270,9 @@ export default wrapDashboardLayout(function OverviewPage() {
 							</div>
 						</div>
 
-						<div id="walkthrough_pot" className="-card --shadow px-8 pb-8 pt-5">
-							<div className="flex items-center text-xl font-bold justify-between">
-								<div className="hidden md:flex items-center">
+						<div id="walkthrough_pot" className="px-8 pt-5 pb-8 -card --shadow">
+							<div className="flex items-center justify-between text-xl font-bold">
+								<div className="items-center hidden md:flex">
 									Group Pot
 									<hr
 										style={{
@@ -281,9 +286,9 @@ export default wrapDashboardLayout(function OverviewPage() {
 									{`${dayjs().format('MMMM')}`}
 								</div>
 
-								<div className="ml-auto mr-4 text-md font-thin">
-									<div className="has-tooltip ml-auto">
-										<span className="tooltip rounded shadow-lg p-1 bg-gray-100 max-w-xs mt-6 text-sm">
+								<div className="ml-auto mr-4 font-thin text-md">
+									<div className="ml-auto has-tooltip">
+										<span className="max-w-xs p-1 mt-6 text-sm bg-gray-100 rounded shadow-lg tooltip">
 											{readyUpCount < 2
 												? 'At least 2 members need to ready up to begin this session.'
 												: `${readyUpCount}/${pot?.data?.users?.length} members have ready'd up. Session has started.`}
@@ -295,9 +300,9 @@ export default wrapDashboardLayout(function OverviewPage() {
 								</div>
 							</div>
 
-							<div className="md:grid grid-cols-3">
+							<div className="grid-cols-3 md:grid">
 								<div>
-									<div className="text-5xl font-bold my-1 md:text-7xl w-full">
+									<div className="w-full my-1 text-5xl font-bold md:text-7xl">
 										<div>
 											<div className="py-5 pl-5">
 												{potView === 'Total Pot' ? (
@@ -306,7 +311,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 													<>${data?.metrics.currentValue / 100}</>
 												)}
 											</div>
-											<div className="mt-1 text-sm text-gray-500 text-left">
+											<div className="mt-1 text-sm text-left text-gray-500">
 												<span className="text-green-500">
 													{failedUsers} people
 												</span>{' '}
@@ -315,13 +320,13 @@ export default wrapDashboardLayout(function OverviewPage() {
 											</div>
 										</div>
 
-										<div className="flex ml-3 mt-3 items-center text-primary text-sm md:hidden">
+										<div className="flex items-center mt-3 ml-3 text-sm text-primary md:hidden">
 											<div className="h-10 pr-3">
 												<CheckinUpdateChart />
 											</div>
 											<div className="flex items-center">
 												<div
-													className="flex justify-center items-center mr-1 w-5 h-5 bg-green-600"
+													className="flex items-center justify-center w-5 h-5 mr-1 bg-green-600"
 													style={{ borderRadius: '50%' }}
 												>
 													<svg
@@ -337,7 +342,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 									</div>
 									<div className="py-2">
 										<div
-											className="flex items-center justify-start cursor-pointer text-xs font-bold"
+											className="flex items-center justify-start text-xs font-bold cursor-pointer"
 											onClick={() => {
 												setYouGetPaidDropDown(!youGetPaidDropDown)
 											}}
@@ -359,11 +364,11 @@ export default wrapDashboardLayout(function OverviewPage() {
 											)}
 											style={{ wordWrap: 'break-word' }}
 										>
-											<p className="mb-2 text-gray-800 font-bold cursor-pointer text-xs">
+											<p className="mb-2 text-xs font-bold text-gray-800 cursor-pointer">
 												When a member fails to complete their weekly check in by
 												Sunday at midnight, they pay in to the group pot
 											</p>
-											<p className="mb-2 text-gray-800 font-bold cursor-pointer text-xs">
+											<p className="mb-2 text-xs font-bold text-gray-800 cursor-pointer">
 												This is paid to you at the end of the month. You get
 												paid for improving yourself as long as you're part of
 												this group!
@@ -376,7 +381,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 										</div>
 										<div className="flex items-center">
 											<div
-												className="flex justify-center items-center mr-1 w-5 h-5 bg-green-600"
+												className="flex items-center justify-center w-5 h-5 mr-1 bg-green-600"
 												style={{ borderRadius: '50%' }}
 											>
 												<svg
@@ -398,10 +403,10 @@ export default wrapDashboardLayout(function OverviewPage() {
 								</div>
 							</div>
 
-							<div className="-hstack mt-8 flex flex-col md:flex-row">
+							<div className="flex flex-col mt-8 -hstack md:flex-row">
 								<div className="p-6 border-b">
 									<div className="flex text-sm">
-										<div className="flex justify-center items-center mr-1 w-5 h-5 rounded-md bg-purple-500">
+										<div className="flex items-center justify-center w-5 h-5 mr-1 bg-purple-500 rounded-md">
 											<img
 												className="block"
 												style={{ maxWidth: '8px' }}
@@ -409,8 +414,8 @@ export default wrapDashboardLayout(function OverviewPage() {
 											></img>
 										</div>
 										<span>Check Ins</span>
-										<div className="has-tooltip ml-auto">
-											<span className="tooltip rounded shadow-lg p-1 bg-gray-100 max-w-xs mt-6">
+										<div className="ml-auto has-tooltip">
+											<span className="max-w-xs p-1 mt-6 bg-gray-100 rounded shadow-lg tooltip">
 												This is the amount of times your group has checked in
 												with photo evidence they've completed the weekly
 												activity this month.
@@ -420,15 +425,15 @@ export default wrapDashboardLayout(function OverviewPage() {
 											</span>
 										</div>
 									</div>
-									<div className="text-3xl font-bold mt-3">
+									<div className="mt-3 text-3xl font-bold">
 										{data?.metrics.checkinsCount}
 									</div>
 									<div
-										className="relative bg-gray-200 mt-3"
+										className="relative mt-3 bg-gray-200"
 										style={{ borderRadius: '1px', height: '2px' }}
 									>
 										<div
-											className="absolute top-0 left-0 bottom-0 bg-purple-500"
+											className="absolute top-0 bottom-0 left-0 bg-purple-500"
 											style={{
 												width: getCheckInProgress(
 													data?.metrics.checkinsCount,
@@ -440,7 +445,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 								</div>
 								<div className="p-6 border-0 border-b md:border-l">
 									<div className="flex text-sm">
-										<div className="flex justify-center items-center mr-1 w-5 h-5 rounded-md bg-pink-400">
+										<div className="flex items-center justify-center w-5 h-5 mr-1 bg-pink-400 rounded-md">
 											<img
 												className="block"
 												style={{ maxWidth: '8px' }}
@@ -448,8 +453,8 @@ export default wrapDashboardLayout(function OverviewPage() {
 											></img>
 										</div>
 										<span>Group Streak 🔥</span>
-										<div className="has-tooltip ml-auto">
-											<span className="tooltip rounded shadow-lg p-1 bg-gray-100 max-w-xs mt-6">
+										<div className="ml-auto has-tooltip">
+											<span className="max-w-xs p-1 mt-6 bg-gray-100 rounded shadow-lg tooltip">
 												This is your groups streak. It increases every time all
 												members in your group complete their check ins by Sunday
 												at midnight.
@@ -459,15 +464,15 @@ export default wrapDashboardLayout(function OverviewPage() {
 											</span>
 										</div>
 									</div>
-									<div className="text-3xl font-bold mt-3">
+									<div className="mt-3 text-3xl font-bold">
 										{data?.pot.streak}
 									</div>
 									<div
-										className="relative bg-gray-200 mt-3"
+										className="relative mt-3 bg-gray-200"
 										style={{ borderRadius: '1px', height: '2px' }}
 									>
 										<div
-											className="absolute top-0 left-0 bottom-0 bg-pink-400"
+											className="absolute top-0 bottom-0 left-0 bg-pink-400"
 											style={{
 												width: getCheckInProgress(data?.pot.streak, 'streak')
 											}}
@@ -476,7 +481,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 								</div>
 								<div className="p-6 border-0 md:border-l">
 									<div className="flex text-sm">
-										<div className="flex justify-center items-center mr-1 w-5 h-5 rounded-md bg-blue-500">
+										<div className="flex items-center justify-center w-5 h-5 mr-1 bg-blue-500 rounded-md">
 											<img
 												className="block"
 												style={{ maxWidth: '8px' }}
@@ -484,8 +489,8 @@ export default wrapDashboardLayout(function OverviewPage() {
 											></img>
 										</div>
 										<span>Pay Ins</span>
-										<div className="has-tooltip ml-auto">
-											<span className="tooltip rounded shadow-lg p-1 bg-gray-100 max-w-xs mt-6">
+										<div className="ml-auto has-tooltip">
+											<span className="max-w-xs p-1 mt-6 bg-gray-100 rounded shadow-lg tooltip">
 												This is the amount of times group members have paid in
 												their swear jar fee to the group pot by failing to check
 												in by Sunday at midnight.
@@ -495,15 +500,15 @@ export default wrapDashboardLayout(function OverviewPage() {
 											</span>
 										</div>
 									</div>
-									<div className="text-3xl font-bold mt-3">
+									<div className="mt-3 text-3xl font-bold">
 										{data?.metrics.payinsCount}
 									</div>
 									<div
-										className="relative bg-gray-200 mt-3"
+										className="relative mt-3 bg-gray-200"
 										style={{ borderRadius: '1px', height: '2px' }}
 									>
 										<div
-											className="absolute top-0 left-0 bottom-0 bg-blue-500"
+											className="absolute top-0 bottom-0 left-0 bg-blue-500"
 											style={{
 												width: getCheckInProgress(
 													data?.metrics.payinsCount,
@@ -515,7 +520,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 								</div>
 							</div>
 						</div>
-						<div className="text-center pt-24 pb-8 text-sm">
+						<div className="pt-24 pb-8 text-sm text-center">
 							<p>
 								This group has been around for{' '}
 								<span className="font-bold">{`${createdDuration.months()} months`}</span>{' '}
