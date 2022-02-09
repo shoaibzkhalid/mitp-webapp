@@ -2,29 +2,28 @@ import dayjs from 'dayjs'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react'
-import ReactModal from 'react-modal'
-import { UserViewLogsModalInner } from '../components/modals/UserViewLogsModalInner'
-import { Square } from '../components/Square'
+import { ModalUserViewLogs } from '../components/modals/ModalUserViewLogs'
+import { Square } from '../components/ui/Square'
 import { wrapDashboardLayout } from '../components/unique/DashboardLayout'
-import { useNextAppElement } from '../state/react/useNextAppElement'
 import { userState } from '../state/user'
 import { useSelectedPot } from '../state/react/useSelectedPot'
 import { formatDuration } from '../utils/formatDuration'
 import { Header } from '../components/unique/Header'
 import CopyInviteLink from '../components/notification/CopyInviteLink'
 import Notification from '../components/notification'
-import { useMediaQuery } from '../state/react/useMediaQuery'
 import clsx from 'clsx'
 import { toggleSideBar } from '../utils/common'
 import { useTimer } from '../state/react/useTimer'
 import { SpinnerBig } from '../components/SpinnerBig'
+import { Button } from '../components/ui/Button'
+import { useIsMobile } from '../state/react/useIsMobile'
 
 export default wrapDashboardLayout(function RealIndexPage() {
 	const router = useRouter()
 	const [duration, setDuration] = useState<string>('')
 	const [notificationMessage, setNotificationMessage] = useState<string>('')
 
-	const isMobile = useMediaQuery('(max-width: 768px)')
+	const isMobile = useIsMobile()
 	const pot = useSelectedPot()
 	const potUser = pot.data?.users.find(u => u.id === userState.user?.id)
 
@@ -50,7 +49,6 @@ export default wrapDashboardLayout(function RealIndexPage() {
 
 	const day = dayjs().get('day')
 
-	const appElement = useNextAppElement()
 	const [viewingLogsOfUserId, setViewingLogsOfUserId] = useState(
 		null as string | null
 	)
@@ -76,21 +74,15 @@ export default wrapDashboardLayout(function RealIndexPage() {
 			</Head>
 
 			<div style={{ margin: '0 auto', maxWidth: '1100px' }}>
-				<ReactModal
-					isOpen={viewingLogsOfUserId !== null}
-					onRequestClose={() => setViewingLogsOfUserId(null)}
-					appElement={appElement}
-				>
-					{viewingLogsOfUserId && pot.data && (
-						<UserViewLogsModalInner
-							closeModal={() => setViewingLogsOfUserId(null)}
-							userId={viewingLogsOfUserId}
-							potId={pot.data.pot.id}
-							viewingLogsMode={viewingLogsMode}
-							openSuccessModal={() => console.log()}
-						></UserViewLogsModalInner>
-					)}
-				</ReactModal>
+				{viewingLogsOfUserId && pot.data && (
+					<ModalUserViewLogs
+						isOpen={viewingLogsOfUserId !== null}
+						onRequestClose={() => setViewingLogsOfUserId(null)}
+						userId={viewingLogsOfUserId}
+						potId={pot.data.pot.id}
+						viewingLogsMode={viewingLogsMode}
+					></ModalUserViewLogs>
+				)}
 
 				<div className="flex flex-col w-full xl:flex-row-reverse">
 					<div className="py-6 pl-8 pr-4 border-b border-gray-200 xl:m-auto dark:border-gray-700 md:py-6 md:px-6 xl:px-12 xl:pt-12 xl:w-4/12 xl:border-b-0">
@@ -381,36 +373,23 @@ export default wrapDashboardLayout(function RealIndexPage() {
 														</td>
 														<td>
 															<div className="flex">
-																<button
-																	style={{
-																		padding: '8px 25px',
-																		fontWeight: 100,
-																		background:
-																			'linear-gradient(166.98deg, #8679E2 -3.04%, #6C5DD3 90.61%)'
-																	}}
-																	className="-button -primary -sm"
+																<Button
 																	onClick={() => {
 																		setViewingLogsOfUserId(u.id)
 																		setViewingLogsMode('week')
 																	}}
 																>
 																	View
-																</button>
-																<button
-																	style={{
-																		padding: '8px 25px',
-																		fontWeight: 100,
-																		background:
-																			'linear-gradient(166.98deg, #8679E2 -3.04%, #6C5DD3 90.61%)'
-																	}}
-																	className="ml-1 -button -primary -sm"
+																</Button>
+																<Button
+																	className="ml-4"
 																	onClick={() => {
 																		setViewingLogsOfUserId(u.id)
 																		setViewingLogsMode('all')
 																	}}
 																>
 																	View All
-																</button>
+																</Button>
 															</div>
 														</td>
 													</tr>
@@ -478,20 +457,14 @@ export default wrapDashboardLayout(function RealIndexPage() {
 								<span className="mt-10 text-gray-400">
 									Friends you invite to this session will be shown here
 								</span>
-								<button
-									style={{
-										padding: '12px 35px',
-										fontWeight: 100,
-										background:
-											'linear-gradient(166.98deg, #8679E2 -3.04%, #6C5DD3 90.61%)'
-									}}
-									className="mt-5 -button -primary -sm"
+								<Button
+									className="mt-5"
 									onClick={() => {
 										CopyInviteLink(pot.data, setNotificationMessage)
 									}}
 								>
 									Copy Invite Link
-								</button>
+								</Button>
 							</div>
 						</>
 					) : (

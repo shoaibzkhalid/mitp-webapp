@@ -8,10 +8,10 @@ import {
 	SidebarContext,
 	SidebarContextProvider
 } from '../../state/contexts/sidebarContext'
-import { useMediaQuery } from '../../state/react/useMediaQuery'
+import { useIsMobile } from '../../state/react/useIsMobile'
 import { userState } from '../../state/user'
+import { OverlayLoadingAnimation } from '../OverlayLoadingAnimation'
 import { Sidebar } from './Sidebar'
-import { useSelectedPot } from '../../state/react/useSelectedPot'
 
 const DashboardLayout = observer(function DashboardLayout(props: {
 	contents: () => JSX.Element
@@ -19,47 +19,48 @@ const DashboardLayout = observer(function DashboardLayout(props: {
 	const router = useRouter()
 	const Component = props.contents
 
-	// useEffect(() => {
-	// 	const pr = when(() => userState.loaded)
-	// 	pr.then(() => {
-	// 		if (!userState.user) router.push('/onboard')
-	// 	})
-	// 	return () => pr.cancel()
-	// }, [])
+	useEffect(() => {
+		const pr = when(() => userState.loaded)
+		pr.then(() => {
+			if (!userState.user)
+				router.push(
+					process.env.NODE_ENV === 'production'
+						? '/'
+						: process.env.NEXT_PUBLIC_LANDINGPAGE
+				)
+		})
+		return () => pr.cancel()
+	}, [])
 
-	const isMobile = useMediaQuery('(max-width: 1024px)')
+	const isMobile = useIsMobile()
 	const [sidebarState] = useContext(SidebarContext)
-	const pot = useSelectedPot()
 
 	return (
 		<>
 			<Head>
 				<title>Dashboard - Camelot</title>
 			</Head>
-			<div className="flex flex-row h-screen">
-				{isMobile ? (
+			{!userState.loaded ? (
+				<OverlayLoadingAnimation />
+			) : (
+				<div className="flex">
 					<div
 						className={clsx(
-							'w-full max-w-xs -sidebar-wrapper-mobile',
+							'fixed',
+							isMobile && '-sidebar-wrapper-mobile',
 							sidebarState.isOpen && '--open'
 						)}
 					>
-						<Sidebar isMobile={isMobile}></Sidebar>
+						<Sidebar />
 					</div>
-				) : (
-					<div
-						className={clsx(
-							'w-full max-w-xs p-6 border-r border-gray-200 dark:border-gray-700'
-							// !pot.data ? 'hidden' : ''
-						)}
-					>
-						<Sidebar isMobile={isMobile}></Sidebar>
+
+					{!isMobile && <div className="w-80 max-w-[100vw] shrink-0"></div>}
+
+					<div className="flex-grow">
+						<Component />
 					</div>
-				)}
-				<div className="flex-grow">
-					<Component />
 				</div>
-			</div>
+			)}
 		</>
 	)
 })

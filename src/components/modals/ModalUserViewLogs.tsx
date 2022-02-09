@@ -2,16 +2,14 @@ import dayjs from 'dayjs'
 import { useQuery } from 'react-query'
 import { Api } from '../../api'
 import { SpinnerBig } from '../SpinnerBig'
-import { ModalProps } from './types'
+import { createModalComponent } from '../ui/Modal'
+import { ButtonCloseModal } from './ButtonCloseModal'
 
-interface UserViewLogsModalInnerProps {
+export const ModalUserViewLogs = createModalComponent<{
 	potId: string
 	userId: string
 	viewingLogsMode: string
-}
-export function UserViewLogsModalInner(
-	props: ModalProps & UserViewLogsModalInnerProps
-) {
+}>(function ModalUserViewLogs(props) {
 	const userLogs = useQuery(['user-logs', props.potId, props.userId], () =>
 		Api.logsList(props.potId, props.userId)
 	)
@@ -32,12 +30,7 @@ export function UserViewLogsModalInner(
 			<div className="text-xl font-poppins flex items-center">
 				<div>User logs</div>
 				<div className="ml-auto">
-					<button
-						className="-button -round hover:shadow-lg text-sm"
-						onClick={() => props.closeModal()}
-					>
-						x
-					</button>
+					<ButtonCloseModal onClick={props.onRequestClose} />
 				</div>
 			</div>
 
@@ -68,4 +61,4 @@ export function UserViewLogsModalInner(
 			)}
 		</>
 	)
-}
+})

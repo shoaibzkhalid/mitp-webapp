@@ -91,7 +91,7 @@ body {
 } */
 
 .-sidebar-wrapper-mobile {
-	@apply absolute z-10 bg-white;
+	@apply z-50;
 	transition: transform 0.25s ease;
 	transform: translateX(-100%);
 }

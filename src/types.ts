@@ -25,6 +25,11 @@ export interface ApiPot extends ModelBase {
 	streak: number
 	inviteAdminMode: boolean
 	timeZone: string
+
+	_count?: {
+		toUsers?: number
+	}
+	toUsers?: ApiUser_MoneyPot[]
 }
 
 export interface ApiPotLog extends ModelBase {

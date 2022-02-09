@@ -2,26 +2,28 @@ import { useState } from 'react'
 import { useMutation } from 'react-query'
 import { Api } from '../../api'
 import { queryClient } from '../../state/queryClient'
-import { ModalProps } from './types'
 import { useDropzone } from 'react-dropzone'
-import { QrCode } from '../QrCode'
+import { QrCode } from '../ui/QrCode'
 import { AppEnv } from '../../env'
 import { userState } from '../../state/user'
 import { selectedPotState } from '../../state/react/useSelectedPot'
 import { useMediaQuery } from '../../state/react/useMediaQuery'
 import { useEffect } from 'react'
 import { SpinnerBig } from '../SpinnerBig'
+import { createModalComponent } from '../ui/Modal'
+import { Button } from '../ui/Button'
+import { ButtonCloseModal } from './ButtonCloseModal'
+import { useIsMobile } from '../../state/react/useIsMobile'
 
-export function CheckInPhotoModalInner({
-	closeModal,
-	potId,
-	openSuccessModal
-}: ModalProps) {
+export const ModalCheckInPhoto = createModalComponent<{
+	openSuccessModal: () => any
+	potId: string
+}>(function ModalCheckInPhoto(props) {
 	const [isUplaoding, setIsUploading] = useState(false)
 	const checkinMutation = useMutation('checkin', async (file: File) => {
 		setIsUploading(true)
-		await Api.logsCreate(potId, file)
-		queryClient.invalidateQueries(['money-pot', potId])
+		await Api.logsCreate(props.potId, file)
+		queryClient.invalidateQueries(['money-pot', props.potId])
 		setIsUploading(false)
 	})
 
@@ -32,14 +34,14 @@ export function CheckInPhotoModalInner({
 		maxSize: 5 * 1024 * 1024
 	})
 
-	const isMobile = useMediaQuery('(max-width: 1024px)')
+	const isMobile = useIsMobile()
 
 	// Automatically send file if we're on mobile
 	useEffect(() => {
 		if (isMobile && acceptedFiles.length > 0) {
 			checkinMutation.mutateAsync(acceptedFiles[0]).then(() => {
-				closeModal()
-				openSuccessModal()
+				props.onRequestClose()
+				props.openSuccessModal()
 			})
 		}
 	}, [acceptedFiles])
@@ -49,12 +51,7 @@ export function CheckInPhotoModalInner({
 			<div className="text-xl font-poppins flex items-center justify-center">
 				<div className="font-bold">Log from Mobile</div>
 				<div className="absolute right-4">
-					<button
-						className="-button -round hover:shadow-md text-sm"
-						onClick={() => closeModal()}
-					>
-						x
-					</button>
+					<ButtonCloseModal onClick={props.onRequestClose} />
 				</div>
 			</div>
 			<div className="text-gray-500 flex justify-center text-center mt-2">
@@ -118,20 +115,18 @@ export function CheckInPhotoModalInner({
 				</>
 			)}
 			<div className="flex justify-center pt-2 pb-6">
-				<button
-					className={
-						'mt-3 text-lg bg-primary w-full sm:w-auto text-white px-14 py-3 rounded-lg'
-					}
+				<Button
+					className={'mt-3'}
 					onClick={() => {
 						checkinMutation.mutateAsync(acceptedFiles[0]).then(() => {
-							closeModal()
-							openSuccessModal()
+							props.onRequestClose()
+							props.openSuccessModal()
 						})
 					}}
 				>
 					Save
-				</button>
+				</Button>
 			</div>
 		</div>
 	)
-}
+})

@@ -1,7 +1,6 @@
 import { useContext } from 'react'
 import { SidebarContext } from '../../state/contexts/sidebarContext'
 import { toggleSideBar } from '../../utils/common'
-import Notification from '../notification'
 
 export const Header = () => {
 	const [sidebarState, setSidebarState] = useContext(SidebarContext)
@@ -24,8 +23,6 @@ export const Header = () => {
 					<div className="w-8 mx-auto mt-3 border-2 border-gray-900 rounded-2xl dark:border-white"></div>
 				</button>
 			</div>
-			{/* </div>
-			</div> */}
 		</>
 	)
 }
