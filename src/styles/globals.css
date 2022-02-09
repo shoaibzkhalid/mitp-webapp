@@ -1,3 +1,6 @@
+html {
+	overflow-x: hidden;
+}
 body {
 	@apply text-gray-800 font-poppins dark:bg-gray-900 dark:text-white;
 }
@@ -9,7 +12,7 @@ body {
 }
 
 .-button {
-	@apply px-5 py-4 flex flex-row items-center justify-center rounded-xl font-bold transition-colors;
+	@apply flex flex-row items-center justify-center px-5 py-4 font-bold transition-colors rounded-xl;
 	touch-action: manipulation;
 }
 .-button:disabled {
@@ -17,16 +20,16 @@ body {
 	pointer-events: none;
 }
 .-button.-primary {
-	@apply bg-primary text-white;
+	@apply text-white bg-primary;
 }
 .-button.-shark {
-	@apply bg-shark text-white px-7 py-3;
+	@apply py-3 text-white bg-shark px-7;
 }
 .-button.-secondary {
 	@apply text-gray-500 hover:text-primary;
 }
 .-button.-dark {
-	@apply bg-gray-800 text-white;
+	@apply text-white bg-gray-800;
 }
 .-button.-round {
 	border-radius: 50%;
@@ -36,7 +39,7 @@ body {
 }
 
 .-card {
-	@apply bg-white block rounded-3xl dark:bg-dark;
+	@apply block bg-white rounded-3xl dark:bg-dark;
 }
 .-card.--shadow {
 	@apply relative;
@@ -88,7 +91,7 @@ body {
 } */
 
 .-sidebar-wrapper-mobile {
-	@apply absolute bg-white z-10;
+	@apply absolute z-10 bg-white;
 	transition: transform 0.25s ease;
 	transform: translateX(-100%);
 }
@@ -97,11 +100,11 @@ body {
 }
 
 .heading-sizes h1 {
-	@apply text-4xl my-4 font-bold;
+	@apply my-4 text-4xl font-bold;
 }
 
 .heading-sizes h2 {
-	@apply text-2xl my-4 font-bold;
+	@apply my-4 text-2xl font-bold;
 }
 
 .heading-sizes ul {
@@ -316,14 +319,14 @@ input:checked ~ .checkbox-bg {
 }
 
 .google-sigin {
-	border: 1px solid #6c5dd3;
+	border: 2px solid #6c5dd3;
 	box-sizing: border-box;
 	width: 100%;
 	border-radius: 10px;
 	background: #fff;
 	color: #6c5dd3;
-	padding: 14px;
-	font-size: 14px;
+	/* padding: 14px; */
+	/* font-size: 14px; */
 	font-family: Inter;
 	font-style: normal;
 	font-weight: 600;
@@ -332,7 +335,7 @@ input:checked ~ .checkbox-bg {
 
 .google-login-logo {
 	position: absolute;
-	width: 35px;
+	/* width: 35px; */
 	left: 38px;
-	top: 24px;
+	top: 29px;
 }

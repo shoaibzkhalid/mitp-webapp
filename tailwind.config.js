@@ -10,6 +10,9 @@ module.exports = {
 				bombay: '#B2B3BD',
 				alabaster: '#F7F7F7',
 				flowerblue: '#5274EE'
+			},
+			spacing: {
+				65: '17rem'
 			}
 		},
 		fontFamily: {
