@@ -10,16 +10,17 @@ import dynamic from 'next/dynamic'
 import Notification from '../components/notification'
 import dayjs from 'dayjs'
 import { getCheckInProgress } from '../utils/common'
+import ReactModal from 'react-modal'
+import { useNextAppElement } from '../state/react/useNextAppElement'
 import { Intro } from '../components/intros/Intro'
 import { HowItWorksIntro } from '../components/intros/HowItWorksIntro'
 import { Header } from '../components/unique/Header'
 import CopyInviteLink from '../components/notification/CopyInviteLink'
 import { toggleSideBar } from '../utils/common'
-import { ModalGroupSettings } from '../components/modals/ModalGroupSettings'
-import { ModalProfileSetting } from '../components/modals/ModalProfileSetting'
+import { GroupSettingsModal } from '../components/modals/GroupSettingsModal'
+import { ProfileSettingModalInner } from '../components/modals/ProfileSettingModalInner'
 import clsx from 'clsx'
 import { AppEnv } from '../env'
-import { Button } from '../components/ui/Button'
 
 const PotChart = dynamic(() => import('../components/home/PotChart'), {
 	ssr: false
@@ -41,6 +42,8 @@ export default wrapDashboardLayout(function OverviewPage() {
 	const [youGetPaidDropDown, setYouGetPaidDropDown] = useState(false)
 	const [openReadyUpModal, setOpenReadyUpModal] = useState(false)
 	const [potView, setPotView] = useState('Total Pot')
+
+	const appElement = useNextAppElement()
 
 	if (!isLoading && data === null) {
 		router.push('/new')
@@ -121,17 +124,22 @@ export default wrapDashboardLayout(function OverviewPage() {
 								</span>
 							)}
 						</div>
-						<ModalGroupSettings
+						<ReactModal
 							isOpen={openGroupDetailModal}
 							onRequestClose={() => setOpenGroupDetailModal(false)}
+							appElement={appElement}
 							style={{
 								content: {
 									minWidth: 320,
 									maxWidth: 600
 								}
 							}}
-						/>
-						<div className="text-gray-400 text-xl flex absolute">
+						>
+							<GroupSettingsModal
+								closeModal={() => setOpenGroupDetailModal(false)}
+							/>
+						</ReactModal>
+						<div className="absolute flex text-gray-400 text-md sm:text-xl">
 							{potAdminUser?.firstName ? (
 								<>{`Group Admin:  ${potAdminUser?.firstName}`}</>
 							) : (
@@ -173,16 +181,21 @@ export default wrapDashboardLayout(function OverviewPage() {
 									{`Check in with photo proof (screenshot or take photo) you've
 										completed "${data?.pot.title}" by Sunday at
 										midnight or pay in swear jar fee of $${pot.data?.pot.minAmount} or more.`}
-									<ModalProfileSetting
+									<ReactModal
 										isOpen={openReadyUpModal}
 										onRequestClose={() => setOpenReadyUpModal(false)}
+										appElement={appElement}
 										style={{
 											content: {
 												minWidth: 320,
 												maxWidth: 600
 											}
 										}}
-									/>
+									>
+										<ProfileSettingModalInner
+											closeModal={() => setOpenReadyUpModal(false)}
+										/>
+									</ReactModal>
 								</div>
 							</div>
 						</div>
@@ -248,12 +261,12 @@ export default wrapDashboardLayout(function OverviewPage() {
 
 						<div className="flex justify-end py-2">
 							<div id="how_it_works_div">
-								<Button
-									kind="secondary"
+								<button
+									className="p-3 font-bold bg-white border rounded-md dark:bg-dark"
 									onClick={() => userState.setHowItWorks(true)}
 								>
-									How it works
-								</Button>
+									(i) How it works
+								</button>
 							</div>
 						</div>
 

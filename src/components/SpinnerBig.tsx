@@ -1,10 +1,10 @@
-import { OverlayLoadingAnimation } from './OverlayLoadingAnimation'
+import { Spinner } from './Spinner'
 
 export function SpinnerBig() {
 	return (
 		<div className="p-14 flex justify-center items-center h-screen">
 			<div className="">
-				<OverlayLoadingAnimation />
+				<Spinner />
 			</div>
 		</div>
 	)

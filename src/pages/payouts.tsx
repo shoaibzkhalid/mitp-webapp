@@ -4,19 +4,22 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useMutation, useQuery } from 'react-query'
 import { Api } from '../api'
-import { Square } from '../components/ui/Square'
+import { Spinner } from '../components/Spinner'
+import { Square } from '../components/Square'
 import { wrapDashboardLayout } from '../components/unique/DashboardLayout'
 import { userState } from '../state/user'
 import { useSelectedPot } from '../state/react/useSelectedPot'
 import { Header } from '../components/unique/Header'
 import { toggleSideBar } from '../utils/common'
-import { ModalWithdraw } from '../components/modals/ModalWithdraw'
-import { Button } from '../components/ui/Button'
-import { OverlayLoadingAnimation } from '../components/OverlayLoadingAnimation'
+import ReactModal from 'react-modal'
+import { WithdrawModalInner } from '../components/modals/WithdrawModalInner'
+import { useNextAppElement } from '../state/react/useNextAppElement'
+// import { SpinnerBig } from '../components/SpinnerBig'
 
 export default wrapDashboardLayout(function PayoutsPage() {
 	const router = useRouter()
 	const { isLoading, data } = useSelectedPot()
+	const appElement = useNextAppElement()
 
 	const [withdrawModalIsOpen, setWithdrawModalIsOpen] = useState(false)
 
@@ -29,7 +32,9 @@ export default wrapDashboardLayout(function PayoutsPage() {
 	if (!isLoading && data === null) {
 		router.push('/new')
 	}
-	if (!data) return <OverlayLoadingAnimation />
+	// if (!data) {
+	// 	return <SpinnerBig />
+	// }
 
 	const { data: transactionsData } = useQuery(
 		['payouts', userState.user?.id],
@@ -42,10 +47,13 @@ export default wrapDashboardLayout(function PayoutsPage() {
 				<title>{`Your Group - ${data?.pot.title}`}</title>
 			</Head>
 
-			<ModalWithdraw
+			<ReactModal
 				isOpen={withdrawModalIsOpen}
 				onRequestClose={() => setWithdrawModalIsOpen(false)}
-			/>
+				appElement={appElement}
+			>
+				<WithdrawModalInner closeModal={() => setWithdrawModalIsOpen(false)} />
+			</ReactModal>
 
 			<div style={{ maxWidth: '1100px', margin: '0 auto' }}>
 				<div className="flex flex-col-reverse w-full xl:flex-row">
@@ -82,9 +90,9 @@ export default wrapDashboardLayout(function PayoutsPage() {
 								(parseInt(transactionsData.currentCredits) / 100).toFixed(2)
 							)}
 						</div>
-						<div className="payments__button-wrapper flex justify-center">
-							<Button
-								className="mr-4"
+						<div className="flex justify-center payments__button-wrapper">
+							<button
+								className="mr-4 -button -primary"
 								disabled={!transactionsData?.currentCredits}
 								onClick={() => {
 									localStorage.setItem(
@@ -98,16 +106,16 @@ export default wrapDashboardLayout(function PayoutsPage() {
 								}}
 							>
 								Add Credits
-							</Button>
-							<Button
-								kind="secondary"
+							</button>
+							<button
+								className="-button -secondary"
 								disabled={!transactionsData?.currentCredits}
 								onClick={() => {
 									setWithdrawModalIsOpen(true)
 								}}
 							>
 								Withdraw
-							</Button>
+							</button>
 						</div>
 					</div>
 				</div>
@@ -196,7 +204,8 @@ function PaymentMethod() {
 					{/* <Spinner></Spinner> */}
 				</div>
 			) : !paypalConnection ? (
-				<Button
+				<button
+					className="-button -primary"
 					onClick={() => {
 						localStorage.setItem(
 							'post-login-action',
@@ -210,7 +219,7 @@ function PaymentMethod() {
 					disabled={!isGoogleConnected}
 				>
 					Link PayPal
-				</Button>
+				</button>
 			) : (
 				<div>
 					<div>
@@ -218,14 +227,14 @@ function PaymentMethod() {
 						{paypalConnection.meta.email}
 					</div>
 					<div>
-						<Button>Unlink</Button>
+						<button className="-button -secondary">Unlink</button>
 
-						<Button
+						<button
 							className="opacity-20"
 							onClick={() => depositMutation.mutate()}
 						>
 							Deposit 2$
-						</Button>
+						</button>
 					</div>
 				</div>
 			)}

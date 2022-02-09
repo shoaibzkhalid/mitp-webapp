@@ -3,7 +3,7 @@ import classes from './Styles.module.css'
 import clsx from 'clsx'
 import { themeState } from '../../state/react/useTheme'
 
-export const ThemeSwitcher = observer(function ThemeSwitcher() {
+export const Switch = observer(function Switch() {
 	const { theme, changeMode } = themeState
 	const toggleDarkMode = (event: React.ChangeEvent<HTMLInputElement>) => {
 		changeMode(event.target.checked ? 'dark' : 'light')

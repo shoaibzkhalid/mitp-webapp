@@ -13,6 +13,7 @@ const r = axios.create({
 function handleResponse(d: AxiosResponse) {
 	if (d.status !== 200) {
 		if (d.status === 401) {
+			console.log()
 			userState.tokens = {
 				accessToken: null,
 				refreshToken: null

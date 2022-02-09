@@ -1,11 +1,13 @@
-import { Button } from '../ui/Button'
-import { ButtonCloseModal } from './ButtonCloseModal'
-
-export function ModalNotifyMe({ closeModal }: any) {
+export function NotifyMeModalInner({ closeModal }: any) {
 	return (
 		<div className="text-xl font-poppins px-2 sm:px-8">
 			<div className="flex justify-end">
-				<ButtonCloseModal onClick={closeModal} />
+				<button
+					className="-button -round hover:shadow-lg text-sm"
+					onClick={() => closeModal()}
+				>
+					x
+				</button>
 			</div>
 
 			<div className="flex justify-center">
@@ -47,7 +49,9 @@ export function ModalNotifyMe({ closeModal }: any) {
 			</div>
 
 			<div className="flex justify-center">
-				<Button className="mt-10">Save</Button>
+				<button className="mt-10 px-14 py-4 bg-shark rounded-xl text-white text-thin">
+					Save
+				</button>
 			</div>
 		</div>
 	)

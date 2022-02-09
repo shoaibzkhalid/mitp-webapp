@@ -1,8 +1,12 @@
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { wrapDashboardLayout } from '../components/unique/DashboardLayout'
+import { useSelectedPot } from '../state/react/useSelectedPot'
 import { Header } from '../components/unique/Header'
-import { Button } from '../components/ui/Button'
+import { Login } from '../components/Authentication/Login'
+import { userState } from '../state/user'
+import clsx from 'clsx'
+import { runInAction } from 'mobx'
 
 export default wrapDashboardLayout(function NewPage() {
 	const router = useRouter()
@@ -41,13 +45,23 @@ export default wrapDashboardLayout(function NewPage() {
 							<img src="/img/round-arrow.svg" width={25} />
 						</div>
 						<div className="py-2 flex justify-center">
-							<Button
+							<button
+								className={clsx(
+									'px-16 py-3 rounded-lg bg-primary text-white text-xl',
+									userState.tokens.accessToken === null ? 'disable-event' : ''
+								)}
 								onClick={() => {
 									router.push('/create')
+									// runInAction(() => {
+									// 	userState.tokens = {
+									// 		accessToken: null,
+									// 		refreshToken: null
+									// 	}
+									// })
 								}}
 							>
 								Create Pot
-							</Button>
+							</button>
 						</div>
 					</div>
 				</div>
