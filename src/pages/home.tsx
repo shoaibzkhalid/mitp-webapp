@@ -101,11 +101,11 @@ export default wrapDashboardLayout(function OverviewPage() {
 				<div className="flex flex-col-reverse w-full xl:flex-row">
 					<div
 						id="walkthrough_potname"
-						className="px-6 pt-4 pb-1 md:pt-12 w-full"
+						className="w-full px-6 pt-4 pb-1 md:pt-12"
 					>
 						<div className="flex items-center">
 							<div className="text-2xl">Your Accountability Group</div>
-							{/* <div className="ml-auto hidden lg:block">
+							{/* <div className="hidden ml-auto lg:block">
 								<ButtonSharePot />
 							</div> */}
 						</div>
@@ -135,7 +135,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 								}
 							}}
 						/>
-						<div className="text-gray-400 text-xl flex absolute">
+						<div className="absolute flex text-xl text-gray-400">
 							{potAdminUser?.firstName ? (
 								<>{`Group Admin:  ${potAdminUser?.firstName}`}</>
 							) : (
@@ -395,7 +395,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 							</div>
 
 							<div className="flex flex-col mt-8 -hstack md:flex-row">
-								<div className="p-6 border-b">
+								<div className="relative p-6 border-b">
 									<div className="flex text-sm">
 										<div className="flex items-center justify-center w-5 h-5 mr-1 bg-purple-500 rounded-md">
 											<img
@@ -406,7 +406,10 @@ export default wrapDashboardLayout(function OverviewPage() {
 										</div>
 										<span>Check Ins</span>
 										<div className="ml-auto has-tooltip">
-											<span className="max-w-xs p-1 mt-6 bg-gray-100 rounded shadow-lg tooltip">
+											<span
+												className="max-w-xs p-1 mt-6 bg-gray-100 rounded shadow-lg tooltip"
+												style={{ right: 0 }}
+											>
 												This is the amount of times your group has checked in
 												with photo evidence they've completed the weekly
 												activity this month.

@@ -13,9 +13,11 @@ import { ModalStripeConnect } from './ModalStripeConnect'
 import { createModalComponent } from '../ui/Modal'
 import { Button } from '../ui/Button'
 import { ButtonCloseModal } from './ButtonCloseModal'
+import { useMediaQuery } from '../../state/react/useMediaQuery'
 
 export const ModalProfileSetting = createModalComponent(
 	function ModalProfileSetting({ onRequestClose }) {
+		const isMobile = useMediaQuery('(max-width: 380px)')
 		const { data } = useSelectedPot()
 		const [stripeModalIsOpen, setStripeModalIsOpen] = useState(false)
 
@@ -104,14 +106,14 @@ export const ModalProfileSetting = createModalComponent(
 					onRequestClose={() => setStripeModalIsOpen(false)}
 					style={{
 						content: {
-							width: 420,
-							height: 280,
+							maxWidth: 420,
+							height: isMobile ? 320 : 280,
 							top: '30%'
 						}
 					}}
 				/>
 				<div className="px-0 sm:px-6">
-					<div className="text-lg font-poppins flex items-center justify-center pt-4">
+					<div className="flex items-center justify-center pt-4 text-lg font-poppins">
 						<div className="">
 							Manage ready up status & modify how you appear to others in your
 							group {data?.pot.title}
@@ -136,7 +138,7 @@ export const ModalProfileSetting = createModalComponent(
 								style={{ display: 'none' }}
 							/>
 							<img
-								className="inline-block absolute right-2 -bottom-2 cursor-pointer"
+								className="absolute inline-block cursor-pointer right-2 -bottom-2"
 								src="/img/edit-icon.svg"
 								style={{
 									maxHeight: 70,
@@ -162,12 +164,12 @@ export const ModalProfileSetting = createModalComponent(
 
 					<div className="mt-10">
 						<div className="flex items-center justify-between">
-							<div className="font-bold text-xl">Swear Jar Fee</div>
-							<div className="text-primary cursor-pointer">
+							<div className="text-xl font-bold">Swear Jar Fee</div>
+							<div className="cursor-pointer text-primary">
 								<Link href="/payouts">-My payouts-</Link>
 							</div>
 						</div>
-						<div className="text-gray-400 text-sm mt-2">
+						<div className="mt-2 text-sm text-gray-400">
 							How much is missing a week worth to you?
 						</div>
 					</div>
@@ -177,7 +179,7 @@ export const ModalProfileSetting = createModalComponent(
 							Group members pay this to the pot when failing to check in by end
 							of week.
 						</div>
-						<div className="pt-3 flex">
+						<div className="flex pt-3">
 							<div className="w-9/12">
 								<SelectInput
 									height="undefined"
@@ -193,7 +195,7 @@ export const ModalProfileSetting = createModalComponent(
 									}}
 								/>
 							</div>
-							<div className="w-3/12 flex">
+							<div className="flex w-3/12">
 								<Button
 									className="w-full"
 									onClick={() => {
@@ -205,13 +207,13 @@ export const ModalProfileSetting = createModalComponent(
 								</Button>
 							</div>
 						</div>
-						<div className="text-gray-400 text-md pt-3">
+						<div className="pt-3 text-gray-400 text-md">
 							Change anytime: Can be seen by others in your group
 						</div>
 					</div>
 
-					<div className="mt-10 flex items-center justify-between">
-						<div className="text-md font-bold sm:font-extrabold sm:text-xl">
+					<div className="flex items-center justify-between mt-10">
+						<div className="font-bold text-md sm:font-extrabold sm:text-xl">
 							Ready up to join pot
 						</div>
 						<div className="flex items-center">
@@ -228,8 +230,8 @@ export const ModalProfileSetting = createModalComponent(
 											changeReady(e)
 										}}
 									/>
-									<div className="checkbox-bg block bg-gray-600 w-24 h-12 rounded-full"></div>
-									<div className="dot absolute left-1 top-1 bg-white w-10 h-10 rounded-full transition"></div>
+									<div className="block w-24 h-12 bg-gray-600 rounded-full checkbox-bg"></div>
+									<div className="absolute w-10 h-10 transition bg-white rounded-full dot left-1 top-1"></div>
 								</div>
 							</label>
 						</div>
@@ -245,7 +247,7 @@ export const ModalProfileSetting = createModalComponent(
 						</ul>
 					</div>
 
-					<div className="text-gray-400 mt-10">
+					<div className="mt-10 text-gray-400">
 						By connecting with paypal you are agreeing to{' '}
 						<span className="text-primary">terms and conditions</span> and{' '}
 						<span className="text-primary">privacy policy</span>
