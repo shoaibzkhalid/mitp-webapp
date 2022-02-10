@@ -73,7 +73,7 @@ export default wrapDashboardLayout(function RealIndexPage() {
 				<title>{`Your Group - ${pot.data?.pot.title || 'Loading...'}`}</title>
 			</Head>
 
-			<div style={{ margin: '0 auto', maxWidth: '1100px' }}>
+			<div style={{ margin: '0 auto', maxWidth: '1200px' }}>
 				{viewingLogsOfUserId && pot.data && (
 					<ModalUserViewLogs
 						isOpen={viewingLogsOfUserId !== null}

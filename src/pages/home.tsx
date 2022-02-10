@@ -100,7 +100,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 				<HowItWorksIntro label="homepage" enabled={userState.howItWorks} />
 			</>
 
-			<div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+			<div style={{ maxWidth: '1200px', margin: '0 auto' }}>
 				<div className="flex flex-col-reverse w-full xl:flex-row">
 					<div
 						id="walkthrough_potname"
@@ -202,12 +202,12 @@ export default wrapDashboardLayout(function OverviewPage() {
 						>
 							<MobileHeader />
 							<div className="text-sm text-center">
-								<div className="hidden text-sm text-gray-500 md:block">
+								<div className="hidden text-base text-gray-500 md:block">
 									{pot.data?.users.length} member
 									{pot.data?.users.length !== 1 && 's'}
 								</div>
 								<div
-									className="px-6 py-3 text-sm text-white bg-gray-900 cursor-pointer rounded-2xl md:mt-2 md:text-sm md:text-blue-600 md:p-0 md:bg-white dark:bg-gray-900"
+									className="px-6 py-3 text-sm text-white bg-gray-900 cursor-pointer rounded-2xl md:mt-2 md:text-base md:text-blue-600 md:p-0 md:bg-white dark:bg-gray-900"
 									onClick={() => CopyInviteLink(data, setNotificationMessage)}
 								>
 									&mdash; copy invite link &mdash;
