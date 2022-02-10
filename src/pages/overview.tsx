@@ -128,7 +128,8 @@ export default wrapDashboardLayout(function RealIndexPage() {
 								</div>
 								{/* prob */}
 								<div className="mt-6 text-sm text-center text-gray-200">
-									Check in by Sunday {potUser?.checkinsThisWeek}/1
+									Check in by Sunday {potUser?.checkinsThisWeek}/
+									{pot?.data.pot.checkinCount}
 								</div>
 							</div>
 							<div className="flex items-center justify-end w-full mt-10 font-bold text-center md:mt:0 md:text-right">

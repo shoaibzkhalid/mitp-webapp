@@ -43,6 +43,8 @@ export default wrapDashboardLayout(function OverviewPage() {
 	const [openReadyUpModal, setOpenReadyUpModal] = useState(false)
 	const [potView, setPotView] = useState('Total Pot')
 
+	console.log(pot)
+
 	if (!isLoading && data === null) {
 		router.push('/new')
 	}
@@ -70,8 +72,9 @@ export default wrapDashboardLayout(function OverviewPage() {
 		[data]
 	)
 
-	const date1 = dayjs(data?.pot.createdAt).format('YYYY-MM-DD')
-	const createdDuration = dayjs.duration(dayjs().diff(date1))
+	const createdDuration = dayjs.duration(
+		dayjs().diff(dayjs(data?.pot.createdAt))
+	)
 
 	const daysLeft = dayjs()
 		.endOf('week')
@@ -143,7 +146,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 							)}
 							<div
 								className="w-full ml-4 text-gray-400"
-								style={{ width: '150px' }}
+								style={{ width: '280px' }}
 							>
 								<div
 									className="flex items-center justify-center cursor-pointer text-md sm:text-lg md:text-xl"
@@ -437,7 +440,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 										></div>
 									</div>
 								</div>
-								<div className="p-6 border-0 border-b md:border-l">
+								<div className="relative p-6 border-0 border-b md:border-l">
 									<div className="flex text-sm">
 										<div className="flex items-center justify-center w-5 h-5 mr-1 bg-pink-400 rounded-md">
 											<img
@@ -448,7 +451,10 @@ export default wrapDashboardLayout(function OverviewPage() {
 										</div>
 										<span>Group Streak 🔥</span>
 										<div className="ml-auto has-tooltip">
-											<span className="max-w-xs p-1 mt-6 bg-gray-100 rounded shadow-lg tooltip">
+											<span
+												className="max-w-xs p-1 mt-6 bg-gray-100 rounded shadow-lg tooltip"
+												style={{ right: 0 }}
+											>
 												This is your groups streak. It increases every time all
 												members in your group complete their check ins by Sunday
 												at midnight.
@@ -473,7 +479,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 										></div>
 									</div>
 								</div>
-								<div className="p-6 border-0 md:border-l">
+								<div className="relative p-6 border-0 md:border-l">
 									<div className="flex text-sm">
 										<div className="flex items-center justify-center w-5 h-5 mr-1 bg-blue-500 rounded-md">
 											<img
@@ -484,7 +490,10 @@ export default wrapDashboardLayout(function OverviewPage() {
 										</div>
 										<span>Pay Ins</span>
 										<div className="ml-auto has-tooltip">
-											<span className="max-w-xs p-1 mt-6 bg-gray-100 rounded shadow-lg tooltip">
+											<span
+												className="max-w-xs p-1 mt-6 bg-gray-100 rounded shadow-lg tooltip"
+												style={{ right: 0 }}
+											>
 												This is the amount of times group members have paid in
 												their swear jar fee to the group pot by failing to check
 												in by Sunday at midnight.
@@ -519,9 +528,12 @@ export default wrapDashboardLayout(function OverviewPage() {
 								This group has been around for{' '}
 								<span className="font-bold">{`${createdDuration.months()} months`}</span>{' '}
 								and{' '}
-								<span className="font-bold">{`${createdDuration.days()} days`}</span>
+								<span className="font-bold">{`${dayjs().diff(
+									dayjs(data?.pot.createdAt),
+									'day'
+								)} days`}</span>
 							</p>
-							<p className="mt-4">{`They have logged ${data?.pot.checkinCount} check-ins`}</p>
+							<p className="mt-4">{`They have logged ${data?.metrics.checkinsCount} check-ins`}</p>
 						</div>
 					</div>
 				</div>
