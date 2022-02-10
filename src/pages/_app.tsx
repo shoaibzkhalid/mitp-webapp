@@ -37,10 +37,8 @@ function MyApp({ Component, pageProps }: AppProps) {
 				userState.save()
 			})
 		}
-		const accessToken = getUrlParameter('accessToken', window.location.href)
 		const refreshToken = getUrlParameter('refreshToken', window.location.href)
-		if (accessToken && refreshToken) {
-			userState.tokens.accessToken = accessToken
+		if (refreshToken) {
 			userState.tokens.refreshToken = refreshToken
 			userState.save()
 			userState.load()

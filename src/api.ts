@@ -13,16 +13,9 @@ const r = axios.create({
 function handleResponse(d: AxiosResponse) {
 	if (d.status !== 200) {
 		if (d.status === 401) {
-			console.log()
-			userState.tokens = {
-				accessToken: null,
-				refreshToken: null
-			}
-			localStorage.setItem('mitp_tokens', '')
+			userState.clear()
 			window.location.assign(
-				process.env.NODE_ENV === 'production'
-					? '/'
-					: process.env.NEXT_PUBLIC_LANDINGPAGE
+				process.env.NODE_ENV === 'production' ? '/' : AppEnv.DevLandingPageUrl
 			)
 		}
 		console.log('API Error:', d.status, d.data)
@@ -41,12 +34,13 @@ export const Api = {
 	userPots: userPotsApi,
 
 	async get<T = any>(url: string, params?: object): Promise<T> {
-		const token = await userState.getAccessToken()
 		return r
 			.get(url, {
 				params,
 				headers: {
-					authorization: userState.tokens.refreshToken ? `Bearer ${token}` : ''
+					authorization: userState.tokens.refreshToken
+						? `Bearer ${await userState.getAccessToken()}`
+						: ''
 				},
 				validateStatus: () => true
 			})
@@ -54,12 +48,13 @@ export const Api = {
 	},
 
 	async post<T = any>(url: string, data?: object, params?: object): Promise<T> {
-		const token = await userState.getAccessToken()
 		return r
 			.post(url, data, {
 				params,
 				headers: {
-					authorization: userState.tokens.refreshToken ? `Bearer ${token}` : ''
+					authorization: userState.tokens.refreshToken
+						? `Bearer ${await userState.getAccessToken()}`
+						: ''
 				},
 				validateStatus: () => true
 			})
@@ -71,13 +66,14 @@ export const Api = {
 		data?: object,
 		params?: object
 	): Promise<T> {
-		const token = await userState.getAccessToken()
 		return r
 			.delete(url, {
 				params,
 				data,
 				headers: {
-					authorization: userState.tokens.refreshToken ? `Bearer ${token}` : ''
+					authorization: userState.tokens.refreshToken
+						? `Bearer ${await userState.getAccessToken()}`
+						: ''
 				},
 				validateStatus: () => true
 			})

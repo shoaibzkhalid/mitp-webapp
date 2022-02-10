@@ -1,10 +1,14 @@
 import { useState } from 'react'
 import { SelectInput } from '../SelectInput'
-import { ModalProps } from './types'
 import clsx from 'clsx'
 import { userState } from '../../state/user'
+import { createModalComponent } from '../ui/Modal'
+import { Button } from '../ui/Button'
+import { ButtonCloseModal } from './ButtonCloseModal'
 
-export function WithdrawModalInner({ closeModal }: ModalProps) {
+export const ModalWithdraw = createModalComponent(function ModalWithdraw({
+	onRequestClose
+}) {
 	const [user, setUser] = useState({
 		firstName: userState.user!.firstName,
 		lastName: userState.user!.lastName
@@ -18,12 +22,7 @@ export function WithdrawModalInner({ closeModal }: ModalProps) {
 			<div className="text-xl font-poppins flex items-center">
 				<div>Withdraw</div>
 				<div className="ml-auto">
-					<button
-						className="-button -round hover:shadow-lg text-sm"
-						onClick={closeModal}
-					>
-						x
-					</button>
+					<ButtonCloseModal onClick={onRequestClose} />
 				</div>
 			</div>
 
@@ -39,7 +38,10 @@ export function WithdrawModalInner({ closeModal }: ModalProps) {
 						height="undefined"
 						selectClassName="bg-alabaster p-4 focus:outline-none"
 						options={[
-							{ label: `Paypal (${user.firstName} ${user.lastName})`, value: 1 }
+							{
+								label: `Paypal (${user.firstName} ${user.lastName})`,
+								value: 1
+							}
 						]}
 						setValue={() => {}}
 					/>
@@ -129,16 +131,9 @@ export function WithdrawModalInner({ closeModal }: ModalProps) {
 				<hr className="mt-5"></hr>
 
 				<div className="flex justify-end mt-5">
-					<button
-						style={{ fontWeight: 100 }}
-						className={
-							'mt-5 -button -shark text-lg bg-shark w-full sm:w-auto font-extralight'
-						}
-					>
-						Withdraw
-					</button>
+					<Button>Withdraw</Button>
 				</div>
 			</div>
 		</>
 	)
-}
+})

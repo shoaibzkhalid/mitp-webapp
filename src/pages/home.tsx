@@ -10,17 +10,17 @@ import dynamic from 'next/dynamic'
 import Notification from '../components/notification'
 import dayjs from 'dayjs'
 import { getCheckInProgress } from '../utils/common'
-import ReactModal from 'react-modal'
-import { useNextAppElement } from '../state/react/useNextAppElement'
 import { Intro } from '../components/intros/Intro'
 import { HowItWorksIntro } from '../components/intros/HowItWorksIntro'
-import { Header } from '../components/unique/Header'
+import { MobileHeader } from '../components/unique/MobileHeader'
 import CopyInviteLink from '../components/notification/CopyInviteLink'
 import { toggleSideBar } from '../utils/common'
-import { GroupSettingsModal } from '../components/modals/GroupSettingsModal'
-import { ProfileSettingModalInner } from '../components/modals/ProfileSettingModalInner'
+import { ModalGroupSettings } from '../components/modals/ModalGroupSettings'
+import { ModalProfileSetting } from '../components/modals/ModalProfileSetting'
 import clsx from 'clsx'
 import { AppEnv } from '../env'
+import { Button } from '../components/ui/Button'
+import { ButtonSharePot } from '../components/unique/ButtonSharePot'
 
 const PotChart = dynamic(() => import('../components/home/PotChart'), {
 	ssr: false
@@ -42,8 +42,6 @@ export default wrapDashboardLayout(function OverviewPage() {
 	const [youGetPaidDropDown, setYouGetPaidDropDown] = useState(false)
 	const [openReadyUpModal, setOpenReadyUpModal] = useState(false)
 	const [potView, setPotView] = useState('Total Pot')
-
-	const appElement = useNextAppElement()
 
 	if (!isLoading && data === null) {
 		router.push('/new')
@@ -103,13 +101,16 @@ export default wrapDashboardLayout(function OverviewPage() {
 				<div className="flex flex-col-reverse w-full xl:flex-row">
 					<div
 						id="walkthrough_potname"
-						className="px-6 pt-4 pb-1 xl:w-10/12 md:pt-12"
+						className="px-6 pt-4 pb-1 md:pt-12 w-full"
 					>
-						<div className="text:lg sm:text-xl md:text-2xl">
-							Your Accountability Group
+						<div className="flex items-center">
+							<div className="text-2xl">Your Accountability Group</div>
+							{/* <div className="ml-auto hidden lg:block">
+								<ButtonSharePot />
+							</div> */}
 						</div>
 						<div
-							className="text-xl font-semibold sm:text-3xl md:text-5xl"
+							className="text-5xl font-semibold xl:w-10/12"
 							style={{ lineHeight: 1.5 }}
 						>
 							{data?.pot.title}
@@ -124,22 +125,17 @@ export default wrapDashboardLayout(function OverviewPage() {
 								</span>
 							)}
 						</div>
-						<ReactModal
+						<ModalGroupSettings
 							isOpen={openGroupDetailModal}
 							onRequestClose={() => setOpenGroupDetailModal(false)}
-							appElement={appElement}
 							style={{
 								content: {
 									minWidth: 320,
 									maxWidth: 600
 								}
 							}}
-						>
-							<GroupSettingsModal
-								closeModal={() => setOpenGroupDetailModal(false)}
-							/>
-						</ReactModal>
-						<div className="absolute flex text-gray-400 text-md sm:text-xl">
+						/>
+						<div className="text-gray-400 text-xl flex absolute">
 							{potAdminUser?.firstName ? (
 								<>{`Group Admin:  ${potAdminUser?.firstName}`}</>
 							) : (
@@ -181,21 +177,16 @@ export default wrapDashboardLayout(function OverviewPage() {
 									{`Check in with photo proof (screenshot or take photo) you've
 										completed "${data?.pot.title}" by Sunday at
 										midnight or pay in swear jar fee of $${pot.data?.pot.minAmount} or more.`}
-									<ReactModal
+									<ModalProfileSetting
 										isOpen={openReadyUpModal}
 										onRequestClose={() => setOpenReadyUpModal(false)}
-										appElement={appElement}
 										style={{
 											content: {
 												minWidth: 320,
 												maxWidth: 600
 											}
 										}}
-									>
-										<ProfileSettingModalInner
-											closeModal={() => setOpenReadyUpModal(false)}
-										/>
-									</ReactModal>
+									/>
 								</div>
 							</div>
 						</div>
@@ -203,10 +194,10 @@ export default wrapDashboardLayout(function OverviewPage() {
 
 					<div className="px-6 py-2 border-b border-gray-200 md:py-4 dark:border-gray-700 sm:px-0 xl:pt-12 xl:w-2/12 xl:border-b-0">
 						<div
-							className="flex items-center justify-between px-6 font-poppins xl:justify-center lg:justify-end"
+							className="flex items-center justify-between font-poppins xl:justify-center lg:justify-end"
 							id="header_invite_holder_div"
 						>
-							<Header />
+							<MobileHeader />
 							<div className="text-sm text-center">
 								<div className="hidden text-sm text-gray-500 md:block">
 									{pot.data?.users.length} member
@@ -261,12 +252,12 @@ export default wrapDashboardLayout(function OverviewPage() {
 
 						<div className="flex justify-end py-2">
 							<div id="how_it_works_div">
-								<button
-									className="p-3 font-bold bg-white border rounded-md dark:bg-dark"
+								<Button
+									kind="secondary"
 									onClick={() => userState.setHowItWorks(true)}
 								>
-									(i) How it works
-								</button>
+									How it works
+								</Button>
 							</div>
 						</div>
 

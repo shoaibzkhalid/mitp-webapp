@@ -339,3 +339,9 @@ input:checked ~ .checkbox-bg {
 	left: 38px;
 	top: 29px;
 }
+
+.profile {
+	overflow: visible;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}

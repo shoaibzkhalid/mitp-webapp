@@ -1,3 +1,3 @@
-import { Switch } from './Switch'
+import { ThemeSwitcher } from './Switch'
 
-export default Switch
+export default ThemeSwitcher

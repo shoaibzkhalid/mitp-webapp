@@ -68,6 +68,13 @@ export const userState = observable({
 		console.log('Saved new account tokens')
 		localStorage.setItem('mitp_tokens', JSON.stringify(userState.tokens))
 	},
+	clear() {
+		userState.tokens = {
+			accessToken: null,
+			refreshToken: null
+		}
+		localStorage.setItem('mitp_tokens', '')
+	},
 	toggleReady() {
 		userState.ready = !userState.ready
 	},

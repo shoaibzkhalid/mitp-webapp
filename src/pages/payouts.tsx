@@ -4,22 +4,19 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useMutation, useQuery } from 'react-query'
 import { Api } from '../api'
-import { Spinner } from '../components/Spinner'
-import { Square } from '../components/Square'
+import { Square } from '../components/ui/Square'
 import { wrapDashboardLayout } from '../components/unique/DashboardLayout'
 import { userState } from '../state/user'
 import { useSelectedPot } from '../state/react/useSelectedPot'
-import { Header } from '../components/unique/Header'
+import { MobileHeader } from '../components/unique/MobileHeader'
 import { toggleSideBar } from '../utils/common'
-import ReactModal from 'react-modal'
-import { WithdrawModalInner } from '../components/modals/WithdrawModalInner'
-import { useNextAppElement } from '../state/react/useNextAppElement'
-// import { SpinnerBig } from '../components/SpinnerBig'
+import { ModalWithdraw } from '../components/modals/ModalWithdraw'
+import { Button } from '../components/ui/Button'
+import { OverlayLoadingAnimation } from '../components/OverlayLoadingAnimation'
 
 export default wrapDashboardLayout(function PayoutsPage() {
 	const router = useRouter()
 	const { isLoading, data } = useSelectedPot()
-	const appElement = useNextAppElement()
 
 	const [withdrawModalIsOpen, setWithdrawModalIsOpen] = useState(false)
 
@@ -32,9 +29,7 @@ export default wrapDashboardLayout(function PayoutsPage() {
 	if (!isLoading && data === null) {
 		router.push('/new')
 	}
-	// if (!data) {
-	// 	return <SpinnerBig />
-	// }
+	if (!data) return <OverlayLoadingAnimation />
 
 	const { data: transactionsData } = useQuery(
 		['payouts', userState.user?.id],
@@ -47,25 +42,13 @@ export default wrapDashboardLayout(function PayoutsPage() {
 				<title>{`Your Group - ${data?.pot.title}`}</title>
 			</Head>
 
-			<ReactModal
+			<ModalWithdraw
 				isOpen={withdrawModalIsOpen}
 				onRequestClose={() => setWithdrawModalIsOpen(false)}
-				appElement={appElement}
-			>
-				<WithdrawModalInner closeModal={() => setWithdrawModalIsOpen(false)} />
-			</ReactModal>
+			/>
 
 			<div style={{ maxWidth: '1100px', margin: '0 auto' }}>
-				<div className="flex flex-col-reverse w-full xl:flex-row">
-					<div
-						className="px-6 border-b border-gray-200 dark:border-gray-700 md:py-1 md:px-3 xl:px-12 xl:pt-12 xl:w-4/12 xl:border-b-0"
-						style={{
-							padding: '25px 20px'
-						}}
-					>
-						<Header />
-					</div>
-				</div>
+				<MobileHeader />
 
 				<div className="px-6 py-12 font-poppins">
 					<div className="mb-3 text-2xl">Hi {userState?.user?.firstName},</div>
@@ -90,9 +73,9 @@ export default wrapDashboardLayout(function PayoutsPage() {
 								(parseInt(transactionsData.currentCredits) / 100).toFixed(2)
 							)}
 						</div>
-						<div className="flex justify-center payments__button-wrapper">
-							<button
-								className="mr-4 -button -primary"
+						<div className="payments__button-wrapper flex justify-center">
+							<Button
+								className="mr-4"
 								disabled={!transactionsData?.currentCredits}
 								onClick={() => {
 									localStorage.setItem(
@@ -106,16 +89,16 @@ export default wrapDashboardLayout(function PayoutsPage() {
 								}}
 							>
 								Add Credits
-							</button>
-							<button
-								className="-button -secondary"
+							</Button>
+							<Button
+								kind="secondary"
 								disabled={!transactionsData?.currentCredits}
 								onClick={() => {
 									setWithdrawModalIsOpen(true)
 								}}
 							>
 								Withdraw
-							</button>
+							</Button>
 						</div>
 					</div>
 				</div>
@@ -204,8 +187,7 @@ function PaymentMethod() {
 					{/* <Spinner></Spinner> */}
 				</div>
 			) : !paypalConnection ? (
-				<button
-					className="-button -primary"
+				<Button
 					onClick={() => {
 						localStorage.setItem(
 							'post-login-action',
@@ -219,7 +201,7 @@ function PaymentMethod() {
 					disabled={!isGoogleConnected}
 				>
 					Link PayPal
-				</button>
+				</Button>
 			) : (
 				<div>
 					<div>
@@ -227,14 +209,14 @@ function PaymentMethod() {
 						{paypalConnection.meta.email}
 					</div>
 					<div>
-						<button className="-button -secondary">Unlink</button>
+						<Button>Unlink</Button>
 
-						<button
+						<Button
 							className="opacity-20"
 							onClick={() => depositMutation.mutate()}
 						>
 							Deposit 2$
-						</button>
+						</Button>
 					</div>
 				</div>
 			)}
