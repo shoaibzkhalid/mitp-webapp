@@ -15,7 +15,7 @@ import { AppEnv } from '../../env'
 import { Button } from '../../components/ui/Button'
 
 export default observer(function PotById(props: { pot: ApiPot }) {
-	const usersCount = props.pot._count!.toUsers
+	const usersCount = props.pot._count!?.toUsers
 	const adminName = props.pot.toUsers?.[0]?.user?.firstName
 
 	const title = `Join ${props.pot.title}`
@@ -40,13 +40,13 @@ export default observer(function PotById(props: { pot: ApiPot }) {
 				{/* We don't want these pages to end up in search engines and pollute our SEO */}
 				<meta name="robots" content="noindex" />
 			</Head>
-			<div className="w-full max-w-lg mx-auto my-8 px-2">
+			<div className="w-full max-w-lg px-2 mx-auto my-8">
 				<p className="text-2xl">You have been invited to a pot</p>
 				<h1 className="text-5xl font-semibold" style={{ lineHeight: 1.5 }}>
 					Join {props.pot.title}
 				</h1>
 
-				<div className="p-2 bg-gray-200 rounded shadow mt-6 mb-10">
+				<div className="p-2 mt-6 mb-10 bg-gray-200 rounded shadow">
 					<div className="font-bold">Description</div>
 					<div className="text-gray-600">{props.pot.description}</div>
 					<div className="mt-4">

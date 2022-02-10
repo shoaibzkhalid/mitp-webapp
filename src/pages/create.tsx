@@ -34,6 +34,7 @@ export default observer(function PotNew() {
 		return [StepRequirements]
 	}, [])
 
+	// Check here
 	const createPotMutation = useMutation(
 		'create-pot',
 		async (state: PotNewState) => {
@@ -86,7 +87,7 @@ export default observer(function PotNew() {
 			}}
 		>
 			<div
-				className="xl:pt-8 2xl:pt-8 sm:px-20 2xl:px-32 lg:pt-8 md:pt-8 sm:pt-8 pt-4 flex justify-end text-white text-xl cursor-pointer"
+				className="flex justify-end pt-4 text-xl text-white cursor-pointer xl:pt-8 2xl:pt-8 sm:px-20 2xl:px-32 lg:pt-8 md:pt-8 sm:pt-8"
 				onClick={() => {
 					router.push('/home')
 				}}
@@ -121,13 +122,13 @@ export default observer(function PotNew() {
 						>
 							Generate session
 						</button>
-						<div className="w-full flex justify-end mt-4 bottom-20 block sm:hidden sm:mt-24 lg:mt-0 sm:absolute text-white">
+						<div className="flex justify-end block w-full mt-4 text-white bottom-20 sm:hidden sm:mt-24 lg:mt-0 sm:absolute">
 							<button
 								className="flex items-center text-xl xl:text-2xl 2xl:text-3xl xl:pr-34 lg:pr-24 md:pr-16"
 								onClick={createLaterSession}
 							>
 								Do this later
-								<svg className="ml-2 w-3 h-3 fill-current sm:w-5 h-5">
+								<svg className="w-3 h-3 h-5 ml-2 fill-current sm:w-5">
 									<use xlinkHref="/img/sprite.svg#icon-arrow-right"></use>
 								</svg>
 							</button>
@@ -136,22 +137,22 @@ export default observer(function PotNew() {
 				</div>
 
 				<div
-					className="w-full relative flex flex-col items-center px-3 sm:w-6/12"
+					className="relative flex flex-col items-center w-full px-3 sm:w-6/12"
 					style={{ background: '#24008b' }}
 				>
-					<div className="hidden sm:block sm:top-10 lg:-top-10 pb-16">
+					<div className="hidden pb-16 sm:block sm:top-10 lg:-top-10">
 						<img
 							src={'/img/Target_optimized.gif'}
 							className={classes.onboarding__image}
 						/>
 					</div>
-					<div className="w-full justify-end mt-4 bottom-20 hidden sm:flex sm:mt-24 lg:mt-0 sm:absolute text-white">
+					<div className="justify-end hidden w-full mt-4 text-white bottom-20 sm:flex sm:mt-24 lg:mt-0 sm:absolute">
 						<button
 							className="flex items-center text-xl xl:text-2xl 2xl:text-3xl xl:pr-34 lg:pr-24 md:pr-16"
 							onClick={createLaterSession}
 						>
 							Setup with defaults
-							<svg className="ml-2 w-3 h-3 fill-current sm:w-5 h-5">
+							<svg className="w-3 h-3 h-5 ml-2 fill-current sm:w-5">
 								<use xlinkHref="/img/sprite.svg#icon-arrow-right"></use>
 							</svg>
 						</button>
@@ -183,6 +184,9 @@ const StepRequirements = observer((props: StepProps) => {
 
 	const updatePerWeekSelection = e => {
 		setPerWeekSelection(e.currentTarget.innerHTML)
+		runInAction(() => {
+			props.state.checkinCount = e.currentTarget.value
+		})
 		setPerWeekDropDown(!perWeekDropdown)
 	}
 
@@ -195,10 +199,10 @@ const StepRequirements = observer((props: StepProps) => {
 
 	return (
 		<div>
-			<h1 className="font-bold text-2xl lg:text-3xl xl:text-4xl 2xl:text-6xl">
+			<h1 className="text-2xl font-bold lg:text-3xl xl:text-4xl 2xl:text-6xl">
 				What activity does your group need to do?
 			</h1>
-			<p className="text-left sm:text-lg lg:text-xl 2xl:text-2xl sm:mt-8 text-gray-200 font-light">
+			<p className="font-light text-left text-gray-200 sm:text-lg lg:text-xl 2xl:text-2xl sm:mt-8">
 				You're seconds away from getting your own group for accountability with
 				friends.
 			</p>
@@ -240,14 +244,14 @@ const StepRequirements = observer((props: StepProps) => {
 
 				<div
 					// style={{display: "flex", justifyContent: "flex-end"}}
-					className="cursor-pointer mt-3 pr-3 absolute flex right-0"
+					className="absolute right-0 flex pr-3 mt-3 cursor-pointer"
 					onClick={() => {
 						setPerWeekDropDown(!perWeekDropdown)
 					}}
 				>
 					<span>{perWeekSelection}</span>
 					<div>
-						<svg className="create_icon_down__2Hk64 relative create-page-frequency-arrow">
+						<svg className="relative create_icon_down__2Hk64 create-page-frequency-arrow">
 							<use href="/img/sprite.svg#icon-arrow-down-fat"></use>
 						</svg>
 					</div>
@@ -267,42 +271,49 @@ const StepRequirements = observer((props: StepProps) => {
 						<li
 							className={clsx(classes.per_week_menu)}
 							onClick={updatePerWeekSelection}
+							value="1"
 						>
 							Once per week
 						</li>
 						<li
 							className={clsx(classes.per_week_menu)}
 							onClick={updatePerWeekSelection}
+							value="2"
 						>
 							Twice per week
 						</li>
 						<li
 							className={clsx(classes.per_week_menu)}
 							onClick={updatePerWeekSelection}
+							value="3"
 						>
 							3x per week
 						</li>
 						<li
 							className={clsx(classes.per_week_menu)}
 							onClick={updatePerWeekSelection}
+							value="4"
 						>
 							4x per week
 						</li>
 						<li
 							className={clsx(classes.per_week_menu)}
 							onClick={updatePerWeekSelection}
+							value="5"
 						>
 							5x per week
 						</li>
 						<li
 							className={clsx(classes.per_week_menu)}
 							onClick={updatePerWeekSelection}
+							value="6"
 						>
 							6x per week
 						</li>
 						<li
 							className={clsx(classes.per_week_menu)}
 							onClick={updatePerWeekSelection}
+							value="7"
 						>
 							7x per week
 						</li>
