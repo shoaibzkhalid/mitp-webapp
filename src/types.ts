@@ -12,6 +12,7 @@ export interface ApiUser extends ModelBase {
 	admin: boolean
 	readyUpAt: Date | string | null
 	connections: ApiUserConnection[]
+	permissions: number[]
 }
 
 export interface ApiPot extends ModelBase {

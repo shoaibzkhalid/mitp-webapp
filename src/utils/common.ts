@@ -1,3 +1,16 @@
+import { AppEnv } from '../env'
+import { ApiPot } from '../types'
+
+export function getPotPosterUrl(pot: ApiPot) {
+	return (
+		AppEnv.apiBaseUrl +
+		'/pdf/flyer1/' +
+		encodeURIComponent(pot.title) +
+		'?link=' +
+		encodeURIComponent(`${AppEnv.webBaseUrl}/pot/${pot.slug}`)
+	)
+}
+
 export function toggleSideBar(isOpen: boolean) {
 	const html = document.querySelector('html')
 	if (isOpen) html?.classList.add('no-scroll')

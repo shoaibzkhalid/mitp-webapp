@@ -9,7 +9,7 @@ import { useSelectedPot } from '../state/react/useSelectedPot'
 import dynamic from 'next/dynamic'
 import Notification from '../components/notification'
 import dayjs from 'dayjs'
-import { getCheckInProgress } from '../utils/common'
+import { getCheckInProgress, getPotPosterUrl } from '../utils/common'
 import { Intro } from '../components/intros/Intro'
 import { HowItWorksIntro } from '../components/intros/HowItWorksIntro'
 import { MobileHeader } from '../components/unique/MobileHeader'
@@ -18,9 +18,7 @@ import { toggleSideBar } from '../utils/common'
 import { ModalGroupSettings } from '../components/modals/ModalGroupSettings'
 import { ModalProfileSetting } from '../components/modals/ModalProfileSetting'
 import clsx from 'clsx'
-import { AppEnv } from '../env'
 import { Button } from '../components/ui/Button'
-import { ButtonSharePot } from '../components/unique/ButtonSharePot'
 
 const PotChart = dynamic(() => import('../components/home/PotChart'), {
 	ssr: false
@@ -215,13 +213,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 								<a
 									className="inline-block mt-4"
 									target="_blank"
-									href={
-										AppEnv.apiBaseUrl +
-										'/pdf/flyer1?link=' +
-										encodeURIComponent(
-											`${AppEnv.webBaseUrl}/pot/${data?.pot.slug}`
-										)
-									}
+									href={data?.pot ? getPotPosterUrl(data?.pot) : ''}
 								>
 									Print QR Code
 								</a>
