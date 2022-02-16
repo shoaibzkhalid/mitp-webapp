@@ -19,6 +19,7 @@ import { ModalGroupSettings } from '../components/modals/ModalGroupSettings'
 import { ModalProfileSetting } from '../components/modals/ModalProfileSetting'
 import clsx from 'clsx'
 import { Button } from '../components/ui/Button'
+import { useIsMobile } from '../state/react/useIsMobile'
 
 const PotChart = dynamic(() => import('../components/home/PotChart'), {
 	ssr: false
@@ -40,8 +41,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 	const [youGetPaidDropDown, setYouGetPaidDropDown] = useState(false)
 	const [openReadyUpModal, setOpenReadyUpModal] = useState(false)
 	const [potView, setPotView] = useState('Total Pot')
-
-	console.log(pot)
+	const isMobile = useIsMobile()
 
 	if (!isLoading && data === null) {
 		router.push('/new')
@@ -142,9 +142,11 @@ export default wrapDashboardLayout(function OverviewPage() {
 							) : (
 								<></>
 							)}
-							<div
+							{/* <div
 								className="w-full ml-4 text-gray-400"
-								style={{ width: '280px' }}
+								style={{
+									width: isMobile ? undefined : '280px'
+								}}
 							>
 								<div
 									className="flex items-center justify-center cursor-pointer text-md sm:text-lg md:text-xl"
@@ -189,7 +191,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 										}}
 									/>
 								</div>
-							</div>
+							</div> */}
 						</div>
 					</div>
 
@@ -286,6 +288,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 								</div>
 							</div>
 
+							{/* Check here */}
 							<div className="grid-cols-3 md:grid">
 								<div>
 									<div className="w-full my-1 text-5xl font-bold md:text-7xl">

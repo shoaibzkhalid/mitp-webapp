@@ -2,6 +2,7 @@ import { observer } from 'mobx-react-lite'
 import { useMemo } from 'react'
 import ReactApexChart from 'react-apexcharts'
 import { useSelectedPot } from '../../state/react/useSelectedPot'
+import { useMediaQuery } from '../../state/react/useMediaQuery'
 
 const blue = '#A0D7E7'
 const purple = '#6C5DD3'
@@ -9,6 +10,7 @@ const borderColor = '#E4E4E4'
 
 export default observer(function CheckinUpdateChart() {
 	const pot = useSelectedPot()
+	const shrinkChart = useMediaQuery('(max-width: 480px)')
 
 	if (!pot.data) return null
 
@@ -67,6 +69,7 @@ export default observer(function CheckinUpdateChart() {
 		<ReactApexChart
 			options={options as any}
 			height="25px"
+			width={shrinkChart ? '100px' : undefined}
 			series={[
 				{
 					name: 'Check in',
