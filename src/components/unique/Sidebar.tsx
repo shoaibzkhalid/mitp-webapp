@@ -15,7 +15,6 @@ import { getReactSelectTheme } from '../../state/react/useTheme'
 import { useContext, useState } from 'react'
 import { ModalProfileSetting } from '../modals/ModalProfileSetting'
 import { userState } from '../../state/user'
-import Tippy from '@tippyjs/react'
 import { useIsMobile } from '../../state/react/useIsMobile'
 import { SidebarContext } from '../../state/contexts/sidebarContext'
 import { toggleSideBar } from '../../utils/common'
@@ -127,6 +126,7 @@ function SidebarHeader() {
 }
 
 const SidebarPotSelector = observer(function SidebarPotSelector() {
+	const pot = useSelectedPot()
 	const pots = useQuery('userPots', Api.userPots.list)
 	const router = useRouter()
 
@@ -162,6 +162,10 @@ const SidebarPotSelector = observer(function SidebarPotSelector() {
 			options={options}
 			isOptionSelected={option => option.value === selectedPotState.moneyPotId}
 			onChange={option => selectPot(option.value)}
+			value={{
+				value: pot.data?.pot!.id,
+				label: pot.data?.pot!.title
+			}}
 			theme={getReactSelectTheme()}
 		/>
 	)
@@ -326,7 +330,7 @@ const Profile = observer(function Profile() {
 					src={user?.avatarUri}
 					title="Profile picture"
 					alt="?"
-					className="h-10 w-10 rounded-full mr-2"
+					className="w-10 h-10 mr-2 rounded-full"
 				/>
 				<div className="px-2">
 					<div className="font-bold">
@@ -342,23 +346,23 @@ const Profile = observer(function Profile() {
 					interactive
 					interactiveBorder={10}
 					content={
-						<div className="border dark:border-gray-500 shadow p-4 bg-white dark:bg-dark rounded-xl w-48">
+						<div className="w-48 p-4 bg-white border shadow dark:border-gray-500 dark:bg-dark rounded-xl">
 							<button
 								onClick={logout}
-								className="hover:underline block w-full text-left text-red-600"
+								className="block w-full text-left text-red-600 hover:underline"
 							>
 								Logout
 							</button>
 							<button
 								onClick={() => setCurrentModal('profileSettings')}
-								className="mt-4 hover:underline block w-full text-left"
+								className="block w-full mt-4 text-left hover:underline"
 							>
 								Settings
 							</button>
 						</div>
 					}
 				>
-					<button className="ml-auto p-2">
+					<button className="p-2 ml-auto">
 						<svg className="-icon">
 							<use xlinkHref="/img/sprite.svg#icon-more"></use>
 						</svg>
