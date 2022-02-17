@@ -156,18 +156,22 @@ const SidebarPotSelector = observer(function SidebarPotSelector() {
 	}
 
 	return (
-		<Select
-			placeholder="Switch or create pot..."
-			isLoading={pots.isLoading}
-			options={options}
-			isOptionSelected={option => option.value === selectedPotState.moneyPotId}
-			onChange={option => selectPot(option.value)}
-			value={{
-				value: pot.data?.pot!.id,
-				label: pot.data?.pot!.title
-			}}
-			theme={getReactSelectTheme()}
-		/>
+		<div className="w-full">
+			<Select
+				placeholder="Switch or create pot..."
+				isLoading={pots.isLoading}
+				options={options}
+				isOptionSelected={option =>
+					option.value === selectedPotState.moneyPotId
+				}
+				onChange={option => selectPot(option.value)}
+				value={{
+					value: pot.data?.pot!.id,
+					label: pot.data?.pot!.title
+				}}
+				theme={getReactSelectTheme()}
+			/>
+		</div>
 	)
 })
 
@@ -331,6 +335,7 @@ const Profile = observer(function Profile() {
 					title="Profile picture"
 					alt="?"
 					className="w-10 h-10 mr-2 rounded-full"
+					referrerPolicy="no-referrer"
 				/>
 				<div className="px-2">
 					<div className="font-bold">

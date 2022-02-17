@@ -9,6 +9,7 @@ const borderColor = '#E4E4E4'
 
 export default observer(function PotChart() {
 	const pot = useSelectedPot()
+
 	if (!pot.data) return null
 
 	const options = useMemo(() => {
@@ -127,12 +128,13 @@ export default observer(function PotChart() {
 				series={[
 					{
 						name: 'Check ins',
-						data: [30, 25, 44, 37]
-						// data: pot.data.dailyStatistics
+						// data: [30, 25, 44, 37]
+						data: pot.data.dailyStatistics
 					},
 					{
 						name: 'Pay ins',
-						data: [10, 16, 38, 30]
+						// data: [10, 16, 38, 30]
+						data: [0, 0, 0, 0]
 					}
 				]}
 			/>
