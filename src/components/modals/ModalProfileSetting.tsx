@@ -170,14 +170,14 @@ export const ModalProfileSetting = createModalComponent(
 							</div>
 						</div>
 						<div className="mt-2 text-sm text-gray-400">
-							How much is missing a week worth to you?
+							Your swear jar fee is what group members pay when failing to check
+							in by the end of the week. Set your swear jar fee below.
 						</div>
 					</div>
 
 					<div className="mt-10">
 						<div className="text-md">
-							Group members pay this to the pot when failing to check in by end
-							of week.
+							How much is missing a week worth to you?
 						</div>
 						<div className="flex pt-3">
 							<div className="w-9/12">

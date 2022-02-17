@@ -62,6 +62,7 @@ export const ModalGroupSettings = createModalComponent(
 				visibility: data.pot.visibility,
 				inviteAdminMode: groupDetails?.inviteMode === 'anyone' ? false : true,
 				timeZone: groupDetails?.timeZone
+				// slug: 'test'
 			})
 		}
 
@@ -82,8 +83,8 @@ export const ModalGroupSettings = createModalComponent(
 			<div className="group-details-modal">
 				{isAdmin ? (
 					<>
-						<div className="text-xl font-poppins flex items-center">
-							<div className="group-detail-modal__headings mt-8">
+						<div className="flex items-center text-xl font-poppins">
+							<div className="mt-8 group-detail-modal__headings">
 								<h2>Group Details</h2>
 								<div className="flex items-center mt-6">
 									<h3 className="group-details-modal__title">
@@ -165,8 +166,8 @@ export const ModalGroupSettings = createModalComponent(
 					{groupDetailsIsSelected ? (
 						<>
 							{!isAdmin && (
-								<div className="group-detail-modal__headings mt-8">
-									<h3 className="group-details-modal__title mb-2">
+								<div className="mt-8 group-detail-modal__headings">
+									<h3 className="mb-2 group-details-modal__title">
 										Title of the group
 									</h3>
 									{/* <div className="flex items-center mt-10 xl:mt-14 2xl:mt-28 sm:text-lg lg:text-xl 2xl:text-2xl">
@@ -207,7 +208,7 @@ export const ModalGroupSettings = createModalComponent(
 							</div>
 
 							<TextArea
-								className="group-details-modal__input group-details-modal__text-area mt-8 mb-2"
+								className="mt-8 mb-2 group-details-modal__input group-details-modal__text-area"
 								rows={4}
 								labelClassName="group-details-modal__input-label mb-2 text-white"
 								label="Description"
@@ -222,7 +223,7 @@ export const ModalGroupSettings = createModalComponent(
 								<SelectInput
 									borders={true}
 									label="Minimum swear jar fee"
-									className="group-details-modal__input mt-6 mb-6 mr-1"
+									className="mt-6 mb-6 mr-1 group-details-modal__input"
 									labelClassName="group-details-modal__input-label"
 									options={[0, 5, 10, 15, 20, 30, 40, 50].map(i => ({
 										label: i === 0 ? `Minimum: $${i}` : i + '$',
@@ -239,7 +240,7 @@ export const ModalGroupSettings = createModalComponent(
 								/>
 								<SelectInput
 									borders={true}
-									className="group-details-modal__input mt-6 mb-6 ml-1"
+									className="mt-6 mb-6 ml-1 group-details-modal__input"
 									label="Check ins required per week"
 									labelClassName="group-details-modal__input-label"
 									disabled={false}
@@ -258,7 +259,7 @@ export const ModalGroupSettings = createModalComponent(
 							</div>
 
 							{isAdmin && (
-								<h3 className="group-details-modal__title mb-8">
+								<h3 className="mb-8 group-details-modal__title">
 									This is the minimum amount a group member pays for missing
 									their weekly check in to the group. All group members can set
 									their swear jar fee at the group minimum or higher.

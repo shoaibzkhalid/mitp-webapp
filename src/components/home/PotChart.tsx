@@ -127,11 +127,12 @@ export default observer(function PotChart() {
 				series={[
 					{
 						name: 'Check ins',
-						data: pot.data.dailyStatistics
+						data: [30, 25, 44, 37]
+						// data: pot.data.dailyStatistics
 					},
 					{
 						name: 'Pay ins',
-						data: [0, 0, 0, 0]
+						data: [10, 16, 38, 30]
 					}
 				]}
 			/>
