@@ -14,8 +14,8 @@ export const ModalUserViewLogs = createModalComponent<{
 		Api.logsList(props.potId, props.userId)
 	)
 
-	if (props.viewingLogsMode === 'week') {
-		userLogs.data.logs = userLogs.data.logs.filter(log => {
+	if (props.viewingLogsMode === 'week' && userLogs.data?.logs) {
+		userLogs.data.logs = userLogs.data?.logs.filter(log => {
 			if (
 				new Date(log.createdAt) > dayjs().startOf('week').toDate() &&
 				new Date(log.createdAt) < dayjs().endOf('week').toDate()
@@ -27,7 +27,7 @@ export const ModalUserViewLogs = createModalComponent<{
 
 	return (
 		<>
-			<div className="text-xl font-poppins flex items-center">
+			<div className="flex items-center text-xl font-poppins">
 				<div>User logs</div>
 				<div className="ml-auto">
 					<ButtonCloseModal onClick={props.onRequestClose} />

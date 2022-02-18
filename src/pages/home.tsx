@@ -39,18 +39,16 @@ export default wrapDashboardLayout(function OverviewPage() {
 	const [openGroupDetailModal, setOpenGroupDetailModal] = useState(false)
 	const [viewRuleDropDown, setViewRuleDropDown] = useState(false)
 	const [youGetPaidDropDown, setYouGetPaidDropDown] = useState(false)
-	const [openReadyUpModal, setOpenReadyUpModal] = useState(false)
-	const [potView, setPotView] = useState('Total Pot')
-	const isMobile = useIsMobile()
 
 	if (!isLoading && data === null) {
 		router.push('/new')
 	}
 
-	const totalPotValue = data?.users?.reduce(
-		(prev, curr) => prev + parseInt(curr.amount) * 4,
-		0
-	)
+	// const totalPotValue = data?.users?.reduce(
+	// 	(prev, curr) => prev + parseInt(curr.amount) * 4,
+	// 	0
+	// )
+
 	const readyUpCount = data?.users.filter(u => u.readyUpAt).length
 
 	useEffect(() => {
@@ -294,11 +292,10 @@ export default wrapDashboardLayout(function OverviewPage() {
 									<div className="w-full my-1 text-5xl font-bold md:text-7xl">
 										<div>
 											<div className="py-5 pl-5">
-												{potView === 'Total Pot' ? (
-													<>${readyUpCount > 1 ? totalPotValue : '--.--'}</>
-												) : (
-													<>${data?.metrics.currentValue / 100}</>
-												)}
+												$
+												{readyUpCount > 1
+													? data?.metrics.currentValue / 100
+													: '--.--'}
 											</div>
 											<div className="mt-1 text-sm text-left text-gray-500">
 												<span className="text-green-500">
