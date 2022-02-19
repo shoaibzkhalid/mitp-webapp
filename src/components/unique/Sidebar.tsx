@@ -298,7 +298,7 @@ function LogoutButton() {
 			)}
 			onClick={logout}
 		>
-			<img src="/img/google-logo.png" className="h-5 mr-1" />
+			<img src="/img/google-logo.svg" className="h-6 mr-1" />
 			<div className="opacity-60">Logout</div>
 		</button>
 	)

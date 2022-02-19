@@ -28,7 +28,7 @@ export const ModalUserViewLogs = createModalComponent<{
 	return (
 		<>
 			<div className="flex items-center text-xl font-poppins">
-				<div>User logs</div>
+				<div className="text-2xl font-bold">User logs</div>
 				<div className="ml-auto">
 					<ButtonCloseModal onClick={props.onRequestClose} />
 				</div>
@@ -47,8 +47,8 @@ export const ModalUserViewLogs = createModalComponent<{
 								<img
 									src={log.pictureUri}
 									style={{
-										height: 110,
-										width: 110,
+										height: props.viewingLogsMode === 'week' ? '100%' : '110px',
+										width: props.viewingLogsMode === 'week' ? '100%' : '110px',
 										borderRadius: '10px'
 									}}
 								/>

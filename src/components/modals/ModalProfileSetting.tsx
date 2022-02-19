@@ -114,16 +114,19 @@ export const ModalProfileSetting = createModalComponent(
 				/>
 				<div className="px-0 sm:px-6">
 					<div className="flex items-center justify-center pt-4 text-lg font-poppins">
-						<div className="">
-							Manage ready up status & modify how you appear to others in your
-							group {data?.pot.title}
+						<div>
+							<div className="text-2xl font-bold">Your Preferences</div>
+							<div className="mt-2 text-sm text-gray-400">
+								Set your swear jar fee to ready up, & modify how you appear to
+								others in {data?.pot.title}
+							</div>
 						</div>
 						<div className="absolute right-2 sm:right-8">
 							<ButtonCloseModal onClick={onRequestClose} />
 						</div>
 					</div>
 
-					<div className="flex justify-center mt-10">
+					<div className="flex justify-center mt-6">
 						<div className="relative" style={{ width: 120 }}>
 							<img
 								className="inline-block w-full max-w-xs rounded-full"
@@ -226,7 +229,9 @@ export const ModalProfileSetting = createModalComponent(
 										id="toggleB"
 										className="sr-only"
 										onChange={e => {
-											setStripeModalIsOpen(true)
+											if (e.target.checked) {
+												setStripeModalIsOpen(true)
+											}
 											changeReady(e)
 										}}
 									/>
@@ -249,8 +254,17 @@ export const ModalProfileSetting = createModalComponent(
 
 					<div className="mt-10 text-gray-400">
 						By connecting with paypal you are agreeing to{' '}
-						<span className="text-primary">terms and conditions</span> and{' '}
-						<span className="text-primary">privacy policy</span>
+						<Link href={'/terms-of-service'}>
+							<a target="_blank">
+								<span className="text-primary">terms and conditions</span>
+							</a>
+						</Link>{' '}
+						and{' '}
+						<Link href={'/privacy-policy'}>
+							<a target="_blank">
+								<span className="text-primary">privacy policy</span>
+							</a>
+						</Link>
 					</div>
 				</div>
 			</>
