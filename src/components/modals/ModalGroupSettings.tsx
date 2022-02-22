@@ -85,7 +85,7 @@ export const ModalGroupSettings = createModalComponent(
 					<>
 						<div className="flex items-center text-xl font-poppins">
 							<div className="mt-8 group-detail-modal__headings">
-								<h2>Group Details</h2>
+								<div className="text-2xl font-bold">Group Details</div>
 								<div className="flex items-center mt-6">
 									<h3 className="group-details-modal__title">
 										Title of the group

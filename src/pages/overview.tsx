@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { ModalUserViewLogs } from '../components/modals/ModalUserViewLogs'
 import { Square } from '../components/ui/Square'
 import { wrapDashboardLayout } from '../components/unique/DashboardLayout'
@@ -17,6 +17,7 @@ import { useTimer } from '../state/react/useTimer'
 import { SpinnerBig } from '../components/SpinnerBig'
 import { Button } from '../components/ui/Button'
 import { useIsMobile } from '../state/react/useIsMobile'
+import { CheckInButton } from '../components/CheckInButton'
 
 export default wrapDashboardLayout(function RealIndexPage() {
 	const router = useRouter()
@@ -39,6 +40,13 @@ export default wrapDashboardLayout(function RealIndexPage() {
 	useEffect(() => {
 		toggleSideBar(false)
 	}, [])
+
+	const checkinCountUser = useMemo(
+		() =>
+			pot.data?.users.find(u => u.id === userState.user?.id)
+				?.checkinsThisWeek || 0,
+		[pot.data]
+	)
 
 	useTimer(() => {
 		const timeUntilWeekEnd = formatDuration(
@@ -95,6 +103,9 @@ export default wrapDashboardLayout(function RealIndexPage() {
 							<div className="mt-3 text-sm sm:mt-1 md:text-lg font-poppins">
 								{duration}
 							</div>
+							<CheckInButton
+								disabled={checkinCountUser >= pot.data?.pot.checkinCount}
+							></CheckInButton>
 							<div className="pt-10 mt-auto text-xs font-thin tracking-widest font-poppins">
 								Those who don't check in by Sunday at midnight pay the group pot
 								their swear jar fee.
@@ -133,10 +144,10 @@ export default wrapDashboardLayout(function RealIndexPage() {
 								</div>
 							</div>
 							<div className="flex items-center justify-end w-full mt-10 font-bold text-center md:mt:0 md:text-right">
-								<img src="/img/member-icon.svg" className="mr-1" />
+								<img src="/img/member-icon.svg" className="mr-1" width={22} />
 								{/* {pot.data?.users.length} Members */}
 								<div className="mr-4 font-thin text-md">
-									{readyUpCount} / {pot.data?.users?.length}
+									{readyUpCount} / {pot.data?.users?.length} Ready
 								</div>
 							</div>
 						</div>
