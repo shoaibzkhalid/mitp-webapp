@@ -5,6 +5,7 @@ import clsx from 'clsx'
 import { themeState } from '../../state/react/useTheme'
 import { userState } from '../../state/user'
 import { ModalProfileSetting } from '../modals/ModalProfileSetting'
+import { useMediaQuery } from '../../state/react/useMediaQuery'
 import { ApiUser } from '../../types'
 
 interface ProfileMenuProps {

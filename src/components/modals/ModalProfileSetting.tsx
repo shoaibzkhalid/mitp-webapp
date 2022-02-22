@@ -126,7 +126,7 @@ export const ModalProfileSetting = createModalComponent(
 						</div>
 					</div>
 
-					<div className="flex justify-center mt-6">
+					<div className="flex justify-center mt-4 tall:mt-6">
 						<div className="relative" style={{ width: 120 }}>
 							<img
 								className="inline-block w-full max-w-xs rounded-full"
@@ -152,7 +152,7 @@ export const ModalProfileSetting = createModalComponent(
 						</div>
 					</div>
 
-					<div className="mt-10">
+					<div className="mt-6 tall:mt-10">
 						<Input
 							placeholder="Enter first name"
 							inputClassName="focus:outline-none bg-alabaster p-4"
@@ -165,7 +165,7 @@ export const ModalProfileSetting = createModalComponent(
 						/>
 					</div>
 
-					<div className="mt-10">
+					<div className="mt-6 tall:mt-10">
 						<div className="flex items-center justify-between">
 							<div className="text-xl font-bold">Swear Jar Fee</div>
 							<div className="cursor-pointer text-primary">
@@ -178,7 +178,7 @@ export const ModalProfileSetting = createModalComponent(
 						</div>
 					</div>
 
-					<div className="mt-10">
+					<div className="mt-6 tall:mt-10">
 						<div className="text-md">
 							How much is missing a week worth to you?
 						</div>
@@ -215,7 +215,7 @@ export const ModalProfileSetting = createModalComponent(
 						</div>
 					</div>
 
-					<div className="flex items-center justify-between mt-10">
+					<div className="flex items-center justify-between mt-6 tall:mt-10">
 						<div className="font-bold text-md sm:font-extrabold sm:text-xl">
 							Ready up to join pot
 						</div>
@@ -242,7 +242,7 @@ export const ModalProfileSetting = createModalComponent(
 						</div>
 					</div>
 
-					<div className="mt-10">
+					<div className="mt-6 tall:mt-10">
 						<ul className="list-disc">
 							<li>
 								{`Members pay in $${potUser?.amount} to the pot for missed week. Check in by Sunday
@@ -252,7 +252,7 @@ export const ModalProfileSetting = createModalComponent(
 						</ul>
 					</div>
 
-					<div className="mt-10 text-gray-400">
+					<div className="mt-6 text-gray-400 tall:mt-10">
 						By connecting with paypal you are agreeing to{' '}
 						<Link href={'/terms-of-service'}>
 							<a target="_blank">

@@ -20,6 +20,7 @@ export const ModalCheckInPhoto = createModalComponent<{
 	potId: string
 }>(function ModalCheckInPhoto(props) {
 	const [isUplaoding, setIsUploading] = useState(false)
+	const [imagePreview, setImagePreview] = useState<any>()
 	const checkinMutation = useMutation('checkin', async (file: File) => {
 		setIsUploading(true)
 		await Api.logsCreate(props.potId, file)
@@ -31,7 +32,10 @@ export const ModalCheckInPhoto = createModalComponent<{
 		maxFiles: 1,
 		multiple: false,
 		accept: 'image/jpeg, image/png',
-		maxSize: 5 * 1024 * 1024
+		maxSize: 5 * 1024 * 1024,
+		onDrop: acceptedFiles => {
+			setImagePreview(URL.createObjectURL(acceptedFiles[0]))
+		}
 	})
 
 	const isMobile = useIsMobile()
@@ -47,14 +51,14 @@ export const ModalCheckInPhoto = createModalComponent<{
 	}, [acceptedFiles])
 
 	return (
-		<div className="flex flex-col h-full py-4 px-8">
-			<div className="text-xl font-poppins flex items-center justify-center">
+		<div className="flex flex-col h-full px-8 py-4">
+			<div className="flex items-center justify-center text-xl font-poppins">
 				<div className="font-bold">Log from Mobile</div>
 				<div className="absolute right-4">
 					<ButtonCloseModal onClick={props.onRequestClose} />
 				</div>
 			</div>
-			<div className="text-gray-500 flex justify-center text-center mt-2">
+			<div className="flex justify-center mt-2 text-center text-gray-500">
 				Scan this QR code on your phone to get logged<br></br>in right away.
 			</div>
 			<div className="flex justify-center py-8">
@@ -73,18 +77,18 @@ export const ModalCheckInPhoto = createModalComponent<{
 					lineHeight: '0.1em',
 					margin: '10px 0 20px'
 				}}
-				className="text-center w-full border-b-2 border-gray-300"
+				className="w-full text-center border-b-2 border-gray-300"
 			>
-				<span className="bg-white dark:bg-dark text-gray-500 dark:text-white px-2 font-bold">
+				<span className="px-2 font-bold text-gray-500 bg-white dark:bg-dark dark:text-white">
 					OR
 				</span>
 			</h2>
 
-			<div className="flex justify-center text-center items-center flex-col my-4">
+			<div className="flex flex-col items-center justify-center my-4 text-center">
 				<div>
 					<h2 className="text-2xl font-bold">Choose Photo</h2>
 				</div>
-				<div className="text-gray-600 mt-1">
+				<div className="mt-1 text-gray-600">
 					Drag and drop to enter photo select from files
 				</div>
 			</div>
@@ -96,7 +100,7 @@ export const ModalCheckInPhoto = createModalComponent<{
 			) : (
 				<>
 					<div
-						className="flex justify-center items-center text-center border-dashed border-2 border-gray-400 rounded-2xl mt-3 cursor-pointer"
+						className="flex items-center justify-center mt-3 text-center border-2 border-gray-400 border-dashed cursor-pointer rounded-2xl"
 						{...getRootProps()}
 						style={{
 							backgroundColor: '#F2F2F2',
@@ -105,12 +109,22 @@ export const ModalCheckInPhoto = createModalComponent<{
 						}}
 					>
 						<input {...getInputProps()} />
-						<div className="flex flex-col items-center">
-							<img src="/img/camera.svg" width="25" />
-							<p className="mt-2 text-gray-600 font-bold">
-								Choose from library
-							</p>
-						</div>
+						{acceptedFiles[0] ? (
+							<>
+								<div className="w-full h-full">
+									<img src={imagePreview} className="w-full h-full" />
+								</div>
+							</>
+						) : (
+							<>
+								<div className="flex flex-col items-center">
+									<img src="/img/camera.svg" width="25" />
+									<p className="mt-2 font-bold text-gray-600">
+										Choose from library
+									</p>
+								</div>
+							</>
+						)}
 					</div>
 				</>
 			)}
