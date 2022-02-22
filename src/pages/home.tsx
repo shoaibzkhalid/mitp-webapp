@@ -109,7 +109,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 							</div> */}
 						</div>
 						<div
-							className="text-5xl font-semibold xl:w-10/12"
+							className="text-4xl font-semibold sm:text-5xl xl:w-10/12 text-"
 							style={{ lineHeight: 1.5 }}
 						>
 							{data?.pot.title}

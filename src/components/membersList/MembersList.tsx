@@ -98,7 +98,7 @@ const MembersList = ({ membersList, isAdmin }) => {
 					</span>
 				</>
 			) : (
-				<div className="flex justify-between border border-primary py-2 px-4 rounded-lg">
+				<div className="flex justify-between px-4 py-2 border rounded-lg border-primary">
 					<div className="text-xl font-bold">Total Members</div>
 					<div className="text-xl font-bold">{membersList.length}</div>
 				</div>

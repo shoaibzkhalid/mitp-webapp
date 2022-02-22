@@ -244,8 +244,27 @@ export default wrapDashboardLayout(function RealIndexPage() {
 														</div>
 														<div className="ml-6">{u.firstName}</div>
 													</div>
-													<div className="cursor-pointer">
-														<img src="/img/right-arrow.svg" />
+													<div className="flex cursor-pointer">
+														<Button
+															className="text-xs sm:text-base"
+															onClick={() => {
+																setViewingLogsOfUserId(u.id)
+																setViewingLogsMode('week')
+															}}
+															size="sm"
+														>
+															View
+														</Button>
+														<Button
+															className="ml-4 text-xs sm:text-base"
+															onClick={() => {
+																setViewingLogsOfUserId(u.id)
+																setViewingLogsMode('all')
+															}}
+															size="sm"
+														>
+															View All
+														</Button>
 													</div>
 												</div>
 												<div className="flex p-2 text-xs border border-gray-200 rounded-lg sm:text-sm justify-evenly dark:border-gray-700">
@@ -336,21 +355,43 @@ export default wrapDashboardLayout(function RealIndexPage() {
 														<td>
 															{u.checkinsThisWeek >=
 															pot.data.pot.checkinCount ? (
-																<div className="flex flex-row items-center text-green-500">
-																	<Square
-																		className="mr-2 bg-green-500"
-																		length="1.2rem"
-																	></Square>
-																	Completed
-																</div>
+																<>
+																	<div className="relative">
+																		<div className="flex flex-row items-center text-green-500">
+																			<Square
+																				className="mr-2 bg-green-500"
+																				length="1.2rem"
+																			></Square>
+																			Completed
+																		</div>
+																		<div
+																			className="absolute flex justify-center font-thin text-gray-400"
+																			style={{ left: '45%' }}
+																		>
+																			{u.checkinsThisWeek}/
+																			{pot.data.pot.checkinCount}
+																		</div>
+																	</div>
+																</>
 															) : (
-																<div className="flex flex-row items-center text-red-500">
-																	<Square
-																		className="mr-2 bg-red-500"
-																		length="1.2rem"
-																	></Square>
-																	Not yet
-																</div>
+																<>
+																	<div className="relative">
+																		<div className="flex flex-row items-center text-red-500">
+																			<Square
+																				className="mr-2 bg-red-500"
+																				length="1.2rem"
+																			></Square>
+																			Not yet
+																		</div>
+																		<div
+																			className="absolute flex justify-center font-thin text-gray-400"
+																			style={{ left: '30%' }}
+																		>
+																			{u.checkinsThisWeek}/
+																			{pot.data.pot.checkinCount}
+																		</div>
+																	</div>
+																</>
 															)}
 														</td>
 														<td className="font-thin font-poppins text-primary">
