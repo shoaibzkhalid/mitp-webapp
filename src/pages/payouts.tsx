@@ -156,22 +156,19 @@ export default wrapDashboardLayout(function PayoutsPage() {
 })
 
 function PaymentMethod() {
-	const { data } = useQuery(['connections', userState.user?.id], () =>
+	const connections = useQuery(['connections', userState.user?.id], () =>
 		Api.user.listConnections()
 	)
-
-	const paypalConnection = data?.find(c => c.service === 'paypal')
+	const paypalConnection = connections.data?.find(c => c.service === 'paypal')
 	const router = useRouter()
 	const pot = useSelectedPot()
 
-	const depositMutation = useMutation(async () => {
-		const order = await Api.user.payin(2)
-		document.location = order.approveUrl
+	// TODO
+	const deletePayPal = useMutation(async () => {})
+	const addCard = useMutation(async () => {
+		const res = await Api.user.createStripeCardSession()
+		window.location.assign(res.url)
 	})
-
-	const isGoogleConnected = !!userState.user?.connections.find(
-		c => c.service === 'google'
-	)
 
 	return (
 		<>
@@ -182,7 +179,7 @@ function PaymentMethod() {
 				style={{ height: '25px' }}
 			></img>
 
-			{!data ? (
+			{!connections.data ? (
 				<div className="flex items-center justify-center">
 					{/* <Spinner></Spinner> */}
 				</div>
@@ -198,28 +195,32 @@ function PaymentMethod() {
 						)
 						router.push('/paypal/login-initiate')
 					}}
-					disabled={!isGoogleConnected}
 				>
 					Link PayPal
 				</Button>
 			) : (
 				<div>
 					<div>
-						Logged in as: {paypalConnection.meta.name} <br />
+						Logged in as:{' '}
+						<span className="font-bold">{paypalConnection.meta.name}</span>{' '}
+						<br />
 						{paypalConnection.meta.email}
 					</div>
 					<div>
-						<Button>Unlink</Button>
-
 						<Button
-							className="opacity-20"
-							onClick={() => depositMutation.mutate()}
+							onClick={() => deletePayPal.mutate()}
+							disabled={deletePayPal.isLoading}
 						>
-							Deposit 2$
+							Unlink
 						</Button>
 					</div>
 				</div>
 			)}
+
+			<div className="mt-4"></div>
+			<Button onClick={() => addCard.mutate()} disabled={addCard.isLoading}>
+				Add payment card
+			</Button>
 		</>
 	)
 }

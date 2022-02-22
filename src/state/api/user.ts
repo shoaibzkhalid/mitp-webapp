@@ -33,5 +33,8 @@ export default {
 	saveStripeCard: (token: string) =>
 		Api.post('3rdparty/stripe/card', { token }),
 
+	createStripeCardSession: () =>
+		Api.post<{ url: string }>('3rdparty/stripe/card-setup'),
+
 	seleteStripeCard: () => Api.delete('3rdparty/stripe/card')
 }

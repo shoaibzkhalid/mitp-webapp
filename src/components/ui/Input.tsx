@@ -27,7 +27,7 @@ export function Input(props: InputProps) {
 					{props.label}
 				</label>
 			)}
-			<div className="shadow-md rounded-md">
+			<div className="border rounded-md bg-white dark:border-gray-500 dark:bg-opacity-5">
 				<input
 					style={props.inputStyle}
 					type={props.type || 'text'}
@@ -38,7 +38,7 @@ export function Input(props: InputProps) {
 					onInput={e => props.setValue?.(e.currentTarget.value)}
 					className={clsx(
 						props.inputClassName,
-						'w-full rounded-md p-3 bg-white dark:bg-transparent'
+						'w-full rounded-md p-3 bg-transparent'
 					)}
 					onBlur={e => (props.onBlur ? props.onBlur() : console.log())}
 				/>
