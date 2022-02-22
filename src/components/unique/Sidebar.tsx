@@ -18,26 +18,30 @@ import { userState } from '../../state/user'
 import { useIsMobile } from '../../state/react/useIsMobile'
 import { SidebarContext } from '../../state/contexts/sidebarContext'
 import { toggleSideBar } from '../../utils/common'
+import { useMediaQuery } from '../../state/react/useMediaQuery'
 import { AppEnv } from '../../env'
+import { useMemo } from 'react'
 
 export function Sidebar() {
+	const haveSmallHeight = useMediaQuery('(max-height: 735px)')
+
 	const router = useRouter()
 	return (
 		<div
 			style={{
-				padding: '100px 0 200px 0'
+				padding: haveSmallHeight ? '50px 0 200px 0' : '100px 0 200px 0'
 			}}
 			className="fixed top-0 left-0 h-screen bg-white border-r border-gray-200 w-65 dark:border-gray-700 dark:bg-gray-900 md:w-80"
 		>
 			<SidebarHeader />
-			<div className="w-full h-full px-5 pb-5 overflow-x-hidden overflow-y-auto border-b border-gray-200 dark:border-gray-700 -sidebar-main md:px-8">
+			<div className="w-full h-full px-6 pb-5 overflow-x-hidden overflow-y-hidden border-b border-gray-200 dark:border-gray-700 -sidebar-main md:px-8">
 				<div className="relative flex items-center py-4">
 					<SidebarPotSelector />
 					<span
 						className="absolute cursor-pointer add-pot-icon"
 						onClick={() => router.push('/create')}
 					>
-						<svg className="w-5 h-5 mr-1 fill-current">
+						<svg className="h-5 mr-1 fill-gray-500" style={{ width: 18 }}>
 							<use xlinkHref="/img/sprite.svg#icon-plus"></use>
 						</svg>
 					</span>
@@ -61,6 +65,7 @@ export function Sidebar() {
 }
 
 function SidebarHeader() {
+	const haveSmallHeight = useMediaQuery('(max-height: 735px)')
 	const isMobile = useIsMobile()
 	const [sidebarState, setSidebarState] = useContext(SidebarContext)
 	const handleClickToggleSideBar = () => {
@@ -70,7 +75,12 @@ function SidebarHeader() {
 
 	return (
 		<div className="absolute top-0 left-0 right-0">
-			<div className="relative flex flex-col items-center justify-center px-8 pt-12 border-0">
+			<div
+				className={clsx(
+					'relative flex flex-col items-center justify-center px-8 border-0',
+					haveSmallHeight ? 'pt-6' : 'pt-12'
+				)}
+			>
 				{isMobile && (
 					<button
 						className="absolute mr-auto left-4"
@@ -177,7 +187,11 @@ const SidebarPotSelector = observer(function SidebarPotSelector() {
 
 function SidebarLinks() {
 	const [currentModal, setCurrentModal] = useState(null as null | 'sweatJarFee')
-	const pot = useSelectedPot()
+	const { data } = useSelectedPot()
+	const potUser = useMemo(
+		() => data?.users.find(u => u.id === userState.user?.id),
+		[data]
+	)
 
 	return (
 		<>
@@ -189,7 +203,7 @@ function SidebarLinks() {
 			<SidebarLink icon={linkIcons.overview} label="Home" link="/home" />
 			<SidebarLink
 				icon={linkIcons.discovery}
-				label="Overview"
+				label="Weekly Overview"
 				link="/overview"
 			/>
 			<SidebarLink
@@ -201,9 +215,9 @@ function SidebarLinks() {
 				icon={linkIcons.settings}
 				label={
 					<div>
-						<div>Set Swear Jar Fee</div>
-						<div className="font-normal">
-							Group minimum: ${pot.data?.pot.minAmount}
+						<div className="font-bold">Set Swear Jar Fee</div>
+						<div className="text-xs font-light whitespace-nowrap">
+							Group minimum: ${data?.pot.minAmount} Yours: ${potUser?.amount}
 						</div>
 					</div>
 				}
@@ -216,7 +230,8 @@ function SidebarLinks() {
 						Send feedback to <br /> developers
 					</>
 				}
-				onClick={() => {}}
+				link="https://forms.gle/RZak8BEdDUkG67xJA"
+				target="_blank"
 			/>
 		</>
 	)
@@ -255,6 +270,7 @@ interface SidebarLinkProps {
 	icon: any
 	link?: string
 	onClick?: () => any
+	target?: string
 }
 function SidebarLink(props: SidebarLinkProps) {
 	const currentPath = useRouter().asPath
@@ -277,7 +293,7 @@ function SidebarLink(props: SidebarLinkProps) {
 	if (props.link)
 		return (
 			<Link href={props.link}>
-				<a>{button}</a>
+				<a target={props.target || '_self'}>{button}</a>
 			</Link>
 		)
 	return <button onClick={props.onClick}>{button}</button>
@@ -298,13 +314,18 @@ function LogoutButton() {
 			)}
 			onClick={logout}
 		>
-			<img src="/img/google-logo.png" className="h-5 mr-1" />
+			<img src="/img/google-logo.svg" className="h-6 mr-1" />
 			<div className="opacity-60">Logout</div>
 		</button>
 	)
 }
 
 const Profile = observer(function Profile() {
+	const { data } = useSelectedPot()
+	const potUser = useMemo(
+		() => data?.users.find(u => u.id === userState.user?.id),
+		[data]
+	)
 	const [currentModal, setCurrentModal] = useState(
 		null as null | 'profileSettings'
 	)
@@ -337,7 +358,7 @@ const Profile = observer(function Profile() {
 					className="w-10 h-10 mr-2 rounded-full"
 					referrerPolicy="no-referrer"
 				/>
-				<div className="px-2">
+				<div className="relative px-2">
 					<div className="font-bold">
 						{user?.firstName || (
 							<span className="text-gray-400">Anonymous</span>
@@ -346,6 +367,13 @@ const Profile = observer(function Profile() {
 					<div className="text-xs opacity-75 profile">
 						Set swear jar fee &amp; ready up
 					</div>
+					{!potUser?.readyUpAt && (
+						<>
+							<div className="absolute top-0 right-0 font-thin text-gray-400">
+								0/1
+							</div>
+						</>
+					)}
 				</div>
 				{/* <Tippy
 					interactive

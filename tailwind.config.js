@@ -12,7 +12,7 @@ module.exports = {
 				flowerblue: '#5274EE'
 			},
 			spacing: {
-				65: '17rem'
+				65: '17.5rem'
 			}
 		},
 		fontFamily: {
