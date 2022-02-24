@@ -118,8 +118,8 @@ export default wrapDashboardLayout(function OverviewPage() {
 									className="inline-block ml-2 cursor-pointer"
 									onClick={() => setOpenGroupDetailModal(true)}
 								>
-									<svg className="w-6 h-6 fill-current">
-										<use xlinkHref="/img/sprite.svg#icon-edit"></use>
+									<svg className="-icon">
+										<use xlinkHref="/img/sprite.svg#icon-settings"></use>
 									</svg>
 								</span>
 							)}
@@ -230,7 +230,12 @@ export default wrapDashboardLayout(function OverviewPage() {
 						>
 							<div
 								id="walkthrough_checkins"
-								className="text-xl text-center text-gray-600"
+								className={clsx(
+									'text-xl text-center',
+									checkinCountUser === data?.pot.checkinCount
+										? 'text-gray-400'
+										: 'text-gray-600'
+								)}
 							>
 								{checkinCountUser}/{data?.pot.checkinCount} check ins this week
 							</div>

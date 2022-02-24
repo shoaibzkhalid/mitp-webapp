@@ -8,20 +8,11 @@ export function formatDuration(seconds: number) {
 
 	const o: [string, number][] = [
 		['day', days],
-		['h', hours],
-		['m', minutes],
-		['second', seconds]
+		['hour', hours],
+		['minute', minutes]
 	]
 	const timeData = o.map(([word, count]) => {
 		return `${count} ${word}${count !== 1 ? 's' : ''}`
 	})
-	return (
-		timeData[0] +
-		', ' +
-		timeData[1] +
-		', ' +
-		timeData[2] +
-		' and ' +
-		timeData[3]
-	)
+	return timeData[0] + ', ' + timeData[1] + ', ' + timeData[2]
 }

@@ -13,6 +13,7 @@ import dayjsRelativeTime from 'dayjs/plugin/relativeTime'
 import dayjsAdvancedFormat from 'dayjs/plugin/advancedFormat'
 import dayjs from 'dayjs'
 import Head from 'next/head'
+
 dayjs.extend(dayjsDuration)
 dayjs.extend(dayjsRelativeTime)
 dayjs.extend(dayjsAdvancedFormat)

@@ -21,6 +21,7 @@ export default wrapDashboardLayout(function PayoutsPage() {
 	const [withdrawModalIsOpen, setWithdrawModalIsOpen] = useState(false)
 
 	const pot = useSelectedPot()
+	const potUser = pot.data?.users.find(u => u.id === userState.user?.id)
 
 	useEffect(() => {
 		toggleSideBar(false)
@@ -58,7 +59,12 @@ export default wrapDashboardLayout(function PayoutsPage() {
 				<div className="grid px-6 lg:grid-cols-3">
 					<div className="col-span-2">
 						<div className="h-full p-8 -card --shadow">
-							<PaymentMethod></PaymentMethod>
+							<div className="flex justify-between">
+								<div>
+									<PaymentMethod></PaymentMethod>
+								</div>
+								<div>Your Swear Jar Fee: ${potUser.amount}</div>
+							</div>
 						</div>
 					</div>
 					<div className="flex flex-col items-center justify-center text-center">
@@ -73,7 +79,7 @@ export default wrapDashboardLayout(function PayoutsPage() {
 								(parseInt(transactionsData.currentCredits) / 100).toFixed(2)
 							)}
 						</div>
-						<div className="payments__button-wrapper flex justify-center">
+						<div className="flex justify-center payments__button-wrapper">
 							<Button
 								className="mr-4"
 								disabled={!transactionsData?.currentCredits}

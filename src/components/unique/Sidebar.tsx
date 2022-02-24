@@ -161,6 +161,7 @@ const SidebarPotSelector = observer(function SidebarPotSelector() {
 		if (id === 'new') return router.push('/create')
 		runInAction(() => {
 			selectedPotState.moneyPotId = id
+			userState.resetNotify()
 		})
 		router.push('/home')
 	}
@@ -205,6 +206,7 @@ function SidebarLinks() {
 				icon={linkIcons.discovery}
 				label="Weekly Overview"
 				link="/overview"
+				notifier={userState.notify}
 			/>
 			<SidebarLink
 				icon={linkIcons.wallet}
@@ -271,6 +273,7 @@ interface SidebarLinkProps {
 	link?: string
 	onClick?: () => any
 	target?: string
+	notifier?: any
 }
 function SidebarLink(props: SidebarLinkProps) {
 	const currentPath = useRouter().asPath
@@ -287,6 +290,12 @@ function SidebarLink(props: SidebarLinkProps) {
 		>
 			<span className="w-8">{props.icon}</span>
 			{props.label}
+
+			{props.notifier && (
+				<>
+					<div className="w-2 h-2 ml-2 bg-red-600"></div>
+				</>
+			)}
 		</div>
 	)
 
