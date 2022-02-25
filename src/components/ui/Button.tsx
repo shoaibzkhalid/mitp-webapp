@@ -1,11 +1,13 @@
 import clsx from 'clsx'
 import React from 'react'
 
-const kindClasses = {
+export const kindClasses = {
 	primary:
 		'border-primary bg-primary text-white hover:shadow-lg hover:shadow-[#6C5DD340] active:opacity-80 disabled:border-gray-300 disabled:text-gray-400 disabled:shadow-none disabled:active:opacity-100',
 	secondary:
-		'border-primary text-primary hover:shadow-lg hover:shadow-[#6C5DD340] active:opacity-80 disabled:border-gray-300 disabled:text-gray-400 disabled:shadow-none disabled:active:opacity-100'
+		'border-primary text-primary hover:shadow-lg hover:shadow-[#6C5DD340] active:opacity-80 disabled:border-gray-300 disabled:text-gray-400 disabled:shadow-none disabled:active:opacity-100',
+	tertiary:
+		'border-primary bg-white text-dark hover:shadow-lg hover:shadow-[#6C5DD340] active:opacity-80 disabled:border-gray-300 disabled:text-gray-400 disabled:shadow-none disabled:active:opacity-100'
 }
 
 const sizeClasses = {

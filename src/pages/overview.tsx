@@ -26,6 +26,7 @@ export default wrapDashboardLayout(function RealIndexPage() {
 
 	const isMobile = useIsMobile()
 	const pot = useSelectedPot()
+
 	const potUser = pot.data?.users.find(u => u.id === userState.user?.id)
 
 	if (!pot.isLoading && pot.data === null) {
@@ -39,6 +40,7 @@ export default wrapDashboardLayout(function RealIndexPage() {
 
 	useEffect(() => {
 		toggleSideBar(false)
+		userState.changeNotify(false)
 	}, [])
 
 	const checkinCountUser = useMemo(
@@ -92,7 +94,26 @@ export default wrapDashboardLayout(function RealIndexPage() {
 					></ModalUserViewLogs>
 				)}
 
-				<MobileHeader />
+				<div className="w-full px-6 py-2 border-b border-gray-200 md:py-4 dark:border-gray-700 sm:px-0 xl:pt-12 xl:border-b-0">
+					<div
+						className="flex items-center justify-between font-poppins lg:justify-end"
+						id="header_invite_holder_div"
+					>
+						<MobileHeader />
+						<div className="text-sm text-center">
+							<div className="hidden text-base text-gray-500 md:block">
+								{pot.data?.users.length} member
+								{pot.data?.users.length !== 1 && 's'}
+							</div>
+							<div
+								className="px-6 py-3 text-sm text-white bg-gray-900 cursor-pointer rounded-2xl md:mt-2 md:text-base md:text-blue-600 md:p-0 md:bg-white dark:bg-gray-900"
+								onClick={() => CopyInviteLink(pot.data, setNotificationMessage)}
+							>
+								&mdash; copy invite link &mdash;
+							</div>
+						</div>
+					</div>
+				</div>
 
 				<div className="w-full px-6 mt-10">
 					<div className="flex flex-col justify-between pt-8 pb-6 text-white overview-containers bg-primary rounded-3xl px-14 md:flex-row">
@@ -100,11 +121,14 @@ export default wrapDashboardLayout(function RealIndexPage() {
 							<div className="text-3xl font-bold md:text-4xl lg:text-2xl xl:text-4xl">
 								Check ins due in...
 							</div>
-							<div className="mt-3 text-sm sm:mt-1 md:text-lg font-poppins">
+							<div className="flex mt-3 text-md sm:mt-1 md:text-xl font-poppins">
+								<img src="/img/clock.svg" width={28} className="mr-2" />
 								{duration}
 							</div>
 							<CheckInButton
 								disabled={checkinCountUser >= pot.data?.pot.checkinCount}
+								kind="tertiary"
+								camera="black"
 							></CheckInButton>
 							<div className="pt-10 mt-auto text-xs font-thin tracking-widest font-poppins">
 								Those who don't check in by Sunday at midnight pay the group pot
@@ -345,6 +369,9 @@ export default wrapDashboardLayout(function RealIndexPage() {
 														>
 															<div className="flex flex-row items-center font-bold">
 																<span style={{ marginLeft: 20 }}>
+																	{userState.notify_users.includes(u.id) && (
+																		<div className="w-2 h-2 bg-red-600"></div>
+																	)}
 																	{u.firstName}
 																</span>
 															</div>
@@ -407,6 +434,7 @@ export default wrapDashboardLayout(function RealIndexPage() {
 																	onClick={() => {
 																		setViewingLogsOfUserId(u.id)
 																		setViewingLogsMode('week')
+																		userState.removeNotifyUser(u.id)
 																	}}
 																>
 																	View
@@ -416,6 +444,7 @@ export default wrapDashboardLayout(function RealIndexPage() {
 																	onClick={() => {
 																		setViewingLogsOfUserId(u.id)
 																		setViewingLogsMode('all')
+																		userState.removeNotifyUser(u.id)
 																	}}
 																>
 																	View All
@@ -428,48 +457,40 @@ export default wrapDashboardLayout(function RealIndexPage() {
 										})}
 										{pot.data.users.length < 2 ? (
 											<>
-												{[0, 1].map(index => {
-													return (
-														<tr
-															className={clsx(
-																index !== 1 ? 'border-b-2' : undefined
-															)}
+												<tr>
+													<td>
+														<div
+															className="p-5 border-2 border-dashed rounded-lg border-primary"
+															style={{
+																maxWidth: 110,
+																maxHeight: 100
+															}}
 														>
-															<td>
-																<div
-																	className="p-5 border-2 border-dashed rounded-lg border-primary"
-																	style={{
-																		maxWidth: 110,
-																		maxHeight: 100
-																	}}
-																>
-																	<img
-																		className=""
-																		src="/img/add-friend-icon.svg"
-																		style={{
-																			minHeight: 60,
-																			minWidth: 60
-																		}}
-																	/>
-																</div>
-															</td>
-															<td
+															<img
+																className=""
+																src="/img/add-friend-icon.svg"
 																style={{
-																	paddingLeft: 0
+																	minHeight: 60,
+																	minWidth: 60
 																}}
+															/>
+														</div>
+													</td>
+													<td
+														style={{
+															paddingLeft: 0
+														}}
+													>
+														<div className="flex flex-row items-center font-bold">
+															<span
+																style={{ marginLeft: 20 }}
+																className="font-thin text-primary font-poppins"
 															>
-																<div className="flex flex-row items-center font-bold">
-																	<span
-																		style={{ marginLeft: 20 }}
-																		className="font-thin text-primary font-poppins"
-																	>
-																		Add Friend
-																	</span>
-																</div>
-															</td>
-														</tr>
-													)
-												})}
+																Invite Friend
+															</span>
+														</div>
+													</td>
+												</tr>
 											</>
 										) : (
 											<></>
