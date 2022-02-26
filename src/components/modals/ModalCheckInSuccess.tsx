@@ -12,12 +12,12 @@ export const ModalCheckInSuccess = createModalComponent(
 
 		return (
 			<>
-				<div className="flex flex-col justify-evenly h-full items-center">
+				<div className="flex flex-col items-center h-full justify-evenly">
 					<img src="/img/success.svg" />
 					<div className="text-3xl font-bold font-poppins">Success!</div>
-					<div className="font-poppins text-center text-bombay sm:text-lg text-sm">
-						{usersWithCheckins} out of {users} member{users === 1 || 's'}
-						have checked in <br /> this week
+					<div className="text-sm text-center font-poppins text-bombay sm:text-lg">
+						{usersWithCheckins} out of {users} member{users === 1 || 's'} have
+						checked in <br /> this week
 					</div>
 					<div>
 						<Button onClick={props.onRequestClose}>Onwards!</Button>

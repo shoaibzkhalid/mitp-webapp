@@ -12,6 +12,7 @@ import { useIsMobile } from '../../state/react/useIsMobile'
 import { userState } from '../../state/user'
 import { OverlayLoadingAnimation } from '../OverlayLoadingAnimation'
 import { Sidebar } from './Sidebar'
+import { useSelectedPot } from '../../state/react/useSelectedPot'
 
 const DashboardLayout = observer(function DashboardLayout(props: {
 	contents: () => JSX.Element
@@ -77,9 +78,10 @@ const DashboardLayout = observer(function DashboardLayout(props: {
  * rendered (the function never called) until the user object is populated. This
  * wouldn't work with `children`.
  */
-export function wrapDashboardLayout(el: () => any) {
+export function wrapDashboardLayout(el: () => any, str?: any) {
 	el = observer(el)
 	return function DashboardLayoutWrapper() {
+		// const { isLoading, data } = useSelectedPot()
 		return (
 			<SidebarContextProvider>
 				<DashboardLayout contents={el}></DashboardLayout>

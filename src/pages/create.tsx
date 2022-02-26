@@ -96,7 +96,7 @@ export default observer(function PotNew() {
 			</div>
 			<div
 				className={clsx(
-					'w-full h-screen flex flex-col text-white sm:flex-row sm:px-14 xl:pt-12 2xl:pt-24 2xl:px-24 lg:pt-10 md:pt-10 sm:pt-10 pt-4',
+					'w-full h-screen flex flex-col text-white sm:flex-row sm:px-14 xl:pt-12 2xl:pt-24 2xl:px-24 lg:pt-10 md:pt-10 pt-0',
 					classes.onboarding__card
 				)}
 			>
@@ -108,13 +108,13 @@ export default observer(function PotNew() {
 					<div className="flex justify-center sm:hidden">
 						<img
 							src={'/img/Target_optimized.gif'}
-							style={{ height: '350px' }}
+							style={{ height: '250px' }}
 						/>
 					</div>
-					<div className="flex flex-col items-center">
+					<div className="absolute flex flex-col items-center w-full sm:w-fit bottom-12 sm:bottom-auto">
 						<button
 							className={clsx(
-								'w-6/12 text-center py-4 rounded-md mt-10 shadow-md lg:mt-16 xl:mt-20 2xl:mt-24 lg:text-xl xl:text-2xl',
+								'px-4 text-center py-4 rounded-md mt-0 sm:mt-10 shadow-md lg:mt-16 xl:mt-20 2xl:mt-24 lg:text-xl xl:text-2xl',
 								classes.onboarding__button
 							)}
 							disabled={!stepCompleted || createPotMutation.isLoading}

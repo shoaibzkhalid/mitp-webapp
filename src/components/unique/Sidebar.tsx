@@ -24,8 +24,8 @@ import { useMemo } from 'react'
 
 export function Sidebar() {
 	const haveSmallHeight = useMediaQuery('(max-height: 735px)')
-
 	const router = useRouter()
+
 	return (
 		<div
 			style={{
@@ -188,7 +188,8 @@ const SidebarPotSelector = observer(function SidebarPotSelector() {
 
 function SidebarLinks() {
 	const [currentModal, setCurrentModal] = useState(null as null | 'sweatJarFee')
-	const { data } = useSelectedPot()
+	const { isLoading, data } = useSelectedPot()
+
 	const potUser = useMemo(
 		() => data?.users.find(u => u.id === userState.user?.id),
 		[data]
@@ -330,6 +331,7 @@ function LogoutButton() {
 }
 
 const Profile = observer(function Profile() {
+	const haveSmallHeight = useMediaQuery('(max-height: 850px)')
 	const { data } = useSelectedPot()
 	const potUser = useMemo(
 		() => data?.users.find(u => u.id === userState.user?.id),
@@ -350,6 +352,12 @@ const Profile = observer(function Profile() {
 			<ModalProfileSetting
 				isOpen={currentModal === 'profileSettings'}
 				onRequestClose={() => setCurrentModal(null)}
+				style={{
+					content: {
+						height: haveSmallHeight ? '95%' : 'auto',
+						top: haveSmallHeight ? -20 : 40
+					}
+				}}
 			/>
 
 			<div
