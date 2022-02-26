@@ -116,35 +116,29 @@ export default wrapDashboardLayout(function OverviewPage() {
 									className="text-4xl font-semibold sm:text-5xl xl:w-10/12 text-"
 									style={{ lineHeight: 1.5 }}
 								>
-									{data?.pot.title}
-									{potUser?.admin && (
-										<span
-											className="inline-block ml-2 cursor-pointer"
-											onClick={() => setOpenGroupDetailModal(true)}
-										>
-											<svg className="w-6 h-6 fill-current">
-												<use xlinkHref="/img/sprite.svg#icon-edit"></use>
-											</svg>
-										</span>
-									)}
-								</div>
-								<ModalGroupSettings
-									isOpen={openGroupDetailModal}
-									onRequestClose={() => setOpenGroupDetailModal(false)}
-									style={{
-										content: {
-											minWidth: 320,
-											maxWidth: 600
-										}
-									}}
-								/>
-								<div className="absolute flex text-xl text-gray-400">
-									{potAdminUser?.firstName ? (
-										<>{`Group Admin:  ${potAdminUser?.firstName}`}</>
-									) : (
-										<></>
-									)}
-									{/* <div
+									<svg className="-icon">
+										<use xlinkHref="/img/sprite.svg#icon-settings"></use>
+									</svg>
+								</span>
+							)}
+						</div>
+						<ModalGroupSettings
+							isOpen={openGroupDetailModal}
+							onRequestClose={() => setOpenGroupDetailModal(false)}
+							style={{
+								content: {
+									minWidth: 320,
+									maxWidth: 600
+								}
+							}}
+						/>
+						<div className="absolute flex text-xl text-gray-400">
+							{potAdminUser?.firstName ? (
+								<>{`Group Admin:  ${potAdminUser?.firstName}`}</>
+							) : (
+								<></>
+							)}
+							{/* <div
 								className="w-full ml-4 text-gray-400"
 								style={{
 									width: isMobile ? undefined : '280px'
@@ -225,6 +219,43 @@ export default wrapDashboardLayout(function OverviewPage() {
 										</a>
 									</div>
 								</div>
+								<a
+									className="inline-block mt-4"
+									target="_blank"
+									href={data?.pot ? getPotPosterUrl(data?.pot) : ''}
+								>
+									Print QR Code
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div className="flex flex-col w-full px-6 xl:flex-row">
+					<div className="w-full">
+						<div
+							className="flex flex-col items-center pt-24 pb-24 md:px-10"
+							id="checkin_div"
+						>
+							<div
+								id="walkthrough_checkins"
+								className={clsx(
+									'text-xl text-center',
+									checkinCountUser === data?.pot.checkinCount
+										? 'text-gray-400'
+										: 'text-gray-600'
+								)}
+							>
+								{checkinCountUser}/{data?.pot.checkinCount} check ins this week
+							</div>
+							<CheckInButton
+								disabled={checkinCountUser >= data?.pot.checkinCount}
+							></CheckInButton>
+							<div className="mt-3 text-sm text-gray-400">
+								{`Take photo proof of ${data?.pot.title}, ${data?.pot.description}`}
+								<br></br>
+								by Sunday Midnight or pay your swear jar fee of ($
+								{potUser?.amount})
 							</div>
 						</div>
 

@@ -14,8 +14,43 @@ export const userState = observable({
 	loaded: false,
 	ready: false,
 	howItWorks: false,
+	notify: false,
+	notify_users: [],
+
+	addNotifyUsers(users: any) {
+		userState.notify_users.push(...users)
+		let unique = userState.notify_users.filter((value, index, self) => {
+			return self.indexOf(value) === index
+		})
+		userState.notify_users = unique
+		localStorage.setItem('notify_users', JSON.stringify(userState.notify_users))
+	},
+
+	removeNotifyUser(userId: string) {
+		const index = userState.notify_users.indexOf(userId)
+		userState.notify_users.splice(index, 1)
+		localStorage.setItem('notify_users', JSON.stringify(userState.notify_users))
+	},
+
+	changeNotify(val: boolean) {
+		localStorage.setItem('notify', JSON.stringify(val))
+		userState.notify = val
+	},
+
+	resetNotify() {
+		localStorage.setItem('notify_users', JSON.stringify([]))
+		localStorage.setItem('notify', JSON.stringify(false))
+		userState.notify_users = []
+		userState.notify = false
+	},
 
 	async load() {
+		runInAction(() => {
+			userState.notify = JSON.parse(localStorage.getItem('notify')) || false
+			userState.notify_users =
+				JSON.parse(localStorage.getItem('notify_users')) || []
+		})
+
 		if (!userState.tokens.refreshToken) {
 			const tokenPayload = localStorage.getItem('mitp_tokens')
 			if (!tokenPayload) return
@@ -74,6 +109,8 @@ export const userState = observable({
 			refreshToken: null
 		}
 		localStorage.setItem('mitp_tokens', '')
+		localStorage.removeItem('notify_users')
+		localStorage.removeItem('notify')
 	},
 	toggleReady() {
 		userState.ready = !userState.ready

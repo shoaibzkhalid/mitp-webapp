@@ -8,9 +8,12 @@ import { useIsMobile } from '../state/react/useIsMobile'
 import { useMutation } from 'react-query'
 import { Api } from '../api'
 import { queryClient } from '../state/queryClient'
+import { kindClasses } from '../components/ui/Button'
 
 interface CheckInButtonProps {
 	disabled?: boolean
+	kind?: keyof typeof kindClasses
+	camera?: string
 }
 
 export const CheckInButton = observer(function CheckInButton(
@@ -37,6 +40,7 @@ export const CheckInButton = observer(function CheckInButton(
 		<>
 			<Button
 				className={'mt-5 w-full max-w-sm text-lg'}
+				kind={props.kind}
 				onClick={() => {
 					if (isMobile) {
 						document.getElementById('mobile-hidden-input').click()
@@ -45,7 +49,16 @@ export const CheckInButton = observer(function CheckInButton(
 					}
 				}}
 			>
-				<img className="mr-3" src="./img/camera.png"></img>
+				<img
+					className="mr-3"
+					src={
+						props.camera === 'black'
+							? './img/camera-black.png'
+							: './img/camera.png'
+					}
+					width={32}
+					height={32}
+				></img>
 				Check In
 			</Button>
 
