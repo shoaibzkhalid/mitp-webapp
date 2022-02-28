@@ -13,6 +13,7 @@ import { toggleSideBar } from '../utils/common'
 import { ModalWithdraw } from '../components/modals/ModalWithdraw'
 import { Button } from '../components/ui/Button'
 import { OverlayLoadingAnimation } from '../components/OverlayLoadingAnimation'
+import { queryClient } from '../state/queryClient'
 
 export default wrapDashboardLayout(function PayoutsPage() {
 	const router = useRouter()
@@ -21,7 +22,6 @@ export default wrapDashboardLayout(function PayoutsPage() {
 	const [withdrawModalIsOpen, setWithdrawModalIsOpen] = useState(false)
 
 	const pot = useSelectedPot()
-	const potUser = pot.data?.users.find(u => u.id === userState.user?.id)
 
 	useEffect(() => {
 		toggleSideBar(false)
@@ -36,6 +36,8 @@ export default wrapDashboardLayout(function PayoutsPage() {
 		['payouts', userState.user?.id],
 		() => Api.transactionsList()
 	)
+
+	const potUser = pot.data?.users.find(u => u.id === userState.user?.id)
 
 	return (
 		<>
@@ -56,8 +58,8 @@ export default wrapDashboardLayout(function PayoutsPage() {
 					<div className="text-5xl font-semibold">Payouts 💰</div>
 				</div>
 
-				<div className="grid px-6 lg:grid-cols-3">
-					<div className="col-span-2">
+				<div className="grid lg:grid-cols-3">
+					<div className="col-span-3">
 						<div className="h-full p-8 -card --shadow">
 							<div className="flex justify-between">
 								<div>
@@ -67,19 +69,18 @@ export default wrapDashboardLayout(function PayoutsPage() {
 							</div>
 						</div>
 					</div>
-					<div className="flex flex-col items-center justify-center text-center">
+					{/* <div className="flex flex-col items-center justify-center text-center">
 						<div className="text-xl font-bold">Your account credits</div>
 						<div className="my-10 font-bold text-primary text-7xl">
 							{!transactionsData ? (
 								<div className="flex items-center justify-center">
-									{/* <Spinner></Spinner> */}
 								</div>
 							) : (
 								'$' +
 								(parseInt(transactionsData.currentCredits) / 100).toFixed(2)
 							)}
 						</div>
-						<div className="flex justify-center payments__button-wrapper">
+						<div className="payments__button-wrapper flex justify-center">
 							<Button
 								className="mr-4"
 								disabled={!transactionsData?.currentCredits}
@@ -106,7 +107,7 @@ export default wrapDashboardLayout(function PayoutsPage() {
 								Withdraw
 							</Button>
 						</div>
-					</div>
+					</div> */}
 				</div>
 
 				<hr className="my-10" />
@@ -162,12 +163,17 @@ export default wrapDashboardLayout(function PayoutsPage() {
 })
 
 function PaymentMethod() {
+	const router = useRouter()
+	const pot = useSelectedPot()
+
 	const connections = useQuery(['connections', userState.user?.id], () =>
 		Api.user.listConnections()
 	)
 	const paypalConnection = connections.data?.find(c => c.service === 'paypal')
-	const router = useRouter()
-	const pot = useSelectedPot()
+
+	const card = useQuery('userCard', async () => {
+		return Api.user.getStripeCard()
+	})
 
 	// TODO
 	const deletePayPal = useMutation(async () => {})
@@ -175,10 +181,14 @@ function PaymentMethod() {
 		const res = await Api.user.createStripeCardSession()
 		window.location.assign(res.url)
 	})
+	const deleteCard = useMutation(async () => {
+		await Api.user.deleteStripeCard()
+		queryClient.invalidateQueries('userCard')
+	})
 
 	return (
 		<>
-			<img
+			{/* <img
 				src="/img/paypal.png"
 				alt="PayPal logo"
 				className="mb-6"
@@ -186,9 +196,7 @@ function PaymentMethod() {
 			></img>
 
 			{!connections.data ? (
-				<div className="flex items-center justify-center">
-					{/* <Spinner></Spinner> */}
-				</div>
+				<></>
 			) : !paypalConnection ? (
 				<Button
 					onClick={() => {
@@ -221,12 +229,21 @@ function PaymentMethod() {
 						</Button>
 					</div>
 				</div>
-			)}
+			)} */}
 
-			<div className="mt-4"></div>
-			<Button onClick={() => addCard.mutate()} disabled={addCard.isLoading}>
-				Add payment card
-			</Button>
+			{/* <div className="mt-4"></div> */}
+			{card.isLoading || card.data === null ? (
+				<Button onClick={() => addCard.mutate()} disabled={addCard.isLoading}>
+					Add payment card
+				</Button>
+			) : (
+				<Button
+					onClick={() => deleteCard.mutate()}
+					disabled={deleteCard.isLoading}
+				>
+					Remove payment card
+				</Button>
+			)}
 		</>
 	)
 }

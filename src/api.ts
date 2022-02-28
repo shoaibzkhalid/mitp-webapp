@@ -23,7 +23,8 @@ function handleResponse(d: AxiosResponse) {
 		e.status = d.status
 		throw e
 	}
-	return d.data?.data ?? d.data
+	if (d.data?.data === undefined) return d.data
+	else return d.data?.data
 }
 
 export const Api = {
