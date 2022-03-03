@@ -73,7 +73,7 @@ export default observer(function CheckinUpdateChart() {
 			series={[
 				{
 					name: 'Check in',
-					data: [0, 0, 0, 0, 0, 0, 0, 0, 0]
+					data: pot.data.dailyStatistics
 				}
 			]}
 		/>
