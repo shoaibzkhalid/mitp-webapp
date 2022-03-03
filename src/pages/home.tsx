@@ -123,7 +123,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 											onClick={() => setOpenGroupDetailModal(true)}
 										>
 											<svg className="w-6 h-6 fill-current">
-												<use xlinkHref="/img/sprite.svg#icon-edit"></use>
+												<use xlinkHref="/img/sprite.svg#icon-settings"></use>
 											</svg>
 										</span>
 									)}
