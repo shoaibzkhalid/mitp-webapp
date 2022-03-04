@@ -439,7 +439,7 @@ export default wrapDashboardLayout(function RealIndexPage() {
 																>
 																	View
 																</Button>
-																<Button
+																{/* <Button
 																	className="ml-4"
 																	onClick={() => {
 																		setViewingLogsOfUserId(u.id)
@@ -448,7 +448,7 @@ export default wrapDashboardLayout(function RealIndexPage() {
 																	}}
 																>
 																	View All
-																</Button>
+																</Button> */}
 															</div>
 														</td>
 													</tr>
