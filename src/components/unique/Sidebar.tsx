@@ -376,7 +376,10 @@ const Profile = observer(function Profile() {
 					referrerPolicy="no-referrer"
 				/>
 				<div className="relative px-2">
-					<div className="font-bold">
+					<div
+						className="font-bold w-1/2 text-ellipsis"
+						style={{ overflow: 'hidden' }}
+					>
 						{user?.firstName || (
 							<span className="text-gray-400">Anonymous</span>
 						)}
