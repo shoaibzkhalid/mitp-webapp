@@ -26,7 +26,9 @@ function MyApp({ Component, pageProps }: AppProps) {
 		userState.load().finally(() =>
 			runInAction(() => {
 				setTimeout(() => {
-					userState.loaded = true
+					runInAction(() => {
+						userState.loaded = true
+					})
 				}, 1000)
 			})
 		)

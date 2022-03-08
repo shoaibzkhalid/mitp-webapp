@@ -188,11 +188,11 @@ const SidebarPotSelector = observer(function SidebarPotSelector() {
 
 function SidebarLinks() {
 	const [currentModal, setCurrentModal] = useState(null as null | 'sweatJarFee')
-	const { isLoading, data } = useSelectedPot()
+	const selectedPot = useSelectedPot()
 
 	const potUser = useMemo(
-		() => data?.users.find(u => u.id === userState.user?.id),
-		[data]
+		() => selectedPot.data?.users.find(u => u.id === userState.user?.id),
+		[selectedPot.data]
 	)
 
 	return (
@@ -220,7 +220,8 @@ function SidebarLinks() {
 					<div>
 						<div className="font-bold">Set Swear Jar Fee</div>
 						<div className="text-xs font-light whitespace-nowrap">
-							Group minimum: ${data?.pot.minAmount} Yours: ${potUser?.amount}
+							Group minimum: ${selectedPot.data?.pot.minAmount} Yours: $
+							{potUser?.amount}
 						</div>
 					</div>
 				}
@@ -313,7 +314,7 @@ function LogoutButton() {
 	const logout = () => {
 		userState.clear()
 		window.location.assign(
-			process.env.NODE_ENV === 'production' ? '/' : AppEnv.DevLandingPageUrl
+			process.env.NODE_ENV === 'production' ? '/' : AppEnv.landingPageUrl
 		)
 	}
 

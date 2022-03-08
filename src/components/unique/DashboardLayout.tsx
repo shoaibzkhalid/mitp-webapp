@@ -78,10 +78,9 @@ const DashboardLayout = observer(function DashboardLayout(props: {
  * rendered (the function never called) until the user object is populated. This
  * wouldn't work with `children`.
  */
-export function wrapDashboardLayout(el: () => any, str?: any) {
+export function wrapDashboardLayout(el: () => any) {
 	el = observer(el)
 	return function DashboardLayoutWrapper() {
-		// const { isLoading, data } = useSelectedPot()
 		return (
 			<SidebarContextProvider>
 				<DashboardLayout contents={el}></DashboardLayout>

@@ -16,10 +16,8 @@ import { MobileHeader } from '../components/unique/MobileHeader'
 import CopyInviteLink from '../components/notification/CopyInviteLink'
 import { toggleSideBar } from '../utils/common'
 import { ModalGroupSettings } from '../components/modals/ModalGroupSettings'
-import { ModalProfileSetting } from '../components/modals/ModalProfileSetting'
 import clsx from 'clsx'
 import { Button } from '../components/ui/Button'
-import { useIsMobile } from '../state/react/useIsMobile'
 
 const PotChart = dynamic(() => import('../components/home/PotChart'), {
 	ssr: false
@@ -31,13 +29,12 @@ const CheckinUpdateChart = dynamic(
 )
 
 export default wrapDashboardLayout(function OverviewPage() {
-	const [notificationMessage, setNotificationMessage] = useState<string>('')
+	const [notificationMessage, setNotificationMessage] = useState('')
 
 	const router = useRouter()
 	const { isLoading, data } = useSelectedPot()
 	const pot = useSelectedPot()
 	const [openGroupDetailModal, setOpenGroupDetailModal] = useState(false)
-	const [viewRuleDropDown, setViewRuleDropDown] = useState(false)
 	const [youGetPaidDropDown, setYouGetPaidDropDown] = useState(false)
 
 	if (!isLoading && data === null) {
@@ -554,4 +551,4 @@ export default wrapDashboardLayout(function OverviewPage() {
 			)}
 		</>
 	)
-}, 'asd')
+})

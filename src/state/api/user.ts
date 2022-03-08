@@ -35,8 +35,8 @@ export default {
 
 	getStripeCard: () => Api.get('3rdparty/stripe/card').catch(e => null),
 
-	createStripeCardSession: () =>
-		Api.post<{ url: string }>('3rdparty/stripe/card-setup'),
+	stripeCreateCardSetupIntent: () =>
+		Api.post<{ clientSecret: string }>('3rdparty/stripe/card-setup'),
 
 	deleteStripeCard: () => Api.delete('3rdparty/stripe/card')
 }

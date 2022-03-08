@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import dayjs from 'dayjs'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
@@ -14,10 +14,12 @@ import { ModalWithdraw } from '../components/modals/ModalWithdraw'
 import { Button } from '../components/ui/Button'
 import { OverlayLoadingAnimation } from '../components/OverlayLoadingAnimation'
 import { queryClient } from '../state/queryClient'
+import Notification from '../components/notification/Notification'
+import { ModalAddPaymentCard } from '../components/modals/ModalAddPaymentCard'
 
 export default wrapDashboardLayout(function PayoutsPage() {
 	const router = useRouter()
-	const { isLoading, data } = useSelectedPot()
+	const selectedPot = useSelectedPot()
 
 	const [withdrawModalIsOpen, setWithdrawModalIsOpen] = useState(false)
 
@@ -27,14 +29,13 @@ export default wrapDashboardLayout(function PayoutsPage() {
 		toggleSideBar(false)
 	}, [])
 
-	if (!isLoading && data === null) {
+	if (!selectedPot.isLoading && selectedPot.data === null) {
 		router.push('/new')
 	}
-	if (!data) return <OverlayLoadingAnimation />
+	if (!selectedPot.data) return <OverlayLoadingAnimation />
 
-	const { data: transactionsData } = useQuery(
-		['payouts', userState.user?.id],
-		() => Api.transactionsList()
+	const payouts = useQuery(['payouts', userState.user?.id], () =>
+		Api.transactionsList()
 	)
 
 	const potUser = pot.data?.users.find(u => u.id === userState.user?.id)
@@ -42,7 +43,7 @@ export default wrapDashboardLayout(function PayoutsPage() {
 	return (
 		<>
 			<Head>
-				<title>{`Your Group - ${data?.pot.title}`}</title>
+				<title>{`Your Group - ${selectedPot.data?.pot.title}`}</title>
 			</Head>
 
 			<ModalWithdraw
@@ -125,7 +126,7 @@ export default wrapDashboardLayout(function PayoutsPage() {
 								</tr>
 							</thead>
 							<tbody>
-								{transactionsData?.transactions.map(tr => {
+								{payouts.data?.transactions.map(tr => {
 									return (
 										<tr>
 											<td>
@@ -163,86 +164,61 @@ export default wrapDashboardLayout(function PayoutsPage() {
 })
 
 function PaymentMethod() {
-	const router = useRouter()
-	const pot = useSelectedPot()
+	const [notificationMessage, setNotificationMessage] = useState('')
+	const setNotificationMessageRef = useRef(setNotificationMessage)
+	setNotificationMessageRef.current = setNotificationMessage
 
-	const connections = useQuery(['connections', userState.user?.id], () =>
-		Api.user.listConnections()
-	)
-	const paypalConnection = connections.data?.find(c => c.service === 'paypal')
+	const [currModal, setCurrModal] = useState(null as null | 'addCard')
 
 	const card = useQuery('userCard', async () => {
 		return Api.user.getStripeCard()
 	})
 
-	// TODO
-	const deletePayPal = useMutation(async () => {})
-	const addCard = useMutation(async () => {
-		const res = await Api.user.createStripeCardSession()
-		window.location.assign(res.url)
-	})
 	const deleteCard = useMutation(async () => {
 		await Api.user.deleteStripeCard()
 		queryClient.invalidateQueries('userCard')
+		setNotificationMessage('Payment card has been removed.')
+		setTimeout(() => setNotificationMessageRef.current(''), 5000)
 	})
 
 	return (
 		<>
-			{/* <img
-				src="/img/paypal.png"
-				alt="PayPal logo"
-				className="mb-6"
-				style={{ height: '25px' }}
-			></img>
+			{notificationMessage !== '' && (
+				<Notification
+					key={notificationMessage}
+					message={notificationMessage}
+					info="copied"
+				/>
+			)}
 
-			{!connections.data ? (
-				<></>
-			) : !paypalConnection ? (
-				<Button
-					onClick={() => {
-						localStorage.setItem(
-							'post-login-action',
-							JSON.stringify({
-								type: 'goto-pot',
-								potId: pot.data!.pot.id
-							})
-						)
-						router.push('/paypal/login-initiate')
-					}}
-				>
-					Link PayPal
-				</Button>
-			) : (
-				<div>
-					<div>
-						Logged in as:{' '}
-						<span className="font-bold">{paypalConnection.meta.name}</span>{' '}
-						<br />
-						{paypalConnection.meta.email}
-					</div>
-					<div>
-						<Button
-							onClick={() => deletePayPal.mutate()}
-							disabled={deletePayPal.isLoading}
-						>
-							Unlink
-						</Button>
-					</div>
-				</div>
-			)} */}
+			<ModalAddPaymentCard
+				isOpen={currModal === 'addCard'}
+				onRequestClose={() => {
+					setCurrModal(null)
+					queryClient.invalidateQueries('userCard')
+				}}
+			/>
 
-			{/* <div className="mt-4"></div> */}
 			{card.isLoading || card.data === null ? (
-				<Button onClick={() => addCard.mutate()} disabled={addCard.isLoading}>
+				<Button
+					onClick={() => setCurrModal('addCard')}
+					disabled={card.isLoading}
+				>
 					Add payment card
 				</Button>
 			) : (
-				<Button
-					onClick={() => deleteCard.mutate()}
-					disabled={deleteCard.isLoading}
-				>
-					Remove payment card
-				</Button>
+				<>
+					<div className="mb-5">
+						Saved card: {card.data.card.brand.toUpperCase()} ending with{' '}
+						{card.data.card.last4}
+					</div>
+					<Button
+						onClick={() => deleteCard.mutate()}
+						disabled={deleteCard.isLoading || card.isLoading}
+					>
+						Remove payment card
+					</Button>
+				</>
 			)}
 		</>
 	)

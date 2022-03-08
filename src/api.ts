@@ -15,7 +15,7 @@ function handleResponse(d: AxiosResponse) {
 		if (d.status === 401) {
 			userState.clear()
 			window.location.assign(
-				process.env.NODE_ENV === 'production' ? '/' : AppEnv.DevLandingPageUrl
+				process.env.NODE_ENV === 'production' ? '/' : AppEnv.landingPageUrl
 			)
 		}
 		console.log('API Error:', d.status, d.data)
