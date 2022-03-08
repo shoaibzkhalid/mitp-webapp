@@ -22,7 +22,7 @@ export const ModalUserViewLogs = createModalComponent<{
 
 	const [currentLogIndex, setCurrentLogIndex] = useState(0)
 	const [currentLogId, setCurrentLogId] = useState(
-		userLogs.data?.logs[currentLogIndex].id
+		userLogs.data?.logs[currentLogIndex]?.id
 	)
 
 	if (props.viewingLogsMode === 'week' && userLogs.data?.logs) {
@@ -73,20 +73,20 @@ export const ModalUserViewLogs = createModalComponent<{
 								src="/img/calendar.svg"
 							/>
 							<span>
-								{dayjs(userLogs.data.logs[currentLogIndex].createdAt).format(
+								{dayjs(userLogs.data.logs[currentLogIndex]?.createdAt).format(
 									'DD MMM YYYY, HH:mm A'
 								)}
 							</span>
 						</div>
 					</div>
 
-					{userLogs.data?.logs[currentLogIndex].pictureUri ? (
+					{userLogs.data?.logs[currentLogIndex]?.pictureUri ? (
 						<>
 							<div
 								className="flex top-1/2 left-10 bg-white rounded-3xl opacity-80 justify-center items-center w-8 h-8 absolute cursor-pointer"
 								onClick={() => {
 									setCurrentLogIndex(currentLogIndex + 1)
-									setCurrentLogId(userLogs.data.logs[currentLogIndex + 1].id)
+									setCurrentLogId(userLogs.data.logs[currentLogIndex + 1]?.id)
 								}}
 							>
 								<svg className="w-3 h-3 fill-white-500 sm:w-5">
@@ -94,7 +94,7 @@ export const ModalUserViewLogs = createModalComponent<{
 								</svg>
 							</div>
 							<img
-								src={userLogs.data?.logs[currentLogIndex].pictureUri}
+								src={userLogs.data?.logs[currentLogIndex]?.pictureUri}
 								style={{
 									height: props.viewingLogsMode === 'week' ? '100%' : '110px',
 									width: props.viewingLogsMode === 'week' ? '100%' : '110px',
