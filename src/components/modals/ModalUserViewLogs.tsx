@@ -37,7 +37,7 @@ export const ModalUserViewLogs = createModalComponent<{
 	}
 
 	console.log('userLogs', potUser)
-
+	console.log('logindex', currentLogIndex)
 	return (
 		<>
 			<div className="flex items-center text-xl font-poppins">
@@ -52,7 +52,7 @@ export const ModalUserViewLogs = createModalComponent<{
 			) : userLogs.data.logs.length === 0 ? (
 				<div className="text-gray-500">No logs.</div>
 			) : (
-				<div className="mb-7 truncate">
+				<div className="mb-7 truncate h-full">
 					<div className="flex flex-row items-center justify-between mb-3">
 						<div className="flex flex-row items-center">
 							<img
@@ -81,18 +81,23 @@ export const ModalUserViewLogs = createModalComponent<{
 					</div>
 
 					{userLogs.data?.logs[currentLogIndex]?.pictureUri ? (
-						<>
-							<div
-								className="flex top-1/2 left-10 bg-white rounded-3xl opacity-80 justify-center items-center w-8 h-8 absolute cursor-pointer"
-								onClick={() => {
-									setCurrentLogIndex(currentLogIndex + 1)
-									setCurrentLogId(userLogs.data.logs[currentLogIndex + 1]?.id)
-								}}
-							>
-								<svg className="w-3 h-3 fill-white-500 sm:w-5">
-									<use xlinkHref="/img/sprite.svg#icon-arrow-left"></use>
-								</svg>
-							</div>
+						<div
+							style={{ height: 'calc(100% - 300px)' }}
+							className="relative border-solid border-2 border-grey-500 rounded-md"
+						>
+							{currentLogIndex !== userLogs.data.logs.length - 1 && (
+								<div
+									className="flex top-1/2 left-10 bg-white rounded-3xl opacity-80 justify-center items-center w-8 h-8 absolute cursor-pointer"
+									onClick={() => {
+										setCurrentLogIndex(currentLogIndex + 1)
+										setCurrentLogId(userLogs.data.logs[currentLogIndex + 1]?.id)
+									}}
+								>
+									<svg className="w-3 h-3 fill-white-500 sm:w-5">
+										<use xlinkHref="/img/sprite.svg#icon-arrow-left"></use>
+									</svg>
+								</div>
+							)}
 							<img
 								src={userLogs.data?.logs[currentLogIndex]?.pictureUri}
 								style={{
@@ -101,21 +106,21 @@ export const ModalUserViewLogs = createModalComponent<{
 									borderRadius: '10px'
 								}}
 							/>
-							{currentLogIndex ? (
+							{currentLogIndex !== 0 && (
 								<div
 									className="flex top-1/2 right-10 rounded-3xl bg-white opacity-80 justify-center items-center w-8 h-8 absolute cursor-pointer"
 									onClick={() => {
 										setCurrentLogIndex(currentLogIndex - 1)
-										setCurrentLogId(userLogs.data.logs[currentLogIndex - 1].id)
+										setCurrentLogId(userLogs.data.logs[currentLogIndex - 1]?.id)
 									}}
 								>
 									<svg className="w-3 h-3 fill-white-500 sm:w-5">
 										<use xlinkHref="/img/sprite.svg#icon-arrow-right"></use>
 									</svg>
 								</div>
-							) : null}
+							)}
 
-							<div className="absolute bottom-1/4" style={{ left: '45%' }}>
+							<div className="absolute" style={{ left: '45%', bottom: '30px' }}>
 								<div className="flex w-full justify-center">
 									{userLogs.data?.logs
 										.slice(0)
@@ -129,7 +134,7 @@ export const ModalUserViewLogs = createModalComponent<{
 										))}
 								</div>
 							</div>
-						</>
+						</div>
 					) : (
 						<div className="text-gray-500">No image.</div>
 					)}
