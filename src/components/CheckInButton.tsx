@@ -40,6 +40,7 @@ export const CheckInButton = observer(function CheckInButton(
 		<>
 			<Button
 				className={'mt-5 w-full max-w-sm text-lg'}
+				disabled={props.disabled}
 				kind={props.kind}
 				onClick={() => {
 					if (isMobile) {

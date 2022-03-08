@@ -85,6 +85,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 		<>
 			<Head>
 				<title>{`Your Group - ${data?.pot.title}`}</title>
+				<link rel="shortcut icon" href="/favicon.ico" />
 			</Head>
 
 			<>
@@ -241,7 +242,10 @@ export default wrapDashboardLayout(function OverviewPage() {
 										week
 									</div>
 									<CheckInButton
-										disabled={checkinCountUser >= data?.pot.checkinCount}
+										disabled={
+											// checkinCountUser >= data?.pot.checkinCount ||
+											userState.howItWorks
+										}
 									></CheckInButton>
 									<div className="mt-3 text-sm text-gray-400">
 										{`Take photo proof of ${data?.pot.title}, ${data?.pot.description}`}
@@ -359,12 +363,12 @@ export default wrapDashboardLayout(function OverviewPage() {
 													)}
 													style={{ wordWrap: 'break-word' }}
 												>
-													<p className="mb-2 text-xs font-bold text-gray-800 cursor-pointer">
+													<p className="mb-2 text-xs font-bold cursor-pointer">
 														When a member fails to complete their weekly check
 														in by Sunday at midnight, they pay in to the group
 														pot
 													</p>
-													<p className="mb-2 text-xs font-bold text-gray-800 cursor-pointer">
+													<p className="mb-2 text-xs font-bold cursor-pointer">
 														This is paid to you at the end of the month. You get
 														paid for improving yourself as long as you're part
 														of this group!

@@ -203,6 +203,7 @@ export const ModalGroupSettings = createModalComponent(
 									setValue={v =>
 										setGroupDetails({ ...groupDetails, groupTitle: v })
 									}
+									inputStyle={{ color: '#31445b' }}
 								/>
 								{isAdmin && <div>{`Admin : ${potAdminUser?.firstName}`}</div>}
 							</div>
