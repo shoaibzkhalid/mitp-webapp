@@ -33,7 +33,7 @@ export const ModalUserViewLogs = createModalComponent<{
 		description: userLogs.data?.logs[currentLogIndex]?.description
 	})
 
-	console.log('logState', userLogs.data?.logs[currentLogIndex]?.description)
+	// console.log('logState', userLogs.data?.logs[currentLogIndex]?.description)
 
 	const saveDescriptionMutation = useMutation(
 		'updatePot',

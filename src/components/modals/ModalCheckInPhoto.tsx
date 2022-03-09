@@ -100,12 +100,16 @@ export const ModalCheckInPhoto = createModalComponent<{
 			) : (
 				<>
 					<div
-						className="flex items-center justify-center mt-3 text-center border-2 border-gray-400 border-dashed cursor-pointer rounded-2xl"
+						className={`flex items-center justify-center mt-3 text-center  ${
+							!acceptedFiles[0] && 'border-2 border-gray-400 border-dashed'
+						} cursor-pointer rounded-2xl`}
 						{...getRootProps()}
 						style={{
-							backgroundColor: '#F2F2F2',
 							color: '#fff',
-							minHeight: '150px'
+							minHeight: '150px',
+							...(!acceptedFiles[0] && {
+								backgroundColor: '#F2F2F2'
+							})
 						}}
 					>
 						<input {...getInputProps()} />
