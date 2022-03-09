@@ -5,7 +5,7 @@ import { userState } from '../../state/user'
 import { SelectInput } from '../SelectInput'
 import { useState } from 'react'
 import { useSelectedPot } from '../../state/react/useSelectedPot'
-import { useMutation } from 'react-query'
+import { useMutation, useQuery } from 'react-query'
 import { Api } from '../../api'
 import { queryClient } from '../../state/queryClient'
 import dayjs from 'dayjs'
@@ -20,6 +20,10 @@ export const ModalProfileSetting = createModalComponent(
 		const isMobile = useMediaQuery('(max-width: 380px)')
 		const { data } = useSelectedPot()
 		const [stripeModalIsOpen, setStripeModalIsOpen] = useState(false)
+
+		const card = useQuery('userCard', async () => {
+			return Api.user.getStripeCard()
+		})
 
 		const [user, setUser] = useState({
 			firstName: userState.user!.firstName,
@@ -224,7 +228,7 @@ export const ModalProfileSetting = createModalComponent(
 							<label className="flex items-center cursor-pointer">
 								<div className="relative">
 									<input
-										checked={potUser.readyUpAt !== null ? true : false}
+										checked={!card.isLoading && card.data !== null}
 										type="checkbox"
 										id="toggleB"
 										className="sr-only"
