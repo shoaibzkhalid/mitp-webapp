@@ -18,6 +18,7 @@ import { toggleSideBar } from '../utils/common'
 import { ModalGroupSettings } from '../components/modals/ModalGroupSettings'
 import clsx from 'clsx'
 import { Button } from '../components/ui/Button'
+import { useIsMobile } from '../state/react/useIsMobile'
 
 const PotChart = dynamic(() => import('../components/home/PotChart'), {
 	ssr: false
@@ -30,6 +31,7 @@ const CheckinUpdateChart = dynamic(
 
 export default wrapDashboardLayout(function OverviewPage() {
 	const [notificationMessage, setNotificationMessage] = useState('')
+	const isMobile = useIsMobile()
 
 	const router = useRouter()
 	const { isLoading, data } = useSelectedPot()
@@ -549,6 +551,32 @@ export default wrapDashboardLayout(function OverviewPage() {
 					)}
 				</>
 			)}
+
+			<div className="absolute top-1/4 right-5">
+				<div className="absolute" style={{ left: '60%', top: -20 }}>
+					<img src="/img/arrowhead.svg" style={{ width: 50, height: 50 }}></img>
+				</div>
+
+				{!userState.inviteMsg && pot.data?.users.length === 1 && !isMobile ? (
+					<div
+						className="shadow-lg p-10"
+						style={{ borderRadius: 40, width: 447, height: 163 }}
+					>
+						<div className="absolute right-10 top-2">
+							<button
+								className="-button -round hover:shadow-md text-sm"
+								onClick={() => userState.setInviteMsg(true)}
+							>
+								x
+							</button>
+						</div>
+						<p className="font-bold">Add some friends to get started!</p>
+						<p>
+							Simply share your group link with them to add them to the group.
+						</p>
+					</div>
+				) : null}
+			</div>
 		</>
 	)
 })

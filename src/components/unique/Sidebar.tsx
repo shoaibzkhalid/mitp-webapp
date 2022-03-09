@@ -1,7 +1,7 @@
 import { runInAction } from 'mobx'
 import { observer } from 'mobx-react-lite'
 import { useRouter } from 'next/router'
-import { useQuery } from 'react-query'
+import { useMutation, useQuery } from 'react-query'
 import Select from 'react-select'
 import { Api } from '../../api'
 import {
@@ -21,10 +21,15 @@ import { toggleSideBar } from '../../utils/common'
 import { useMediaQuery } from '../../state/react/useMediaQuery'
 import { AppEnv } from '../../env'
 import { useMemo } from 'react'
+import { queryClient } from '../../state/queryClient'
+import { ModalNotifyMe } from '../modals/ModalNotifyMe'
+import { ModalPotConfirmModal } from '../modals/ModalPotConfirmModal'
 
 export function Sidebar() {
 	const haveSmallHeight = useMediaQuery('(max-height: 735px)')
+
 	const router = useRouter()
+	const selectedPot = useSelectedPot()
 
 	return (
 		<div
@@ -137,28 +142,116 @@ function SidebarHeader() {
 
 const SidebarPotSelector = observer(function SidebarPotSelector() {
 	const pot = useSelectedPot()
+	const [confirmationModal, setConfirmationModal] = useState(false)
+
 	const pots = useQuery('userPots', Api.userPots.list)
+	const selectedPot = pot.pot
+
+	const potAdminUser = useMemo(
+		() => pot.data?.users.find(u => u.admin),
+		[pot.data]
+	)
+
+	const potUser = useMemo(
+		() => pot.data?.users.find(u => u.id === userState.user?.id),
+		[pot.data]
+	)
 	const router = useRouter()
+
+	// console.log('potAdminUser', potUser.id, potAdminUser.id)
+	const showPotDelete = potAdminUser?.id === userState.user?.id
+
+	const leaveDeletePotMutation = useMutation(
+		'kickPotUser',
+		async (params: any) => {
+			try {
+				if (showPotDelete) {
+					Api.userPots.deletePot(pot.data.pot.id)
+					return
+				}
+				Api.userPots.deletePotUser(pot.data.pot.id, params.userId)
+			} catch (e) {
+				console.log('error', e)
+			}
+		},
+		{
+			onSuccess() {
+				console.log('success')
+				queryClient.invalidateQueries(['money-pot', selectedPot?.pot.id])
+			}
+		}
+	)
+
+	const leaveDeletePot = () => {
+		const params = {
+			userId: potUser.id
+		}
+		try {
+			leaveDeletePotMutation.mutate(params)
+
+			runInAction(() => {
+				userState.resetNotify()
+			})
+			router.push('/new')
+		} catch (e) {
+			console.log('error', e)
+		}
+	}
 
 	const options =
 		pots.data?.map(pot => ({
 			value: pot.moneyPot!.id,
 			label: (pot.moneyPot!.title || 'No title') as any
 		})) ?? []
-	options.push({
-		value: 'new',
-		label: (
-			<div className="flex items-center justify-center">
-				<svg className="-icon mr-2 translate-y-[-2px]">
-					<use xlinkHref="/img/sprite.svg#icon-plus"></use>
-				</svg>
-				Create new pot
-			</div>
-		)
-	})
+	options.push(
+		{
+			value: 'new',
+			label: (
+				<div className="flex items-center justify-center">
+					<svg className="-icon mr-2 translate-y-[-2px]">
+						<use xlinkHref="/img/sprite.svg#icon-plus"></use>
+					</svg>
+					Create new pot
+				</div>
+			)
+		},
+		{
+			value: 'leave',
+			label: (
+				<div
+					className="flex items-center justify-center"
+					onClick={() => setConfirmationModal(true)}
+				>
+					<div className="mr-2">
+						<img src="/img/leave.svg" style={{ width: 20, height: 20 }} />
+					</div>
+					<div className="text-red-600">Leave this pot</div>
+				</div>
+			)
+		},
+		{
+			value: 'delete',
+			label: (
+				<div
+					className="flex items-center justify-center"
+					onClick={() => setConfirmationModal(true)}
+				>
+					<div className="mr-2">
+						<img src="/img/delete.svg" style={{ width: 20, height: 20 }} />
+					</div>
+					<div className="text-red-600">Delete this pot</div>
+				</div>
+			)
+		}
+	)
 
 	const selectPot = (id: string) => {
+		if (id === 'leave' || id === 'delete') {
+			return
+		}
+
 		if (id === 'new') return router.push('/create')
+
 		runInAction(() => {
 			selectedPotState.moneyPotId = id
 			userState.resetNotify()
@@ -168,10 +261,26 @@ const SidebarPotSelector = observer(function SidebarPotSelector() {
 
 	return (
 		<div className="w-full">
+			<ModalPotConfirmModal
+				isOpen={confirmationModal}
+				onRequestClose={() => setConfirmationModal(false)}
+				potId={selectedPotState.moneyPotId}
+				openSuccessModal={() => {
+					setConfirmationModal(false)
+					leaveDeletePot()
+				}}
+				style={{ content: { position: 'relative' } }}
+				btnText={showPotDelete ? 'Delete' : 'Leave'}
+			/>
+
 			<Select
 				placeholder="Switch or create pot..."
 				isLoading={pots.isLoading}
-				options={options}
+				options={
+					showPotDelete
+						? options.filter(o => o.value !== 'leave')
+						: options.filter(o => o.value !== 'delete')
+				}
 				isOptionSelected={option =>
 					option.value === selectedPotState.moneyPotId
 				}
@@ -188,6 +297,7 @@ const SidebarPotSelector = observer(function SidebarPotSelector() {
 
 function SidebarLinks() {
 	const [currentModal, setCurrentModal] = useState(null as null | 'sweatJarFee')
+
 	const selectedPot = useSelectedPot()
 
 	const potUser = useMemo(
