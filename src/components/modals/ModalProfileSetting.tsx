@@ -14,11 +14,13 @@ import { createModalComponent } from '../ui/Modal'
 import { Button } from '../ui/Button'
 import { ButtonCloseModal } from './ButtonCloseModal'
 import { useMediaQuery } from '../../state/react/useMediaQuery'
+import { ModalPotConfirmModal } from './ModalPotConfirmModal'
 
 export const ModalProfileSetting = createModalComponent(
 	function ModalProfileSetting({ onRequestClose }) {
 		const isMobile = useMediaQuery('(max-width: 380px)')
 		const { data } = useSelectedPot()
+		const [confirmationModal, setConfirmationModal] = useState(false)
 		const [stripeModalIsOpen, setStripeModalIsOpen] = useState(false)
 
 		const card = useQuery('userCard', async () => {
@@ -223,6 +225,7 @@ export const ModalProfileSetting = createModalComponent(
 						<div className="font-bold text-md sm:font-extrabold sm:text-xl">
 							Ready up to join pot
 						</div>
+
 						<div className="flex items-center">
 							<span className="mr-3 text-gray-400">leave/join</span>
 							<label className="flex items-center cursor-pointer">
@@ -270,6 +273,31 @@ export const ModalProfileSetting = createModalComponent(
 							</a>
 						</Link>
 					</div>
+
+					<div className="flex items-center justify-center mt-6 tall:mt-10">
+						<div
+							className="flex items-center justify-center "
+							// onClick={() => setConfirmationModal(true)}
+						>
+							<Button
+								className={'border-red-600'}
+								onClick={() => setConfirmationModal(true)}
+								kind="tertiary"
+							>
+								<div className="mr-2">
+									<img src="/img/leave.svg" style={{ width: 20, height: 20 }} />
+								</div>
+								<div className={'text-red-600'}>Leave/delete this pot</div>
+							</Button>
+						</div>
+					</div>
+
+					<ModalPotConfirmModal
+						isOpen={confirmationModal}
+						onRequestClose={() => setConfirmationModal(false)}
+						openSuccessModal={() => setConfirmationModal(false)}
+						style={{ content: { position: 'relative' } }}
+					/>
 				</div>
 			</>
 		)

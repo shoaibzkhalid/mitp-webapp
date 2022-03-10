@@ -22,7 +22,6 @@ import { useMediaQuery } from '../../state/react/useMediaQuery'
 import { AppEnv } from '../../env'
 import { useMemo } from 'react'
 import { queryClient } from '../../state/queryClient'
-import { ModalNotifyMe } from '../modals/ModalNotifyMe'
 import { ModalPotConfirmModal } from '../modals/ModalPotConfirmModal'
 
 export function Sidebar() {
@@ -145,58 +144,15 @@ const SidebarPotSelector = observer(function SidebarPotSelector() {
 	const [confirmationModal, setConfirmationModal] = useState(false)
 
 	const pots = useQuery('userPots', Api.userPots.list)
-	const selectedPot = pot.pot
 
 	const potAdminUser = useMemo(
 		() => pot.data?.users.find(u => u.admin),
 		[pot.data]
 	)
 
-	const potUser = useMemo(
-		() => pot.data?.users.find(u => u.id === userState.user?.id),
-		[pot.data]
-	)
 	const router = useRouter()
 
-	// console.log('potAdminUser', potUser.id, potAdminUser.id)
 	const showPotDelete = potAdminUser?.id === userState.user?.id
-
-	const leaveDeletePotMutation = useMutation(
-		'kickPotUser',
-		async (params: any) => {
-			try {
-				if (showPotDelete) {
-					Api.userPots.deletePot(pot.data.pot.id)
-					return
-				}
-				Api.userPots.deletePotUser(pot.data.pot.id, params.userId)
-			} catch (e) {
-				console.log('error', e)
-			}
-		},
-		{
-			onSuccess() {
-				console.log('success')
-				queryClient.invalidateQueries(['money-pot', selectedPot?.pot.id])
-			}
-		}
-	)
-
-	const leaveDeletePot = () => {
-		const params = {
-			userId: potUser.id
-		}
-		try {
-			leaveDeletePotMutation.mutate(params)
-
-			runInAction(() => {
-				userState.resetNotify()
-			})
-			router.push('/new')
-		} catch (e) {
-			console.log('error', e)
-		}
-	}
 
 	const options =
 		pots.data?.map(pot => ({
@@ -264,13 +220,8 @@ const SidebarPotSelector = observer(function SidebarPotSelector() {
 			<ModalPotConfirmModal
 				isOpen={confirmationModal}
 				onRequestClose={() => setConfirmationModal(false)}
-				potId={selectedPotState.moneyPotId}
-				openSuccessModal={() => {
-					setConfirmationModal(false)
-					leaveDeletePot()
-				}}
+				openSuccessModal={() => setConfirmationModal(false)}
 				style={{ content: { position: 'relative' } }}
-				btnText={showPotDelete ? 'Delete' : 'Leave'}
 			/>
 
 			<Select

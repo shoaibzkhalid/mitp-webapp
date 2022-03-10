@@ -25,6 +25,7 @@ export const ModalCheckInPhoto = createModalComponent<{
 		setIsUploading(true)
 		await Api.logsCreate(props.potId, file)
 		queryClient.invalidateQueries(['money-pot', props.potId])
+		queryClient.invalidateQueries(['user-logs', props.potId])
 		setIsUploading(false)
 	})
 
