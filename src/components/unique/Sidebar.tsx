@@ -23,6 +23,7 @@ import { AppEnv } from '../../env'
 import { useMemo } from 'react'
 import { queryClient } from '../../state/queryClient'
 import { ModalPotConfirmModal } from '../modals/ModalPotConfirmModal'
+import Tippy from '@tippyjs/react'
 
 export function Sidebar() {
 	const haveSmallHeight = useMediaQuery('(max-height: 735px)')
@@ -32,10 +33,12 @@ export function Sidebar() {
 
 	return (
 		<div
-			style={{
-				padding: haveSmallHeight ? '50px 0 200px 0' : '100px 0 200px 0'
-			}}
-			className="fixed top-0 left-0 h-screen bg-white border-r border-gray-200 w-65 dark:border-gray-700 dark:bg-gray-900 md:w-80"
+			style={{ padding: '50px 0 200px 0' }}
+			className="
+			pt-14 pb-0 pr-0
+			fixed top-0 left-0  h-screen bg-white border-r 
+			border-gray-200 w-65 
+			dark:border-gray-700 dark:bg-gray-900 md:w-80"
 		>
 			<SidebarHeader />
 			<div className="w-full h-full px-6 pb-5 overflow-x-hidden overflow-y-hidden border-b border-gray-200 dark:border-gray-700 -sidebar-main md:px-8">
@@ -81,8 +84,7 @@ function SidebarHeader() {
 		<div className="absolute top-0 left-0 right-0">
 			<div
 				className={clsx(
-					'relative flex flex-col items-center justify-center px-8 border-0',
-					haveSmallHeight ? 'pt-6' : 'pt-12'
+					'relative flex flex-col items-center justify-center px-8 border-0 pt-6'
 				)}
 			>
 				{isMobile && (
@@ -439,16 +441,22 @@ const Profile = observer(function Profile() {
 				/>
 				<div className="relative px-2">
 					<div
-						className="font-bold w-1/2 text-ellipsis"
-						style={{ overflow: 'hidden' }}
+						className="font-bold text-ellipsis"
+						style={{
+							overflow: 'hidden',
+							...(!potUser?.readyUpAt && { width: '50%' })
+						}}
 					>
 						{user?.firstName || (
 							<span className="text-gray-400">Anonymous</span>
 						)}
 					</div>
-					<div className="text-xs opacity-75 profile">
-						Set swear jar fee &amp; ready up
-					</div>
+					{!potUser?.readyUpAt && (
+						<div className="text-xs opacity-75 profile">
+							Set swear jar fee &amp; ready up
+						</div>
+					)}
+
 					{!potUser?.readyUpAt && (
 						<>
 							<div className="absolute top-0 right-0 font-thin text-gray-400">

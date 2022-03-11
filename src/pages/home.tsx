@@ -117,16 +117,14 @@ export default wrapDashboardLayout(function OverviewPage() {
 									style={{ lineHeight: 1.5 }}
 								>
 									{data?.pot.title}
-									{potUser?.admin && (
-										<span
-											className="inline-block ml-2 cursor-pointer"
-											onClick={() => setOpenGroupDetailModal(true)}
-										>
-											<svg className="w-6 h-6 fill-current">
-												<use xlinkHref="/img/sprite.svg#icon-settings"></use>
-											</svg>
-										</span>
-									)}
+									<span
+										className="inline-block ml-2 cursor-pointer"
+										onClick={() => setOpenGroupDetailModal(true)}
+									>
+										<svg className="w-6 h-6 fill-current">
+											<use xlinkHref="/img/sprite.svg#icon-settings"></use>
+										</svg>
+									</span>
 								</div>
 								<ModalGroupSettings
 									isOpen={openGroupDetailModal}

@@ -14,10 +14,13 @@ import classes from './../../pages/create.module.css'
 import { createModalComponent } from '../ui/Modal'
 import { Button } from '../ui/Button'
 import { ButtonCloseModal } from './ButtonCloseModal'
+import { ModalPotConfirmModal } from './ModalPotConfirmModal'
 
 export const ModalGroupSettings = createModalComponent(
 	function ModalGroupSettings({ onRequestClose }) {
 		const { data } = useSelectedPot()
+		const [confirmationModal, setConfirmationModal] = useState(false)
+
 		const [groupDetails, setGroupDetails] = useState({
 			groupTitle: data?.pot.title,
 			description: data?.pot.description,
@@ -166,60 +169,59 @@ export const ModalGroupSettings = createModalComponent(
 					{groupDetailsIsSelected ? (
 						<>
 							{!isAdmin && (
-								<div className="mt-8 group-detail-modal__headings">
-									<h3 className="mb-2 group-details-modal__title">
+								<div className="mt-8 ">
+									<h3 className={`mb-2  ${!isAdmin && 'text-gray-400'}`}>
 										Title of the group
 									</h3>
-									{/* <div className="flex items-center mt-10 xl:mt-14 2xl:mt-28 sm:text-lg lg:text-xl 2xl:text-2xl">
-									Set the activity your group does together
-									<div
-										className={clsx(
-											classes.tooltip,
-											'sm:text-2xl lg:text-xl 2xl:text-4xl'
-										)}
-									>
-										<img
-											src="/img/info.png"
-											alt=""
-											className={clsx(classes.group_info_img, 'pl-1')}
-										/>
-										<span className={classes.tooltiptext}>
-											This is the activity your group does together. Type in
-											your own, or choose from the dropdown menu
-										</span>
-									</div>
-								</div> */}
 								</div>
 							)}
 							<div className="flex items-center">
-								<Input
-									className={clsx(
-										'group-details-modal__input',
-										isAdmin ? 'mr-8' : ''
-									)}
-									placeholder="Weekly Workouts"
-									value={groupDetails.groupTitle}
-									disabled={saveMutation.isLoading}
-									setValue={v =>
-										setGroupDetails({ ...groupDetails, groupTitle: v })
-									}
-									inputStyle={{ color: '#31445b' }}
-								/>
+								{isAdmin ? (
+									<Input
+										className={clsx(
+											'group-details-modal__input',
+											isAdmin ? 'mr-8' : ''
+										)}
+										placeholder="Weekly Workouts"
+										value={groupDetails.groupTitle}
+										disabled={saveMutation.isLoading}
+										setValue={v =>
+											setGroupDetails({ ...groupDetails, groupTitle: v })
+										}
+										inputStyle={{ color: '#31445b' }}
+									/>
+								) : (
+									<h3 className="group-details-modal__title">
+										{groupDetails.groupTitle}
+									</h3>
+								)}
 								{isAdmin && <div>{`Admin : ${potAdminUser?.firstName}`}</div>}
 							</div>
 
-							<TextArea
-								className="mt-8 mb-2 group-details-modal__input group-details-modal__text-area"
-								rows={4}
-								labelClassName="group-details-modal__input-label mb-2 text-white"
-								label="Description"
-								placeholder="Specific activities, duration, or location requirements for check ins"
-								value={groupDetails.description}
-								disabled={saveMutation.isLoading}
-								setValue={v =>
-									setGroupDetails({ ...groupDetails, description: v })
-								}
-							/>
+							{isAdmin ? (
+								<TextArea
+									className="mt-8 mb-2 group-details-modal__input group-details-modal__text-area"
+									rows={4}
+									labelClassName="group-details-modal__input-label mb-2 text-white"
+									label="Description"
+									placeholder="Specific activities, duration, or location requirements for check ins"
+									value={groupDetails.description}
+									disabled={saveMutation.isLoading}
+									setValue={v =>
+										setGroupDetails({ ...groupDetails, description: v })
+									}
+								/>
+							) : (
+								<div className="mt-8 ">
+									<h3 className={`mb-2  ${!isAdmin && 'text-gray-400'}`}>
+										Description
+									</h3>
+									<h3 className="group-details-modal__title">
+										{groupDetails.description}
+									</h3>
+								</div>
+							)}
+
 							<div className="flex">
 								<SelectInput
 									borders={true}
@@ -230,7 +232,7 @@ export const ModalGroupSettings = createModalComponent(
 										label: i === 0 ? `Minimum: $${i}` : i + '$',
 										value: i
 									}))}
-									disabled={false}
+									disabled={isAdmin ? false : true}
 									value={Number(groupDetails.payInMinimum)}
 									setValue={v =>
 										setGroupDetails({
@@ -244,7 +246,7 @@ export const ModalGroupSettings = createModalComponent(
 									className="mt-6 mb-6 ml-1 group-details-modal__input"
 									label="Check ins required per week"
 									labelClassName="group-details-modal__input-label"
-									disabled={false}
+									disabled={isAdmin ? false : true}
 									options={frequencyOptions.map((i, index: number) => ({
 										label: i,
 										value: index + 1
@@ -267,31 +269,61 @@ export const ModalGroupSettings = createModalComponent(
 								</h3>
 							)}
 
-							<ButtonsSwitch
-								button1Data="Anyone can invite"
-								button2Data="Only I can invite"
-								setInviteMode={v =>
-									setGroupDetails({
-										...groupDetails,
-										inviteMode: v
-									})
-								}
-								inviteMode={groupDetails?.inviteMode}
-							/>
 							{isAdmin && (
-								<MembersList
-									membersList={data?.users}
-									isAdmin={potUser?.admin}
+								<ButtonsSwitch
+									button1Data="Anyone can invite"
+									button2Data="Only I can invite"
+									setInviteMode={v =>
+										setGroupDetails({
+											...groupDetails,
+											inviteMode: v
+										})
+									}
+									inviteMode={groupDetails?.inviteMode}
 								/>
 							)}
-							<div className="flex justify-center mt-10">
-								<Button
-									disabled={updatePotMutation.isLoading}
-									onClick={() => updatePortGroup()}
-								>
-									Save
-								</Button>
+
+							<div className="flex items-center justify-center mt-6 tall:mt-10">
+								<div className="flex items-center justify-center ">
+									<Button
+										className={'border-red-600'}
+										onClick={() => setConfirmationModal(true)}
+										kind="tertiary"
+									>
+										<div className="mr-2">
+											<img
+												src="/img/leave.svg"
+												style={{ width: 20, height: 20 }}
+											/>
+										</div>
+										<div className={'text-red-600'}>Leave/delete this pot</div>
+									</Button>
+								</div>
 							</div>
+
+							<ModalPotConfirmModal
+								isOpen={confirmationModal}
+								onRequestClose={() => setConfirmationModal(false)}
+								openSuccessModal={() => setConfirmationModal(false)}
+								style={{ content: { position: 'relative' } }}
+							/>
+
+							{isAdmin && (
+								<>
+									<MembersList
+										membersList={data?.users}
+										isAdmin={potUser?.admin}
+									/>
+									<div className="flex justify-center mt-10">
+										<Button
+											disabled={updatePotMutation.isLoading}
+											onClick={() => updatePortGroup()}
+										>
+											Save
+										</Button>
+									</div>
+								</>
+							)}
 						</>
 					) : (
 						<>

@@ -38,7 +38,7 @@ export const CheckInButton = observer(function CheckInButton(
 		userLogs.data?.logs[0] &&
 		dayjs().isSame(userLogs.data?.logs[0].createdAt, 'day')
 
-	console.log('checkedInAlready', checkedInAlready, userLogs.data?.logs[0])
+	// console.log('checkedInAlready', checkedInAlready, userLogs.data?.logs[0])
 
 	const checkinMutation = useMutation('checkin', async (file: File) => {
 		await Api.logsCreate(selectedPotState.moneyPotId, file)

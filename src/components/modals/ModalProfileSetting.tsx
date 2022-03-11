@@ -22,20 +22,11 @@ export const ModalProfileSetting = createModalComponent(
 		const { data } = useSelectedPot()
 		const [confirmationModal, setConfirmationModal] = useState(false)
 		const [stripeModalIsOpen, setStripeModalIsOpen] = useState(false)
+		const [error, setError] = useState('')
 
 		const card = useQuery('userCard', async () => {
 			return Api.user.getStripeCard()
 		})
-
-		const [user, setUser] = useState({
-			firstName: userState.user!.firstName,
-			lastName: userState.user!.lastName,
-			email: userState.user!.email
-		})
-
-		const [fileURL, setFileURL] = useState(userState.user!.avatarUri)
-		const [pAmount, setPamount] = useState(data?.pot.minAmount)
-		const inputFile = useRef(null)
 
 		const potUser = useMemo(
 			() => data?.users.find(u => u.id === userState.user?.id),
@@ -43,6 +34,17 @@ export const ModalProfileSetting = createModalComponent(
 		)
 
 		const [swearFee, setSwearFee] = useState(potUser?.amount)
+
+		const [user, setUser] = useState({
+			firstName: userState.user!.firstName,
+			lastName: userState.user!.lastName,
+			email: userState.user!.email,
+			swearFee: swearFee
+		})
+
+		const [fileURL, setFileURL] = useState(userState.user!.avatarUri)
+		const [pAmount, setPamount] = useState(data?.pot.minAmount)
+		const inputFile = useRef(null)
 
 		const handleChange = event => {
 			if (event.target.files.length > 0) {
@@ -104,6 +106,8 @@ export const ModalProfileSetting = createModalComponent(
 			}
 			updateMutation.mutate(params)
 		}
+
+		console.log('check', user)
 
 		return (
 			<>
@@ -189,31 +193,29 @@ export const ModalProfileSetting = createModalComponent(
 							How much is missing a week worth to you?
 						</div>
 						<div className="flex pt-3">
-							<div className="w-9/12">
-								<SelectInput
-									height="undefined"
-									selectClassName="bg-alabaster p-4 focus:outline-none"
-									options={[0, 5, 10, 15, 20, 30, 40, 50].map(i => ({
-										label: i === 0 ? `Group Minimum: $${i}` : i + '$',
-										value: i + ''
-									}))}
-									value={potUser?.amount}
+							<div className="w-full">
+								<Input
+									placeholder="Enter your swear jar fee"
+									inputClassName="focus:outline-none bg-alabaster p-4"
+									inputStyle={{
+										color: '#000000'
+									}}
+									value={user.swearFee}
 									setValue={v => {
+										if (v <= data.pot.minAmount - 1) {
+											setError(
+												'Amount must be greater than or equal to group minimum $' +
+													data?.pot.minAmount
+											)
+											return
+										}
+										setError('')
+										setUser({ ...user, swearFee: v })
 										setSwearFee(v as string)
 										updatePortGroup(v as string)
 									}}
 								/>
-							</div>
-							<div className="flex w-3/12">
-								<Button
-									className="w-full"
-									onClick={() => {
-										updatePortGroup(swearFee)
-										onRequestClose()
-									}}
-								>
-									Save
-								</Button>
+								{error && <div className="text-red-400">Error: {error}</div>}
 							</div>
 						</div>
 						<div className="pt-3 text-gray-400 text-md">
@@ -275,10 +277,7 @@ export const ModalProfileSetting = createModalComponent(
 					</div>
 
 					<div className="flex items-center justify-center mt-6 tall:mt-10">
-						<div
-							className="flex items-center justify-center "
-							// onClick={() => setConfirmationModal(true)}
-						>
+						<div className="flex items-center justify-center ">
 							<Button
 								className={'border-red-600'}
 								onClick={() => setConfirmationModal(true)}
