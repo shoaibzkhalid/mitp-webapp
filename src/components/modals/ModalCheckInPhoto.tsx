@@ -14,6 +14,8 @@ import { createModalComponent } from '../ui/Modal'
 import { Button } from '../ui/Button'
 import { ButtonCloseModal } from './ButtonCloseModal'
 import { useIsMobile } from '../../state/react/useIsMobile'
+import { toast } from 'react-toastify'
+import { themeState } from '../../state/react/useTheme'
 
 export const ModalCheckInPhoto = createModalComponent<{
 	openSuccessModal: () => any
@@ -21,6 +23,7 @@ export const ModalCheckInPhoto = createModalComponent<{
 }>(function ModalCheckInPhoto(props) {
 	const [isUplaoding, setIsUploading] = useState(false)
 	const [imagePreview, setImagePreview] = useState<any>()
+
 	const checkinMutation = useMutation('checkin', async (file: File) => {
 		setIsUploading(true)
 		await Api.logsCreate(props.potId, file)
@@ -35,6 +38,17 @@ export const ModalCheckInPhoto = createModalComponent<{
 		accept: 'image/jpeg, image/png',
 		maxSize: 5 * 1024 * 1024,
 		onDrop: acceptedFiles => {
+			if (acceptedFiles.length < 1) {
+				toast(
+					'You can only upload images with the extension .jpeg and .png .',
+					{
+						type: 'error',
+						theme: themeState.theme
+					}
+				)
+				return
+			}
+
 			setImagePreview(URL.createObjectURL(acceptedFiles[0]))
 		}
 	})

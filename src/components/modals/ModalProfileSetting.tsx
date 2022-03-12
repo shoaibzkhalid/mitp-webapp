@@ -15,6 +15,8 @@ import { Button } from '../ui/Button'
 import { ButtonCloseModal } from './ButtonCloseModal'
 import { useMediaQuery } from '../../state/react/useMediaQuery'
 import { ModalPotConfirmModal } from './ModalPotConfirmModal'
+import { toast } from 'react-toastify'
+import { themeState } from '../../state/react/useTheme'
 
 export const ModalProfileSetting = createModalComponent(
 	function ModalProfileSetting({ onRequestClose }) {
@@ -47,6 +49,15 @@ export const ModalProfileSetting = createModalComponent(
 		const inputFile = useRef(null)
 
 		const handleChange = event => {
+			console.log('event.target.files', event.target.files)
+			if (event.target.files[0].size > 5000000) {
+				toast('Your photo is too large. Please upload a file less than 5MB.', {
+					type: 'error',
+					theme: themeState.theme
+				})
+				return
+			}
+
 			if (event.target.files.length > 0) {
 				const fileURL = URL.createObjectURL(event.target.files[0])
 				setFileURL(fileURL)
@@ -106,8 +117,6 @@ export const ModalProfileSetting = createModalComponent(
 			}
 			updateMutation.mutate(params)
 		}
-
-		console.log('check', user)
 
 		return (
 			<>

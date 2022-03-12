@@ -114,7 +114,7 @@ export default wrapDashboardLayout(function PayoutsPage() {
 				<hr className="my-10" />
 
 				<div className="px-6 -card --shadow xl:px-12 md:px-8">
-					<div className="-table-responsive max-w-[100vw]">
+					<div className="-table-responsive max-w-[90vw]">
 						<table className="-table">
 							<thead>
 								<tr>
