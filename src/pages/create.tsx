@@ -10,6 +10,7 @@ import { userState } from '../state/user'
 import { selectedPotState } from '../state/react/useSelectedPot'
 import clsx from 'clsx'
 import classes from './create.module.css'
+import { useIsMobile } from '../state/react/useIsMobile'
 
 function createPotNewState() {
 	return observable({
@@ -104,6 +105,8 @@ export default observer(function PotNew() {
 					<StepComponent
 						state={state}
 						setStepCompleted={setStepCompleted}
+						generateSession={generateSession}
+						disabled={!stepCompleted || createPotMutation.isLoading}
 					></StepComponent>
 					<div className="flex justify-center sm:hidden">
 						<img
@@ -112,16 +115,6 @@ export default observer(function PotNew() {
 						/>
 					</div>
 					<div className="absolute flex flex-col items-center w-full sm:w-fit bottom-12 sm:bottom-auto">
-						<button
-							className={clsx(
-								'px-4 text-center py-4 rounded-md mt-0 sm:mt-10 shadow-md lg:mt-16 xl:mt-20 2xl:mt-24 lg:text-xl xl:text-2xl',
-								classes.onboarding__button
-							)}
-							disabled={!stepCompleted || createPotMutation.isLoading}
-							onClick={generateSession}
-						>
-							Generate session
-						</button>
 						<div className="flex justify-end block w-full mt-4 text-white bottom-20 sm:hidden sm:mt-24 lg:mt-0 sm:absolute">
 							<button
 								className="flex items-center text-xl xl:text-2xl 2xl:text-3xl xl:pr-34 lg:pr-24 md:pr-16"
@@ -166,12 +159,15 @@ export default observer(function PotNew() {
 interface StepProps {
 	state: PotNewState
 	setStepCompleted: (completed: any) => any
+	disabled: boolean
+	generateSession: any
 }
 
 const StepRequirements = observer((props: StepProps) => {
 	const [suggestionDropdown, setSuggestionDropDown] = useState<boolean>(false)
 	const [perWeekDropdown, setPerWeekDropDown] = useState<boolean>(false)
 	const [perWeekSelection, setPerWeekSelection] = useState('Once per week')
+	const isMobile = useIsMobile()
 
 	useEffect(
 		() => props.setStepCompleted(props.state.title.length > 0),
@@ -367,6 +363,25 @@ const StepRequirements = observer((props: StepProps) => {
 						Weekly Studying, complete an hour of studying
 					</li>
 				</ul>
+
+				<button
+					className={clsx(
+						`absolute ${
+							!isMobile && suggestionDropdown
+								? 'top-65'
+								: `${
+										isMobile && suggestionDropdown
+											? 'top-96 mt-14'
+											: `${isMobile ? 'top-20' : 'top-1'}`
+								  } `
+						} px-4 text-center py-4 rounded-md sm:mt-10 shadow-md lg:mt-16 xl:mt-24 2xl:mt-24 lg:text-xl xl:text-2xl`,
+						classes.onboarding__button
+					)}
+					disabled={props.disabled}
+					onClick={props.generateSession}
+				>
+					Generate session
+				</button>
 			</div>
 		</div>
 	)
