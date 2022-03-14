@@ -17,7 +17,7 @@ export function OverlayLoadingAnimation() {
 	return (
 		<div className="absolute top-0 bottom-0 left-0 right-0 flex items-center justify-center bg-white">
 			<div className="w-full max-w-[8rem]">
-				<Lottie options={options} height={100} width={100} />
+				<Lottie options={options} height={80} width={80} />
 			</div>
 		</div>
 	)

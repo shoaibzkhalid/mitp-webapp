@@ -42,7 +42,8 @@
 		"react-modal": "^3.14.4",
 		"react-query": "^3.34.12",
 		"react-select": "^5.2.2",
-		"react-ssr-prepass": "npm:preact-ssr-prepass"
+		"react-ssr-prepass": "npm:preact-ssr-prepass",
+		"react-toastify": "^8.2.0"
 	},
 	"devDependencies": {
 		"@types/react": "^17.0.39",

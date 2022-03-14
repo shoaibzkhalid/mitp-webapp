@@ -36,6 +36,7 @@ export interface ApiPot extends ModelBase {
 export interface ApiPotLog extends ModelBase {
 	pictureUri: string | null
 	user_MoneyPotId: string
+	description: string | null
 }
 
 export interface ApiUser_MoneyPot extends ModelBase {

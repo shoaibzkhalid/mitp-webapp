@@ -1,7 +1,7 @@
 import { runInAction } from 'mobx'
 import { observer } from 'mobx-react-lite'
 import { useRouter } from 'next/router'
-import { useQuery } from 'react-query'
+import { useMutation, useQuery } from 'react-query'
 import Select from 'react-select'
 import { Api } from '../../api'
 import {
@@ -21,17 +21,24 @@ import { toggleSideBar } from '../../utils/common'
 import { useMediaQuery } from '../../state/react/useMediaQuery'
 import { AppEnv } from '../../env'
 import { useMemo } from 'react'
+import { queryClient } from '../../state/queryClient'
+import { ModalPotConfirmModal } from '../modals/ModalPotConfirmModal'
+import Tippy from '@tippyjs/react'
 
 export function Sidebar() {
 	const haveSmallHeight = useMediaQuery('(max-height: 735px)')
+
 	const router = useRouter()
+	const selectedPot = useSelectedPot()
 
 	return (
 		<div
-			style={{
-				padding: haveSmallHeight ? '50px 0 200px 0' : '100px 0 200px 0'
-			}}
-			className="fixed top-0 left-0 h-screen bg-white border-r border-gray-200 w-65 dark:border-gray-700 dark:bg-gray-900 md:w-80"
+			style={{ padding: '50px 0 200px 0' }}
+			className="
+			pt-14 pb-0 pr-0
+			fixed top-0 left-0  h-screen bg-white border-r 
+			border-gray-200 w-65 
+			dark:border-gray-700 dark:bg-gray-900 md:w-80"
 		>
 			<SidebarHeader />
 			<div className="w-full h-full px-6 pb-5 overflow-x-hidden overflow-y-hidden border-b border-gray-200 dark:border-gray-700 -sidebar-main md:px-8">
@@ -77,8 +84,7 @@ function SidebarHeader() {
 		<div className="absolute top-0 left-0 right-0">
 			<div
 				className={clsx(
-					'relative flex flex-col items-center justify-center px-8 border-0',
-					haveSmallHeight ? 'pt-6' : 'pt-12'
+					'relative flex flex-col items-center justify-center px-8 border-0 pt-6'
 				)}
 			>
 				{isMobile && (
@@ -137,28 +143,73 @@ function SidebarHeader() {
 
 const SidebarPotSelector = observer(function SidebarPotSelector() {
 	const pot = useSelectedPot()
+	const [confirmationModal, setConfirmationModal] = useState(false)
+
 	const pots = useQuery('userPots', Api.userPots.list)
+
+	const potAdminUser = useMemo(
+		() => pot.data?.users.find(u => u.admin),
+		[pot.data]
+	)
+
 	const router = useRouter()
+
+	const showPotDelete = potAdminUser?.id === userState.user?.id
 
 	const options =
 		pots.data?.map(pot => ({
 			value: pot.moneyPot!.id,
 			label: (pot.moneyPot!.title || 'No title') as any
 		})) ?? []
-	options.push({
-		value: 'new',
-		label: (
-			<div className="flex items-center justify-center">
-				<svg className="-icon mr-2 translate-y-[-2px]">
-					<use xlinkHref="/img/sprite.svg#icon-plus"></use>
-				</svg>
-				Create new pot
-			</div>
-		)
-	})
+	options.push(
+		{
+			value: 'new',
+			label: (
+				<div className="flex items-center justify-center">
+					<svg className="-icon mr-2 translate-y-[-2px]">
+						<use xlinkHref="/img/sprite.svg#icon-plus"></use>
+					</svg>
+					Create new pot
+				</div>
+			)
+		},
+		{
+			value: 'leave',
+			label: (
+				<div
+					className="flex items-center justify-center"
+					onClick={() => setConfirmationModal(true)}
+				>
+					<div className="mr-2">
+						<img src="/img/leave.svg" style={{ width: 20, height: 20 }} />
+					</div>
+					<div className="text-red-600">Leave this pot</div>
+				</div>
+			)
+		},
+		{
+			value: 'delete',
+			label: (
+				<div
+					className="flex items-center justify-center"
+					onClick={() => setConfirmationModal(true)}
+				>
+					<div className="mr-2">
+						<img src="/img/delete.svg" style={{ width: 20, height: 20 }} />
+					</div>
+					<div className="text-red-600">Delete this pot</div>
+				</div>
+			)
+		}
+	)
 
 	const selectPot = (id: string) => {
+		if (id === 'leave' || id === 'delete') {
+			return
+		}
+
 		if (id === 'new') return router.push('/create')
+
 		runInAction(() => {
 			selectedPotState.moneyPotId = id
 			userState.resetNotify()
@@ -168,10 +219,21 @@ const SidebarPotSelector = observer(function SidebarPotSelector() {
 
 	return (
 		<div className="w-full">
+			<ModalPotConfirmModal
+				isOpen={confirmationModal}
+				onRequestClose={() => setConfirmationModal(false)}
+				openSuccessModal={() => setConfirmationModal(false)}
+				style={{ content: { position: 'relative' } }}
+			/>
+
 			<Select
 				placeholder="Switch or create pot..."
 				isLoading={pots.isLoading}
-				options={options}
+				options={
+					showPotDelete
+						? options.filter(o => o.value !== 'leave')
+						: options.filter(o => o.value !== 'delete')
+				}
 				isOptionSelected={option =>
 					option.value === selectedPotState.moneyPotId
 				}
@@ -188,6 +250,7 @@ const SidebarPotSelector = observer(function SidebarPotSelector() {
 
 function SidebarLinks() {
 	const [currentModal, setCurrentModal] = useState(null as null | 'sweatJarFee')
+
 	const selectedPot = useSelectedPot()
 
 	const potUser = useMemo(
@@ -378,16 +441,22 @@ const Profile = observer(function Profile() {
 				/>
 				<div className="relative px-2">
 					<div
-						className="font-bold w-1/2 text-ellipsis"
-						style={{ overflow: 'hidden' }}
+						className="font-bold text-ellipsis"
+						style={{
+							overflow: 'hidden',
+							...(!potUser?.readyUpAt && { width: '50%' })
+						}}
 					>
 						{user?.firstName || (
 							<span className="text-gray-400">Anonymous</span>
 						)}
 					</div>
-					<div className="text-xs opacity-75 profile">
-						Set swear jar fee &amp; ready up
-					</div>
+					{!potUser?.readyUpAt && (
+						<div className="text-xs opacity-75 profile">
+							Set swear jar fee &amp; ready up
+						</div>
+					)}
+
 					{!potUser?.readyUpAt && (
 						<>
 							<div className="absolute top-0 right-0 font-thin text-gray-400">

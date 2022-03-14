@@ -2,15 +2,22 @@ import { useRouter } from 'next/router'
 import { Button } from '../ui/Button'
 import { createModalComponent } from '../ui/Modal'
 import { useMediaQuery } from '../../state/react/useMediaQuery'
+import { ButtonCloseModal } from './ButtonCloseModal'
 
 export const ModalStripeConnect = createModalComponent(
-	function ModalStripeConnect() {
+	function ModalStripeConnect(props) {
 		const router = useRouter()
 		const isMobile = useMediaQuery('(max-width: 380px)')
 
 		return (
 			<>
 				<div className="flex flex-col justify-center h-full px-0 text-center sm:px-6">
+					<div className="flex items-center justify-center text-xl font-poppins">
+						<div className="absolute right-4 top-2">
+							<ButtonCloseModal onClick={props.onRequestClose} />
+						</div>
+					</div>
+
 					<div className="flex justify-center">
 						<img src="/img/stripe-logo.svg" width={150} height={60} />
 					</div>

@@ -1,10 +1,12 @@
 import dayjs from 'dayjs'
-import { useState } from 'react'
-import { useQuery } from 'react-query'
+import { useEffect, useState } from 'react'
+import { useMutation, useQuery } from 'react-query'
 import { Api } from '../../api'
+import { queryClient } from '../../state/queryClient'
 import { useSelectedPot } from '../../state/react/useSelectedPot'
 import { userState } from '../../state/user'
 import { SpinnerBig } from '../SpinnerBig'
+import { Input } from '../ui/Input'
 import { createModalComponent } from '../ui/Modal'
 import { ButtonCloseModal } from './ButtonCloseModal'
 
@@ -13,19 +15,53 @@ export const ModalUserViewLogs = createModalComponent<{
 	userId: string
 	viewingLogsMode: string
 }>(function ModalUserViewLogs(props) {
+	const { potId, userId, onRequestClose, viewingLogsMode } = props
+
 	const pot = useSelectedPot()
+	const [desFieldActive, setDesFieldActive] = useState(false)
 	const potUser = pot.data?.users.find(u => u.id === userState.user?.id)
 
-	const userLogs = useQuery(['user-logs', props.potId, props.userId], () =>
-		Api.logsList(props.potId, props.userId)
+	const userLogs = useQuery(['user-logs', potId, userId], () =>
+		Api.logsList(potId, userId)
 	)
+
+	useEffect(() => {}, [userLogs])
 
 	const [currentLogIndex, setCurrentLogIndex] = useState(0)
-	const [currentLogId, setCurrentLogId] = useState(
-		userLogs.data?.logs[currentLogIndex]?.id
+
+	const [logState, setLogState] = useState({
+		description: userLogs.data?.logs[currentLogIndex]?.description
+	})
+
+	// console.log('logState', userLogs.data?.logs[currentLogIndex]?.description)
+
+	const saveDescriptionMutation = useMutation(
+		'updatePot',
+		async (description: any) =>
+			Api.logUpdate(userLogs.data.logs[currentLogIndex].id, {
+				description
+			}),
+		{
+			onSuccess() {
+				queryClient.invalidateQueries(['user-logs', potId])
+			}
+		}
 	)
 
-	if (props.viewingLogsMode === 'week' && userLogs.data?.logs) {
+	const deleteDescriptionMutation = useMutation('delete-log', async () => {
+		await Api.logDescDelete(userLogs.data.logs[currentLogIndex].id)
+		queryClient.invalidateQueries(['user-logs', potId])
+	})
+
+	useEffect(() => {
+		setCurrentLogId(userLogs.data?.logs[currentLogIndex].id)
+	}, [userLogs.data?.logs])
+
+	const [currentLogId, setCurrentLogId] = useState(
+		userLogs.data?.logs[currentLogIndex].id || null
+	)
+
+	if (viewingLogsMode === 'week' && userLogs.data?.logs) {
 		userLogs.data.logs = userLogs.data?.logs.filter(log => {
 			if (
 				new Date(log.createdAt) > dayjs().startOf('week').toDate() &&
@@ -36,14 +72,14 @@ export const ModalUserViewLogs = createModalComponent<{
 		})
 	}
 
-	console.log('userLogs', potUser)
-	console.log('logindex', currentLogIndex)
+	// console.log('currentLogId', currentLogId, userLogs.data?.logs)
+
 	return (
 		<>
 			<div className="flex items-center text-xl font-poppins">
 				<div className="text-2xl font-bold">User logs</div>
 				<div className="ml-auto">
-					<ButtonCloseModal onClick={props.onRequestClose} />
+					<ButtonCloseModal onClick={onRequestClose} />
 				</div>
 			</div>
 
@@ -52,7 +88,7 @@ export const ModalUserViewLogs = createModalComponent<{
 			) : userLogs.data.logs.length === 0 ? (
 				<div className="text-gray-500">No logs.</div>
 			) : (
-				<div className="mb-7 truncate h-full">
+				<div className="mb-7 truncate">
 					<div className="flex flex-row items-center justify-between mb-3">
 						<div className="flex flex-row items-center">
 							<img
@@ -89,6 +125,11 @@ export const ModalUserViewLogs = createModalComponent<{
 								<div
 									className="flex top-1/2 left-10 bg-white rounded-3xl opacity-80 justify-center items-center w-8 h-8 absolute cursor-pointer"
 									onClick={() => {
+										setLogState({
+											...logState,
+											description:
+												userLogs.data.logs[currentLogIndex + 1]?.description
+										})
 										setCurrentLogIndex(currentLogIndex + 1)
 										setCurrentLogId(userLogs.data.logs[currentLogIndex + 1]?.id)
 									}}
@@ -101,8 +142,8 @@ export const ModalUserViewLogs = createModalComponent<{
 							<img
 								src={userLogs.data?.logs[currentLogIndex]?.pictureUri}
 								style={{
-									height: props.viewingLogsMode === 'week' ? '100%' : '110px',
-									width: props.viewingLogsMode === 'week' ? '100%' : '110px',
+									height: viewingLogsMode === 'week' ? '100%' : '110px',
+									width: viewingLogsMode === 'week' ? '100%' : '110px',
 									borderRadius: '10px'
 								}}
 							/>
@@ -111,6 +152,11 @@ export const ModalUserViewLogs = createModalComponent<{
 									className="flex top-1/2 right-10 rounded-3xl bg-white opacity-80 justify-center items-center w-8 h-8 absolute cursor-pointer"
 									onClick={() => {
 										setCurrentLogIndex(currentLogIndex - 1)
+										setLogState({
+											...logState,
+											description:
+												userLogs.data.logs[currentLogIndex - 1]?.description
+										})
 										setCurrentLogId(userLogs.data.logs[currentLogIndex - 1]?.id)
 									}}
 								>
@@ -120,28 +166,75 @@ export const ModalUserViewLogs = createModalComponent<{
 								</div>
 							)}
 
-							<div className="absolute" style={{ left: '45%', bottom: '30px' }}>
-								<div className="flex w-full justify-center">
-									{userLogs.data?.logs
-										.slice(0)
-										.reverse()
-										.map(log => (
-											<div
-												className={`mr-2 ${
-													log.id === currentLogId ? 'bg-primary' : 'bg-bombay'
-												} rounded-3xl h-2 w-2`}
-											></div>
-										))}
+							{userLogs.data.logs ? (
+								<div
+									className="absolute"
+									style={{ left: '45%', bottom: '30px' }}
+								>
+									<div className="flex w-full justify-center">
+										{userLogs.data.logs
+											.slice(0)
+											.reverse()
+											.map(log => (
+												<div
+													className={`mr-2 ${
+														log.id === currentLogId ? 'bg-primary' : 'bg-bombay'
+													} rounded-3xl h-2 w-2`}
+												></div>
+											))}
+									</div>
 								</div>
-							</div>
+							) : null}
 						</div>
 					) : (
 						<div className="text-gray-500">No image.</div>
 					)}
 
-					<p className="mt-2 leading-1">
-						Lorem ipsum dolor, sit amet consectetur adipisicing elit. At Lorem
-					</p>
+					{!desFieldActive && (
+						<>
+							{userLogs.data?.logs[currentLogIndex]?.description ? (
+								<p
+									className={`mt-4 leading-1 text-center`}
+									onDoubleClick={() => setDesFieldActive(true)}
+								>
+									{userLogs.data?.logs[currentLogIndex]?.description}
+								</p>
+							) : (
+								<p
+									className={`mt-4 leading-1 text-center text-gray-300`}
+									onDoubleClick={() => setDesFieldActive(true)}
+								>
+									Add a description here...
+								</p>
+							)}
+						</>
+					)}
+
+					{desFieldActive && (
+						<Input
+							placeholder="Add a description here..."
+							inputClassName="focus:outline-none bg-alabaster p-4 text-center"
+							inputStyle={{
+								color: '#000000'
+							}}
+							value={logState.description}
+							setValue={v => setLogState({ ...logState, description: v })}
+							onBlur={() => {
+								saveDescriptionMutation.mutate(logState.description)
+								setDesFieldActive(false)
+							}}
+						/>
+					)}
+
+					<button
+						onClick={() => {
+							setLogState({ ...logState, description: '' })
+							deleteDescriptionMutation.mutate('')
+						}}
+						className="absolute bottom-7 right-10 -button -round hover:shadow-md"
+					>
+						<img src="/img/trash-1.svg" width={15} height={15} />
+					</button>
 				</div>
 			)}
 		</>

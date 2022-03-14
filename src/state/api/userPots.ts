@@ -41,5 +41,7 @@ export default {
 	) => Api.post(`money-pot/${potId}/user/${userId}`, data),
 
 	deletePotUser: (potId: string, userId: any) =>
-		Api.delete<ApiPot>(`money-pot/${potId}/user/${userId}`)
+		Api.delete<ApiPot>(`money-pot/${potId}/user/${userId}`),
+
+	deletePot: (potId: string) => Api.delete<ApiPot>(`money-pot/${potId}`)
 }

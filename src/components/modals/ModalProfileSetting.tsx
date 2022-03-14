@@ -5,7 +5,7 @@ import { userState } from '../../state/user'
 import { SelectInput } from '../SelectInput'
 import { useState } from 'react'
 import { useSelectedPot } from '../../state/react/useSelectedPot'
-import { useMutation } from 'react-query'
+import { useMutation, useQuery } from 'react-query'
 import { Api } from '../../api'
 import { queryClient } from '../../state/queryClient'
 import dayjs from 'dayjs'
@@ -14,22 +14,21 @@ import { createModalComponent } from '../ui/Modal'
 import { Button } from '../ui/Button'
 import { ButtonCloseModal } from './ButtonCloseModal'
 import { useMediaQuery } from '../../state/react/useMediaQuery'
+import { ModalPotConfirmModal } from './ModalPotConfirmModal'
+import { toast } from 'react-toastify'
+import { themeState } from '../../state/react/useTheme'
 
 export const ModalProfileSetting = createModalComponent(
 	function ModalProfileSetting({ onRequestClose }) {
 		const isMobile = useMediaQuery('(max-width: 380px)')
 		const { data } = useSelectedPot()
+		const [confirmationModal, setConfirmationModal] = useState(false)
 		const [stripeModalIsOpen, setStripeModalIsOpen] = useState(false)
+		const [error, setError] = useState('')
 
-		const [user, setUser] = useState({
-			firstName: userState.user!.firstName,
-			lastName: userState.user!.lastName,
-			email: userState.user!.email
+		const card = useQuery('userCard', async () => {
+			return Api.user.getStripeCard()
 		})
-
-		const [fileURL, setFileURL] = useState(userState.user!.avatarUri)
-		const [pAmount, setPamount] = useState(data?.pot.minAmount)
-		const inputFile = useRef(null)
 
 		const potUser = useMemo(
 			() => data?.users.find(u => u.id === userState.user?.id),
@@ -38,7 +37,27 @@ export const ModalProfileSetting = createModalComponent(
 
 		const [swearFee, setSwearFee] = useState(potUser?.amount)
 
+		const [user, setUser] = useState({
+			firstName: userState.user!.firstName,
+			lastName: userState.user!.lastName,
+			email: userState.user!.email,
+			swearFee: swearFee
+		})
+
+		const [fileURL, setFileURL] = useState(userState.user!.avatarUri)
+		const [pAmount, setPamount] = useState(data?.pot.minAmount)
+		const inputFile = useRef(null)
+
 		const handleChange = event => {
+			console.log('event.target.files', event.target.files)
+			if (event.target.files[0].size > 5000000) {
+				toast('Your photo is too large. Please upload a file less than 5MB.', {
+					type: 'error',
+					theme: themeState.theme
+				})
+				return
+			}
+
 			if (event.target.files.length > 0) {
 				const fileURL = URL.createObjectURL(event.target.files[0])
 				setFileURL(fileURL)
@@ -183,31 +202,29 @@ export const ModalProfileSetting = createModalComponent(
 							How much is missing a week worth to you?
 						</div>
 						<div className="flex pt-3">
-							<div className="w-9/12">
-								<SelectInput
-									height="undefined"
-									selectClassName="bg-alabaster p-4 focus:outline-none"
-									options={[0, 5, 10, 15, 20, 30, 40, 50].map(i => ({
-										label: i === 0 ? `Group Minimum: $${i}` : i + '$',
-										value: i + ''
-									}))}
-									value={potUser?.amount}
+							<div className="w-full">
+								<Input
+									placeholder="Enter your swear jar fee"
+									inputClassName="focus:outline-none bg-alabaster p-4"
+									inputStyle={{
+										color: '#000000'
+									}}
+									value={user.swearFee}
 									setValue={v => {
+										if (v <= data.pot.minAmount - 1) {
+											setError(
+												'Amount must be greater than or equal to group minimum $' +
+													data?.pot.minAmount
+											)
+											return
+										}
+										setError('')
+										setUser({ ...user, swearFee: v })
 										setSwearFee(v as string)
 										updatePortGroup(v as string)
 									}}
 								/>
-							</div>
-							<div className="flex w-3/12">
-								<Button
-									className="w-full"
-									onClick={() => {
-										updatePortGroup(swearFee)
-										onRequestClose()
-									}}
-								>
-									Save
-								</Button>
+								{error && <div className="text-red-400">Error: {error}</div>}
 							</div>
 						</div>
 						<div className="pt-3 text-gray-400 text-md">
@@ -219,12 +236,13 @@ export const ModalProfileSetting = createModalComponent(
 						<div className="font-bold text-md sm:font-extrabold sm:text-xl">
 							Ready up to join pot
 						</div>
+
 						<div className="flex items-center">
 							<span className="mr-3 text-gray-400">leave/join</span>
 							<label className="flex items-center cursor-pointer">
 								<div className="relative">
 									<input
-										checked={potUser.readyUpAt !== null ? true : false}
+										checked={!card.isLoading && card.data !== null}
 										type="checkbox"
 										id="toggleB"
 										className="sr-only"
@@ -266,6 +284,28 @@ export const ModalProfileSetting = createModalComponent(
 							</a>
 						</Link>
 					</div>
+
+					<div className="flex items-center justify-center mt-6 tall:mt-10">
+						<div className="flex items-center justify-center ">
+							<Button
+								className={'border-red-600'}
+								onClick={() => setConfirmationModal(true)}
+								kind="tertiary"
+							>
+								<div className="mr-2">
+									<img src="/img/leave.svg" style={{ width: 20, height: 20 }} />
+								</div>
+								<div className={'text-red-600'}>Leave/delete this pot</div>
+							</Button>
+						</div>
+					</div>
+
+					<ModalPotConfirmModal
+						isOpen={confirmationModal}
+						onRequestClose={() => setConfirmationModal(false)}
+						openSuccessModal={() => setConfirmationModal(false)}
+						style={{ content: { position: 'relative' } }}
+					/>
 				</div>
 			</>
 		)

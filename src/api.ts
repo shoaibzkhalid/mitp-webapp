@@ -93,6 +93,14 @@ export const Api = {
 		return Api.post(`money-pot/${moneyPotId}/log`, fd)
 	},
 
+	logUpdate: (moneyPotId: string, data: { description: string }) => {
+		return Api.post(`log/${moneyPotId}`, data)
+	},
+
+	logDescDelete: (moneyPotId: string) => {
+		return Api.post(`log/${moneyPotId}`, { description: '' })
+	},
+
 	logsList: (moneyPotId: string, userId: string) =>
 		Api.get<{ logs: ApiPotLog[] }>(`money-pot/${moneyPotId}/user/${userId}`),
 
