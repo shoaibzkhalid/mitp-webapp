@@ -229,11 +229,7 @@ export const ModalUserViewLogs = createModalComponent<{
 					<button
 						onClick={() => {
 							setLogState({ ...logState, description: '' })
-<<<<<<< HEAD
 							deleteDescriptionMutation.mutate(null)
-=======
-							deleteDescriptionMutation.mutate('')
->>>>>>> 7c64032849b428e14d1d5e270e60c2b10ea0634e
 						}}
 						className="absolute bottom-7 right-10 -button -round hover:shadow-md"
 					>
