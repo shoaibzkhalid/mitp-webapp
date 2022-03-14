@@ -83,6 +83,12 @@ function Form(props: FormProps) {
 				>
 					Add card
 				</Button>
+				<div className="opacity-50 mt-2">
+					Powered by{' '}
+					<a href="https://stripe.com" target="_blank">
+						Stripe
+					</a>
+				</div>
 			</div>
 		</>
 	)

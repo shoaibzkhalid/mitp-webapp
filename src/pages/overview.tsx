@@ -227,7 +227,7 @@ export default wrapDashboardLayout(function RealIndexPage() {
 														>
 															View
 														</Button>
-														<Button
+														{/* <Button
 															className="ml-4 text-xs sm:text-base"
 															onClick={() => {
 																setViewingLogsOfUserId(u.id)
@@ -236,7 +236,7 @@ export default wrapDashboardLayout(function RealIndexPage() {
 															size="sm"
 														>
 															View All
-														</Button>
+														</Button> */}
 													</div>
 												</div>
 												<div className="items-center flex p-2 text-xs border border-gray-200 rounded-lg sm:text-sm justify-evenly dark:border-gray-700">

@@ -1,5 +1,6 @@
 import '../styles/tailwind.css'
 import '../styles/globals.css'
+import 'react-toastify/dist/ReactToastify.css'
 import type { AppProps } from 'next/app'
 import { useEffect } from 'react'
 import { userState } from '../state/user'
@@ -13,6 +14,8 @@ import dayjsRelativeTime from 'dayjs/plugin/relativeTime'
 import dayjsAdvancedFormat from 'dayjs/plugin/advancedFormat'
 import dayjs from 'dayjs'
 import Head from 'next/head'
+import { ToastContainer } from 'react-toastify'
+import { themeState } from '../state/react/useTheme'
 
 dayjs.extend(dayjsDuration)
 dayjs.extend(dayjsRelativeTime)
@@ -66,6 +69,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 				/>
 				<link rel="shortcut icon" href="/favicon.ico" />
 			</Head>
+			<ToastContainer theme={themeState.theme} />
 			<QueryClientProvider client={queryClient}>
 				<MatomoTracking />
 				<div>

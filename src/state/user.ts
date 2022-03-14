@@ -14,6 +14,7 @@ export const userState = observable({
 	loaded: false,
 	ready: false,
 	howItWorks: false,
+	inviteMsg: false,
 	notify: false,
 	notify_users: [],
 
@@ -49,6 +50,9 @@ export const userState = observable({
 			userState.notify = JSON.parse(localStorage.getItem('notify')) || false
 			userState.notify_users =
 				JSON.parse(localStorage.getItem('notify_users')) || []
+
+			userState.inviteMsg =
+				JSON.parse(localStorage.getItem('inviteMsg')) || false
 		})
 
 		if (!userState.tokens.refreshToken) {
@@ -111,12 +115,18 @@ export const userState = observable({
 		localStorage.setItem('mitp_tokens', '')
 		localStorage.removeItem('notify_users')
 		localStorage.removeItem('notify')
+		localStorage.removeItem('inviteMsg')
 	},
 	toggleReady() {
 		userState.ready = !userState.ready
 	},
 	setHowItWorks(val: boolean) {
 		userState.howItWorks = val
+	},
+
+	setInviteMsg(val: boolean) {
+		localStorage.setItem('inviteMsg', JSON.stringify(val))
+		userState.inviteMsg = val
 	},
 	async getAccessToken() {
 		if (!userState.tokens.refreshToken) throw new Error('User not logged in')

@@ -47,6 +47,7 @@ export function SelectInput(props: SelectProps) {
 					)}
 					style={{ height: props.height ? undefined : '48px' }}
 					onChange={e => props.setValue(e.target.value)}
+					disabled={props.disabled}
 				>
 					{props.options.map(option => (
 						<option
