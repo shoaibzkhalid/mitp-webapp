@@ -2,6 +2,8 @@ import clsx from 'clsx'
 import * as intro from 'intro.js'
 import 'intro.js/introjs.css'
 import { useEffect } from 'react'
+import { useQuery } from 'react-query'
+import { Api } from '../../api'
 import { userState } from '../../state/user'
 
 interface HowItWorksProps {
@@ -9,6 +11,14 @@ interface HowItWorksProps {
 	enabled?: any
 }
 export function HowItWorksIntro(props: HowItWorksProps) {
+	const pots = useQuery('userPots', Api.userPots.list)
+
+	const options =
+		pots.data?.map(pot => ({
+			value: pot.moneyPot!.id,
+			label: (pot.moneyPot!.title || 'No title') as any
+		})) ?? []
+
 	function steps() {
 		return [
 			{
@@ -29,11 +39,19 @@ export function HowItWorksIntro(props: HowItWorksProps) {
 				tooltipClass: clsx('bg-white text-black dark:bg-dark dark:text-white'),
 				position: 'left'
 			},
-			{
-				title: 'Bookmark',
-				intro: `Last Step:  Take a minute to add this page to your bookmarks bar by tapping on the icon above.`,
-				tooltipClass: clsx('bg-white text-black dark:bg-dark dark:text-white')
-			}
+			...(options.length > 1
+				? [
+						{
+							element: document.getElementById('gear_icon'),
+							title: 'Change Group Name',
+							intro: `Last Step:  This is the default name for all new sessions. You can change this by clicking on the gear icon here.`,
+							tooltipClass: clsx(
+								'bg-white text-black dark:bg-dark dark:text-white'
+							),
+							position: 'left'
+						}
+				  ]
+				: [])
 		]
 	}
 

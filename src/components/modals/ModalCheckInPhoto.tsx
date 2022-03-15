@@ -7,9 +7,7 @@ import { QrCode } from '../ui/QrCode'
 import { AppEnv } from '../../env'
 import { userState } from '../../state/user'
 import { selectedPotState } from '../../state/react/useSelectedPot'
-import { useMediaQuery } from '../../state/react/useMediaQuery'
 import { useEffect } from 'react'
-import { SpinnerBig } from '../SpinnerBig'
 import { createModalComponent } from '../ui/Modal'
 import { Button } from '../ui/Button'
 import { ButtonCloseModal } from './ButtonCloseModal'
@@ -21,15 +19,17 @@ export const ModalCheckInPhoto = createModalComponent<{
 	openSuccessModal: () => any
 	potId: string
 }>(function ModalCheckInPhoto(props) {
-	const [isUplaoding, setIsUploading] = useState(false)
 	const [imagePreview, setImagePreview] = useState<any>()
 
 	const checkinMutation = useMutation('checkin', async (file: File) => {
-		setIsUploading(true)
+		userState.setIsUploading(true)
+
 		await Api.logsCreate(props.potId, file)
 		queryClient.invalidateQueries(['money-pot', props.potId])
 		queryClient.invalidateQueries(['user-logs', props.potId])
-		setIsUploading(false)
+		setTimeout(() => {
+			userState.setIsUploading(false)
+		}, 5000)
 	})
 
 	const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
@@ -108,49 +108,42 @@ export const ModalCheckInPhoto = createModalComponent<{
 				</div>
 			</div>
 
-			{isUplaoding ? (
-				<>
-					<SpinnerBig />
-				</>
-			) : (
-				<>
-					<div
-						className={`flex items-center justify-center mt-3 text-center  ${
-							!acceptedFiles[0] && 'border-2 border-gray-400 border-dashed'
-						} cursor-pointer rounded-2xl`}
-						{...getRootProps()}
-						style={{
-							color: '#fff',
-							minHeight: '150px',
-							...(!acceptedFiles[0] && {
-								backgroundColor: '#F2F2F2'
-							})
-						}}
-					>
-						<input {...getInputProps()} />
-						{acceptedFiles[0] ? (
-							<>
-								<div className="w-full h-full">
-									<img src={imagePreview} className="w-full h-full" />
-								</div>
-							</>
-						) : (
-							<>
-								<div className="flex flex-col items-center">
-									<img src="/img/camera.svg" width="25" />
-									<p className="mt-2 font-bold text-gray-600">
-										Choose from library
-									</p>
-								</div>
-							</>
-						)}
-					</div>
-				</>
-			)}
+			<div
+				className={`flex items-center justify-center mt-3 text-center  ${
+					!acceptedFiles[0] && 'border-2 border-gray-400 border-dashed'
+				} cursor-pointer rounded-2xl`}
+				{...getRootProps()}
+				style={{
+					color: '#fff',
+					minHeight: '150px',
+					...(!acceptedFiles[0] && {
+						backgroundColor: '#F2F2F2'
+					})
+				}}
+			>
+				<input {...getInputProps()} />
+				{acceptedFiles[0] ? (
+					<>
+						<div className="w-full h-full">
+							<img src={imagePreview} className="w-full h-full" />
+						</div>
+					</>
+				) : (
+					<>
+						<div className="flex flex-col items-center">
+							<img src="/img/camera.svg" width="25" />
+							<p className="mt-2 font-bold text-gray-600">
+								Choose from library
+							</p>
+						</div>
+					</>
+				)}
+			</div>
 			<div className="flex justify-center pt-2 pb-6">
 				<Button
 					className={'mt-3'}
 					onClick={() => {
+						props.onRequestClose()
 						checkinMutation.mutateAsync(acceptedFiles[0]).then(() => {
 							props.onRequestClose()
 							props.openSuccessModal()

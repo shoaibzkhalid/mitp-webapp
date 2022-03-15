@@ -2,7 +2,6 @@ import { observer } from 'mobx-react-lite'
 import { useState, useEffect } from 'react'
 import { selectedPotState, useSelectedPot } from '../state/react/useSelectedPot'
 import { ModalCheckInPhoto } from './modals/ModalCheckInPhoto'
-import { ModalCheckInSuccess } from './modals/ModalCheckInSuccess'
 import { Button } from './ui/Button'
 import { useIsMobile } from '../state/react/useIsMobile'
 import { useMutation, useQuery } from 'react-query'
@@ -10,9 +9,9 @@ import { Api } from '../api'
 import { queryClient } from '../state/queryClient'
 import { kindClasses } from '../components/ui/Button'
 import { toast } from 'react-toastify'
-import { themeState } from '../state/react/useTheme'
 import { userState } from '../state/user'
 import dayjs from 'dayjs'
+import { themeState } from '../state/react/useTheme'
 
 interface CheckInButtonProps {
 	disabled?: boolean
@@ -101,7 +100,8 @@ export const CheckInButton = observer(function CheckInButton(
 				potId={selectedPotState.moneyPotId}
 				openSuccessModal={() => setOpenModal('success')}
 			></ModalCheckInPhoto>
-			<ModalCheckInSuccess
+
+			{/* <ModalCheckInSuccess
 				isOpen={openModal === 'success'}
 				onRequestClose={() => setOpenModal(null)}
 				style={{
@@ -110,7 +110,7 @@ export const CheckInButton = observer(function CheckInButton(
 						top: '10%'
 					}
 				}}
-			></ModalCheckInSuccess>
+			></ModalCheckInSuccess> */}
 		</>
 	)
 })

@@ -19,6 +19,7 @@ import { ModalGroupSettings } from '../components/modals/ModalGroupSettings'
 import clsx from 'clsx'
 import { Button } from '../components/ui/Button'
 import { useIsMobile } from '../state/react/useIsMobile'
+import { UploadAnimation } from '../components/UploadAnimation'
 
 const PotChart = dynamic(() => import('../components/home/PotChart'), {
 	ssr: false
@@ -115,6 +116,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 								<div
 									className="text-4xl font-semibold sm:text-5xl text-"
 									style={{ lineHeight: 1.5 }}
+									id="gear_icon"
 								>
 									{data?.pot.title}
 									<span
@@ -238,6 +240,8 @@ export default wrapDashboardLayout(function OverviewPage() {
 										{checkinCountUser}/{data?.pot.checkinCount} check ins this
 										week
 									</div>
+									{userState.isUploading ? <UploadAnimation /> : null}
+
 									<CheckInButton
 										disabled={
 											// checkinCountUser >= data?.pot.checkinCount ||

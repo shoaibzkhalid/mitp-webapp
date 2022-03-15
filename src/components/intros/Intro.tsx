@@ -48,9 +48,13 @@ export function Intro(props: IntroProps) {
 					position: 'left'
 				},
 				{
-					title: 'Bookmark',
-					intro: `Last Step:  Take a minute to add this page to your bookmarks bar by tapping on the icon above.`,
-					tooltipClass: clsx('bg-white text-black dark:bg-dark dark:text-white')
+					element: document.getElementById('gear_icon'),
+					title: 'Change Group Name',
+					intro: `Last Step:  This is the default name for all new sessions. You can change this by clicking on the gear icon here.`,
+					tooltipClass: clsx(
+						'bg-white text-black dark:bg-dark dark:text-white'
+					),
+					position: 'left'
 				}
 			]
 	}

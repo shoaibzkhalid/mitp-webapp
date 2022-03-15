@@ -17,6 +17,7 @@ export const userState = observable({
 	inviteMsg: false,
 	notify: false,
 	notify_users: [],
+	isUploading: false,
 
 	addNotifyUsers(users: any) {
 		userState.notify_users.push(...users)
@@ -128,6 +129,10 @@ export const userState = observable({
 		localStorage.setItem('inviteMsg', JSON.stringify(val))
 		userState.inviteMsg = val
 	},
+	setIsUploading(val: boolean) {
+		userState.isUploading = val
+	},
+
 	async getAccessToken() {
 		if (!userState.tokens.refreshToken) throw new Error('User not logged in')
 

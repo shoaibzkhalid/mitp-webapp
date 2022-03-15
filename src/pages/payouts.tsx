@@ -16,6 +16,7 @@ import { OverlayLoadingAnimation } from '../components/OverlayLoadingAnimation'
 import { queryClient } from '../state/queryClient'
 import Notification from '../components/notification/Notification'
 import { ModalAddPaymentCard } from '../components/modals/ModalAddPaymentCard'
+import EarningChart from '../components/payout/EarningChart'
 
 export default wrapDashboardLayout(function PayoutsPage() {
 	const router = useRouter()
@@ -54,9 +55,15 @@ export default wrapDashboardLayout(function PayoutsPage() {
 			<div style={{ maxWidth: '1200px', margin: '0 auto' }}>
 				<MobileHeader />
 
-				<div className="px-6 py-12 font-poppins">
-					<div className="mb-3 text-2xl">Hi {userState?.user?.firstName},</div>
-					<div className="text-5xl font-semibold">Payouts 💰</div>
+				<div className="flex items-center lg:flex-row flex-col justify-between">
+					<div className="px-6 py-12 font-poppins">
+						<div className="mb-3 text-2xl">
+							Hi {userState?.user?.firstName},
+						</div>
+						<div className="text-5xl font-semibold">Payouts 💰</div>
+					</div>
+
+					<EarningChart />
 				</div>
 
 				<div className="grid lg:grid-cols-3">
@@ -70,6 +77,7 @@ export default wrapDashboardLayout(function PayoutsPage() {
 							</div>
 						</div>
 					</div>
+
 					{/* <div className="flex flex-col items-center justify-center text-center">
 						<div className="text-xl font-bold">Your account credits</div>
 						<div className="my-10 font-bold text-primary text-7xl">
