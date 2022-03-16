@@ -84,7 +84,7 @@ export default wrapDashboardLayout(function OverviewPage() {
 	return (
 		<>
 			<Head>
-				<title>{`Your Group - ${data?.pot.title}`}</title>
+				<title>{`MITP - ${data?.pot.title}`}</title>
 				<link rel="shortcut icon" href="/favicon.ico" />
 			</Head>
 

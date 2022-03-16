@@ -5,9 +5,16 @@ export function useMediaQuery(q: string) {
 	useEffect(() => {
 		const mq = window.matchMedia(q)
 		const cb = (m: MediaQueryListEvent) => setResult(m.matches)
-		mq.addEventListener('change', cb)
-		if (mq.matches !== result) setResult(mq.matches)
-		return () => mq.removeEventListener('change', cb)
+
+		if (mq.addEventListener) {
+			mq.addEventListener('change', cb)
+			if (mq.matches !== result) setResult(mq.matches)
+			return () => mq.removeEventListener('change', cb)
+		} else {
+			mq.addListener(cb)
+			if (mq.matches !== result) setResult(mq.matches)
+			return () => mq.removeListener(cb)
+		}
 	}, [])
 	return result
 }

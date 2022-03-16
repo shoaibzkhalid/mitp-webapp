@@ -80,7 +80,7 @@ export default wrapDashboardLayout(function RealIndexPage() {
 	return (
 		<>
 			<Head>
-				<title>{`Your Group - ${pot.data?.pot.title || 'Loading...'}`}</title>
+				<title>{`MITP - ${pot.data?.pot.title || 'Loading...'}`}</title>
 			</Head>
 
 			<div style={{ margin: '0 auto', maxWidth: '1200px' }}>

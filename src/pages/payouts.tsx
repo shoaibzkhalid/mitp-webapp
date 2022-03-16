@@ -44,7 +44,7 @@ export default wrapDashboardLayout(function PayoutsPage() {
 	return (
 		<>
 			<Head>
-				<title>{`Your Group - ${selectedPot.data?.pot.title}`}</title>
+				<title>{`MITP - ${selectedPot.data?.pot.title}`}</title>
 			</Head>
 
 			<ModalWithdraw

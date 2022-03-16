@@ -68,6 +68,10 @@ function MyApp({ Component, pageProps }: AppProps) {
 					content="width=device-width, initial-scale=1.0, user-scalable=0"
 				/>
 				<link rel="shortcut icon" href="/favicon.ico" />
+				<script
+					type="application/javascript"
+					src="https://polyfill.io/v3/polyfill.min.js?features=ResizeObserver"
+				></script>
 			</Head>
 			<ToastContainer theme={themeState.theme} />
 			<QueryClientProvider client={queryClient}>
