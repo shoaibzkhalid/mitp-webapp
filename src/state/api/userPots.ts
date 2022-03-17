@@ -22,7 +22,6 @@ export default {
 				checkinsCount: number
 			}
 			dailyStatistics: number[]
-			isAdmin: boolean
 		}>(`money-pot/${id}`),
 
 	create: (d: {

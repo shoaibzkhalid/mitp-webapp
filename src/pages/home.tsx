@@ -233,12 +233,20 @@ export default wrapDashboardLayout(function OverviewPage() {
 									className="flex flex-col items-center pt-24 pb-24 md:px-10"
 									id="checkin_div"
 								>
-									<div
-										id="walkthrough_checkins"
-										className="text-xl text-center text-gray-600"
-									>
-										{checkinCountUser}/{data?.pot.checkinCount} check ins this
-										week
+									<div className="flex items-center justify-between">
+										<div
+											id="walkthrough_checkins"
+											className="text-xl text-center text-gray-600"
+										>
+											{checkinCountUser}/{data?.pot.checkinCount} check ins this
+											week
+										</div>
+										<div
+											className="flex fill-current justify-center ml-4 cursor-pointer"
+											onClick={() => router.reload()}
+										>
+											<img src="/img/refresh.svg" />
+										</div>
 									</div>
 									{userState.isUploading ? <UploadAnimation /> : null}
 

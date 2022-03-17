@@ -14,7 +14,7 @@ export const ModalPotConfirmModal = createModalComponent<{
 }>(function ModalPotConfirmModal(props) {
 	const pot = useSelectedPot()
 	const router = useRouter()
-	const selectedPot = pot?.data
+	const selectedPot = pot.pot
 	const potAdminUser = useMemo(
 		() => pot.data?.users.find(u => u.admin),
 		[pot.data]
@@ -59,7 +59,8 @@ export const ModalPotConfirmModal = createModalComponent<{
 			runInAction(() => {
 				userState.resetNotify()
 			})
-			router.push('/home')
+			// router.push('/home')
+			router.reload()
 		} catch (e) {
 			console.log('error', e)
 		}
@@ -75,7 +76,10 @@ export const ModalPotConfirmModal = createModalComponent<{
 			<div className="flex justify-between align-center w-ful">
 				<Button
 					className={'mt-3 border-red-600'}
-					onClick={() => leaveDeletePot()}
+					onClick={() => {
+						props.onRequestClose()
+						leaveDeletePot()
+					}}
 					kind="tertiary"
 				>
 					<div className={'text-red-600'}>{btnTxt}</div>

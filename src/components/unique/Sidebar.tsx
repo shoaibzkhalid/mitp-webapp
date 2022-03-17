@@ -156,11 +156,12 @@ const SidebarPotSelector = observer(function SidebarPotSelector() {
 
 	const showPotDelete = potAdminUser?.id === userState.user?.id
 
-	const options =
+	let options =
 		pots.data?.map(pot => ({
 			value: pot.moneyPot!.id,
 			label: (pot.moneyPot!.title || 'No title') as any
 		})) ?? []
+
 	options.push(
 		{
 			value: 'new',
@@ -217,13 +218,19 @@ const SidebarPotSelector = observer(function SidebarPotSelector() {
 		router.push('/home')
 	}
 
+	const noDelOpts = options.filter(
+		o => o.value !== 'delete' && o.value !== 'leave'
+	)
+
+	options = !pot.data ? noDelOpts : options
+
 	return (
 		<div className="w-full">
 			<ModalPotConfirmModal
 				isOpen={confirmationModal}
 				onRequestClose={() => setConfirmationModal(false)}
 				openSuccessModal={() => setConfirmationModal(false)}
-				style={{ content: { position: 'relative' } }}
+				style={{ content: { position: 'relative', inset: 'unset' } }}
 			/>
 
 			<Select
